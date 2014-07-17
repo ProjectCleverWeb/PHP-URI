@@ -45,5 +45,3 @@ checks:
         require_braces_around_control_structures: true
         remove_trailing_whitespace: true
         remove_php_closing_tag: true
-tools:
-    external_code_coverage: true
