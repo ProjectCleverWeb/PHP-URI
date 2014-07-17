@@ -46,7 +46,8 @@ namespace uri {
 		These variables can be accessed just like normal public variables, and can
 		even be changed like public variables. This implementation of private
 		variables combined with the __get(), __set(), __isset(), & __unset() magic
-		constants allow each variable to stay in sync with the group.
+		constants allow each variable to stay in sync with the group, and still be
+		accessable.
 		*/
 		private $authority;
 		private $domain;
