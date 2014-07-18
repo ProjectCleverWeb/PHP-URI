@@ -286,7 +286,7 @@ namespace uri {
 		/**
 		 * The query parsed into an array
 		 * 
-		 * @return array The query array
+		 * @return null|array The query array
 		 */
 		public function query_arr() {
 			return \uri\generate::query_array($this->object);
@@ -363,6 +363,10 @@ namespace uri {
 		 * @return object|false If the input can be correctly parsed, then it returns an object, FALSE otherwise
 		 */
 		public static function parse($uri) {
+			if (!is_string($uri)) {
+				return FALSE;
+			}
+			
 			$parsed = self::regex_parse($uri);
 			
 			// Could not be parsed correctly
@@ -391,7 +395,6 @@ namespace uri {
 		 * @return array|false Returns an array if the sting could be correctly parsed, FALSE otherwise
 		 */
 		private static function regex_parse($uri) {
-			settype($uri, 'string');
 			// $regex = (
 			//   '/'.
 			//   '^(([a-z]+)?(\:\/\/|\:|\/\/))?'.              // Scheme, Scheme Name, & Scheme Symbols

@@ -66,51 +66,26 @@ class URITest extends PHPUnit_Framework_TestCase {
 	 * @depends Advanced_Parsing
 	 */
 	public function Error_Catching() {
-		// // Invalid
-		// $uri1 = new uri('');
-		// $uri2 = new uri(array());
-		// $uri3 = new uri((object) array());
-		// $uri4 = new uri(1);
-		// // Valid
-		// $uri5 = new uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		// Invalid
+		$uri1 = new uri('');
+		$uri2 = new uri(array());
+		$uri3 = new uri((object) array());
+		$uri4 = new uri(1);
+		// Valid
+		$uri5 = new uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
 		
 		
 		
-		// // Invalid Input
-		// $this->assertEquals(TRUE, $uri1->error);
-		// $this->assertEquals(TRUE, $uri2->error);
-		// $this->assertEquals(TRUE, $uri3->error);
-		// $this->assertEquals(TRUE, $uri4->error);
+		// Invalid Input
+		$this->assertEquals(FALSE, empty($uri1->error));
+		$this->assertEquals(FALSE, empty($uri2->error));
+		$this->assertEquals(FALSE, empty($uri3->error));
+		$this->assertEquals(FALSE, empty($uri4->error));
 		
-		// // Invalid section to modify
-		// $this->assertEquals(FALSE, $uri5->append('invalid', ''));
-		// $this->assertEquals(FALSE, $uri5->prepend('invalid', ''));
-		// $this->assertEquals(FALSE, $uri5->replace('invalid', ''));
-		
-		// // Ensure all vars return FALSE
-		// $this->assertEquals(FALSE, $uri1->scheme);
-		// $this->assertEquals(FALSE, $uri1->scheme_name);
-		// $this->assertEquals(FALSE, $uri1->scheme_symbols);
-		// $this->assertEquals(FALSE, $uri1->user);
-		// $this->assertEquals(FALSE, $uri1->pass);
-		// $this->assertEquals(FALSE, $uri1->host);
-		// $this->assertEquals(FALSE, $uri1->port);
-		// $this->assertEquals(FALSE, $uri1->path);
-		// $this->assertEquals(FALSE, $uri1->query);
-		// $this->assertEquals(FALSE, $uri1->fragment);
-		
-		// // All methods, except reset(), should return FALSE while the object is in error
-		// $this->assertEquals(FALSE, $uri1->gen_authority());
-		// $this->assertEquals(FALSE, $uri1->gen_scheme());
-		// $this->assertEquals(FALSE, $uri1->arr());
-		// $this->assertEquals(FALSE, $uri1->str());
-		// $this->assertEquals(FALSE, $uri1->p_str());
-		// $this->assertEquals(FALSE, $uri1->path_info());
-		// $this->assertEquals(FALSE, $uri1->query_arr());
-		// $this->assertEquals(FALSE, $uri1->append(NULL, NULL));
-		// $this->assertEquals(FALSE, $uri1->prepend(NULL, NULL));
-		// $this->assertEquals(FALSE, $uri1->replace(NULL, NULL));
-		
+		// Invalid section to modify
+		$this->assertEquals(FALSE, $uri5->append('invalid', ''));
+		$this->assertEquals(FALSE, $uri5->prepend('invalid', ''));
+		$this->assertEquals(FALSE, $uri5->replace('invalid', ''));
 	}
 	
 	/**
@@ -627,15 +602,32 @@ class URITest extends PHPUnit_Framework_TestCase {
 	 * @test
 	 * @depends Reset
 	 */
+	public function Queries() {
+		// Test both when there is and isn't pre-existing data
+		$uri1 = new uri('example.com');
+		$uri2 = new uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		
+		// Check For Errors
+		$this->assertEmpty($uri1->error);
+		$this->assertEmpty($uri2->error);
+		
+		$this->assertSame(array(), $uri1->query_arr());
+		$this->assertSame(array('query' => 'str'), $uri2->query_arr());
+	}
+	
+	
+	/**
+	 * @test
+	 * @depends Reset
+	 */
 	public function Invoke() {
-		// // Test both when there is and isn't pre-existing data
-		// $uri1 = new uri('example.com');
+		// Test both when there is and isn't pre-existing data
+		$uri1 = new uri('example.com');
 		
-		// // Check For Errors
-		// $this->assertEmpty($uri1->error);
+		// Check For Errors
+		$this->assertEmpty($uri1->error);
 		
-		// $uri1('google.com');
-		// $this->assertEquals('google.com', $uri1->str());
+		$this->assertEquals('example.com', $uri1());
 	}
 	
 	
