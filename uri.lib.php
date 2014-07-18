@@ -16,7 +16,6 @@
  */
 
 namespace {
-	
 	/**
 	 * URI Class
 	 * 
@@ -26,14 +25,15 @@ namespace {
 }
 
 namespace uri {
-	
 	/**
 	 * Main URI Class
 	 * 
-	 * This class acts as an extension of a URI string.
+	 * This class parses URI string into a dynamic and easy to use object. In
+	 * many ways, this class simply acts as an extension of a PHP string. Calling
+	 * this class as if it were a string will result in the current URL string
+	 * being used throughout PHP.
 	 */
 	abstract class main {
-		
 		/*** Variables ***/
 		
 		public $error;
@@ -67,6 +67,7 @@ namespace uri {
 		private $username;
 		
 		
+		
 		/*** Magic Methods ***/
 		
 		/**
@@ -83,6 +84,7 @@ namespace uri {
 				\uri\generate::authority($this->object);
 				\uri\generate::aliases($this->object);
 				
+				// References required for Sudo-Private Variables
 				$this->authority      = &$this->object->authority;
 				$this->domain         = &$this->object->domain;
 				$this->fqdn           = &$this->object->fqdn;
@@ -100,18 +102,37 @@ namespace uri {
 				$this->user           = &$this->object->user;
 				$this->username       = &$this->object->username;
 			} else {
-				// parse error
+				$this->error = 'Input could not be parsed as a URI';
 			}
 		}
 		
+		/**
+		 * In the event this class is called as or converted to a string, it will
+		 * return the current URI string, and NOT cause any errors.
+		 * 
+		 * @return string The current URI as a string
+		 */
 		public function __toString() {
 			return \uri\generate::string($this->object);
 		}
 		
+		/**
+		 * Invoked? just return the current URI, nothing fancy.
+		 * 
+		 * @return string The current URI as a string
+		 */
 		public function __invoke() {
 			return \uri\generate::string($this->object);
 		}
 		
+		/**
+		 * Allows access to the different parts of the URI to be synchronized. This
+		 * means that what is returned should always be accurate. Throws notice if
+		 * the variable cannot be accessed.
+		 * 
+		 * @param  string $name The requested variable
+		 * @return string|null  The value of the variable, or NULL if it can't be accessed
+		 */
 		public function __get($name) {
 			if (isset($this->object->$name)) {
 				\uri\generate::scheme($this->object);
@@ -121,7 +142,8 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Undefined property via __get(): \'%1$s\' in %2$s on line %3$s',
+						'Undefined property via %1$s::__get(): \'%2$s\' in %3$s on line %4$s',
+						__NAMESPACE__.'\\'.__CLASS__,
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -132,6 +154,15 @@ namespace uri {
 			}
 		}
 		
+		/**
+		 * Allows access to the different parts of the URI to be synchronized. This
+		 * means that what is returned should always be accurate. Throws notice if
+		 * the variable cannot be accessed.
+		 * 
+		 * @param  string $name  The requested variable
+		 * @param  string $value The new value for the variable
+		 * @return string|null   The new value of the variable, or NULL if it can't be accessed
+		 */
 		public function __set($name, $value) {
 			if (\uri\modify::modify($this->object, 'replace', $name, $value)) {
 				return $value;
@@ -139,7 +170,8 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Forbidden property via __set(): \'%1$s\' in %2$s on line %3$s',
+						'Forbidden property via %1$s::__set(): \'%2$s\' in %3$s on line %4$s',
+						__NAMESPACE__.'\\'.__CLASS__,
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -150,12 +182,27 @@ namespace uri {
 			}
 		}
 		
+		/**
+		 * Allows access to the different parts of the URI to be synchronized. This
+		 * means that what is returned should always be accurate.
+		 * 
+		 * @param  string  $name The requested variable
+		 * @return boolean       Returns TRUE if the variable is not empty, FALSE otherwise
+		 */
 		public function __isset($name) {
 			\uri\generate::scheme($this->object);
 			\uri\generate::authority($this->object);
-			return isset($this->object->$name);
+			return !empty($this->object->$name);
 		}
 		
+		/**
+		 * Allows access to the different parts of the URI to be synchronized. This
+		 * means that what is returned should always be accurate. Throws notice if
+		 * the variable cannot be accessed.
+		 * 
+		 * @param  string $name The requested variable
+		 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
+		 */
 		public function __unset($name) {
 			if (isset($this->object->$name)) {
 				$this->object->$name = '';
@@ -166,7 +213,8 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Undifined property via __unset(): \'%1$s\' in %2$s on line %3$s',
+						'Undifined property via %1$s::__unset(): \'%2$s\' in %3$s on line %4$s',
+						__NAMESPACE__.'\\'.__CLASS__,
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -179,49 +227,111 @@ namespace uri {
 		
 		
 		
-		
 		/*** Methods ***/
 		
+		/**
+		 * Returns the current URI as a string.
+		 * 
+		 * @return string The current URI as a string
+		 */
 		public function str() {
 			return \uri\generate::string($this->object);
 		}
 		
+		/**
+		 * Alias of str()
+		 * 
+		 * @return string The current URI as a string
+		 */
 		public function to_string() {
 			return \uri\generate::string($this->object);
 		}
 		
+		/**
+		 * Prints the current URI as a string
+		 * 
+		 * @return void
+		 */
 		public function p_str() {
 			echo \uri\generate::string($this->object);
 		}
 		
+		/**
+		 * Returns the current URI as an array
+		 * 
+		 * @return array The current URI as an array
+		 */
 		public function arr() {
 			return (array) $this->object;
 		}
 		
+		/**
+		 * Alias of arr()
+		 * 
+		 * @return array The current URI as an array
+		 */
 		public function to_array() {
 			return (array) $this->object;
 		}
 		
+		/**
+		 * The path broken down into dirname, basename, extension, filename, & array
+		 * 
+		 * @return array The information array
+		 */
 		public function path_info() {
 			return \uri\generate::path_info($this->object);
 		}
 		
+		/**
+		 * The query parsed into an array
+		 * 
+		 * @return array The query array
+		 */
 		public function query_arr() {
 			return \uri\generate::query_array($this->object);
 		}
 		
+		/**
+		 * Replaces $section of the URI with $str, given $str is a valid replacement
+		 * 
+		 * @param  string $section The section to replace
+		 * @param  string $str     The string to replace the section with
+		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
+		 */
 		public function replace($section, $str) {
 			return \uri\modify::modify($this->object, 'replace', $section, $str);
 		}
 		
+		/**
+		 * Prepends $section of the URI with $str, given the $section is still valid
+		 * once $str is in place
+		 * 
+		 * @param  string $section The section to prepend
+		 * @param  string $str     The string to prepend the section with
+		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
+		 */
 		public function prepend($section, $str) {
 			return \uri\modify::modify($this->object, 'prepend', $section, $str);
 		}
 		
+		/**
+		 * Appends $section of the URI with $str, given $section is still valid
+		 * once $str is in place
+		 * 
+		 * @param  string $section The section to append
+		 * @param  string $str     The string to append the section with
+		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
+		 */
 		public function append($section, $str) {
 			return \uri\modify::modify($this->object, 'append', $section, $str);
 		}
 		
+		/**
+		 * Resets the current object to its initial state
+		 * 
+		 * @return void
+		 */
 		public function reset() {
 			$this->__construct($this->input);
 		}
@@ -230,18 +340,28 @@ namespace uri {
 	
 	
 	/**
+	 * The Parser Class
 	 * 
+	 * This class controls how the initial input is parsed. This class is
+	 * designed to be easily upgraded to use different types of parsing. should
+	 * it be desired.
 	 */
 	class parser {
-		
 		/*** Constants ***/
 		
+		// This regex is broken down to be readable in regex_parse()
 		const REGEX = '/^(([a-z]+)?(\:\/\/|\:|\/\/))?(?:([a-z0-9$_\.\+!\*\'\(\),;&=\-]+)(?:\:([a-z0-9$_\.\+!\*\'\(\),;&=\-]*))?@)?((?:\d{3}.\d{3}.\d{3}.\d{3})|(?:[a-z0-9\-_]+(?:\.[a-z0-9\-_]+)*))(?:\:([0-9]+))?((?:\:|\/)[a-z0-9\-_\/\.]+)?(?:\?([a-z0-9$_\.\+!\*\'\(\),;:@&=\-%]*))?(?:#([a-z0-9\-_]*))?/i';
 		
 		
 		
 		/*** Methods ***/
 		
+		/**
+		 * Wrapper function for parsing a string into a URI object
+		 * 
+		 * @param  string $uri  The input to be parsed as a URI
+		 * @return object|false If the input can be correctly parsed, then it returns an object, FALSE otherwise
+		 */
 		public static function parse($uri) {
 			$parsed = self::regex_parse($uri);
 			
@@ -264,6 +384,12 @@ namespace uri {
 			);
 		}
 		
+		/**
+		 * Parses a URI string into a usable array.
+		 * 
+		 * @param  string $uri The URI to be parsed
+		 * @return array|false Returns an array if the sting could be correctly parsed, FALSE otherwise
+		 */
 		private static function regex_parse($uri) {
 			settype($uri, 'string');
 			// $regex = (
@@ -292,17 +418,18 @@ namespace uri {
 			}
 			
 			// Return what was parsed, but make sure that each offset is set regardless
-			return $parsed[0] + array('','','','','','','','','','','');
+			return $parsed[0] + array_fill(0, 11, '');
 		}
 	}
 	
 	
 	
 	/**
+	 * The Modifier Class
 	 * 
+	 * This class is in charge of making user-based changes.
 	 */
 	class modify {
-		
 		/*** Methods ***/
 		
 		public static function modify(&$object, $action, $section, $str) {
