@@ -440,7 +440,7 @@ namespace uri {
 			$section = strtolower($section);
 			
 			if (is_callable(array('\\uri\\modify', $section))) {
-				return call_user_func_array(array('\\uri\\modify', $section), array($object, $action, $str));
+				return call_user_func_array(array('\\uri\\modify', $section), array(&$object, $action, $str));
 			} else {
 				return FALSE;
 			}
@@ -460,7 +460,7 @@ namespace uri {
 		
 		public static function scheme_name(&$object, $action, $str) {
 			$org = $object->scheme_name;
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'scheme_name', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme_name', $str));
 			if (!preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name)) {
 				$object->scheme_name = $org;
 				return FALSE;
@@ -473,7 +473,7 @@ namespace uri {
 		
 		public static function scheme_symbols(&$object, $action, $str) {
 			$org = $object->scheme_symbols;
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'scheme_symbols', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme_symbols', $str));
 			if (!preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols)) {
 				$object->scheme_symbols = $org;
 				return FALSE;
@@ -484,7 +484,7 @@ namespace uri {
 		
 		public static function scheme(&$object, $action, $str) {
 			$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'scheme', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme', $str));
 			if (empty($object->scheme)) {
 				$object->scheme = $object->scheme_name = $object->scheme_symbols = '';
 			} else {
@@ -514,7 +514,7 @@ namespace uri {
 		public static function user(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'user', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'user', $str));
 			return \uri\generate::string($object);
 		}
 		
@@ -525,7 +525,7 @@ namespace uri {
 		public static function pass(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'pass', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'pass', $str));
 			return \uri\generate::string($object);
 		}
 		
@@ -535,7 +535,7 @@ namespace uri {
 		
 		public static function host(&$object, $action, $str) {
 			$org = $object->host;
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'host', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'host', $str));
 			if (
 				(
 					!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
@@ -565,7 +565,7 @@ namespace uri {
 			if ($str[0] == ':') {
 				$str = substr($str, 1);
 			}
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'port', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'port', $str));
 			if (!preg_match('/\A[0-9]{0,5}\Z/', $object->port)) {
 				$object->port = $org;
 				return FALSE;
@@ -583,7 +583,7 @@ namespace uri {
 			}
 			$str = implode('/', $safe_arr);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'path', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'path', $str));
 			return \uri\generate::string($object);
 		}
 		
@@ -594,7 +594,7 @@ namespace uri {
 				$str = substr($str, 1);
 			}
 			
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'query', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'query', $str));
 			return \uri\generate::string($object);
 		}
 		
@@ -604,7 +604,7 @@ namespace uri {
 			}
 			$str = urlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array($object, 'fragment', $str));
+			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'fragment', $str));
 			return \uri\generate::string($object);
 		}
 		
