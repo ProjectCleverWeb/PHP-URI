@@ -5,7 +5,7 @@ A PHP library for working with URI's. Requires PHP `5.3.7` or later. Replaces an
 Copyright &copy; 2014 Nicholas Jordon - All Rights Reserved <br>
 Licensed under the MIT license
 
-####Download: [1.0.0 RC1](https://github.com/ProjectCleverWeb/PHP-URI/archive/master.zip)####
+####Download: [1.0.0 RC2](https://github.com/ProjectCleverWeb/PHP-URI/archive/master.zip)####
 
 ---
 
