@@ -2,7 +2,7 @@ build:
   tests:
     override:
       -
-        command: phpunit --testdox --coverage-text test.php
+        command: phpunit --testdox --coverage-text
   environment:
     php:
       version: 5.5.12

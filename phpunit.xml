@@ -1,7 +1,11 @@
 <phpunit>
 	<testsuites>
 		<testsuite name="PHP URI">
-			<file>test.php</file>
+			<file>uri.lib.php</file>
+			<file>tests/ParseTest.php</file>
+			<file>tests/ErrorsTest.php</file>
+			<file>tests/GenerateTest.php</file>
+			<file>tests/ModifyTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
