@@ -1,0 +1,30 @@
+{
+	"name": "PHP URI",
+	"description": "A PHP library for working with URI's. Requires PHP 5.3.7 or later. Replaces and extends PHP's parse_url().",
+	"version": "1.0.0-RC2",
+	"keywords": [
+		"uri",
+		"url",
+		"address",
+		"web"
+	],
+	"homepage": "https://github.com/ProjectCleverWeb/PHP-URI",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Nicholas Jordon",
+			"email": "projectcleverweb@gmail.com",
+			"homepage": "http://projectcleverweb.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.7"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.1.*"
+	},
+	"autoload": {
+		"files": ["uri.lib.php"]
+	}
+}
