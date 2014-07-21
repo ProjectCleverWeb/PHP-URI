@@ -435,6 +435,16 @@ namespace uri {
 	class modify {
 		/*** Methods ***/
 		
+		/**
+		 * Acts as universal alias to the rest of the class, ensuring the call is
+		 * viable.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function modify(&$object, $action, $section, $str) {
 			settype($section, 'string');
 			$section = strtolower($section);
@@ -446,21 +456,69 @@ namespace uri {
 			}
 		}
 		
+		/**
+		 * The 'replace' action.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return void
+		 */
 		public static function replace(&$object, $section, $str) {
 			$object->$section = $str;
 		}
 		
+		/**
+		 * The 'prepend' action.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return void
+		 */
 		public static function prepend(&$object, $section, $str) {
 			$object->$section = $str.$object->$section;
 		}
 		
+		/**
+		 * The 'append' action.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return void
+		 */
 		public static function append(&$object, $section, $str) {
 			$object->$section = $object->$section.$str;
 		}
 		
+		/**
+		 * Allows the callback method for all actions to be easily replaced
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return void
+		 */
+		private static function action_callback(&$object, $action, $section, $str) {
+			call_user_func_array(
+				array('\\uri\\modify', $action),
+				array(&$object, $section, $str)
+			);
+		}
+		
+		/**
+		 * Modfies the Scheme Name
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function scheme_name(&$object, $action, $str) {
 			$org = $object->scheme_name;
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme_name', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			if (!preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name)) {
 				$object->scheme_name = $org;
 				return FALSE;
@@ -471,9 +529,17 @@ namespace uri {
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Modfies the Scheme Symbols
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function scheme_symbols(&$object, $action, $str) {
 			$org = $object->scheme_symbols;
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme_symbols', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			if (!preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols)) {
 				$object->scheme_symbols = $org;
 				return FALSE;
@@ -482,9 +548,17 @@ namespace uri {
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Modfies the Scheme
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function scheme(&$object, $action, $str) {
 			$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'scheme', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			if (empty($object->scheme)) {
 				$object->scheme = $object->scheme_name = $object->scheme_symbols = '';
 			} else {
@@ -507,35 +581,83 @@ namespace uri {
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Alias of scheme()
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function protocol(&$object, $action, $str) {
 			self::scheme($object, $action, $str);
 		}
 		
+		/**
+		 * Modfies the Username
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function user(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'user', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Alias of user()
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function username(&$object, $action, $str) {
 			self::user($object, $action, $str);
 		}
 		
+		/**
+		 * Modfies the Password
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function pass(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'pass', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Alias of pass()
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function password(&$object, $action, $str) {
 			self::pass($object, $action, $str);
 		}
 		
+		/**
+		 * Modfies the Host
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function host(&$object, $action, $str) {
 			$org = $object->host;
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'host', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			if (
 				(
 					!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
@@ -552,20 +674,44 @@ namespace uri {
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Alias of host()
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function domain(&$object, $action, $str) {
 			self::host($object, $action, $str);
 		}
 		
+		/**
+		 * Alias of host()
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function fqdn(&$object, $action, $str) {
 			self::host($object, $action, $str);
 		}
 		
+		/**
+		 * Modfies the Port
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function port(&$object, $action, $str) {
 			$org = $object->port;
 			if ($str[0] == ':') {
 				$str = substr($str, 1);
 			}
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'port', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			if (!preg_match('/\A[0-9]{0,5}\Z/', $object->port)) {
 				$object->port = $org;
 				return FALSE;
@@ -574,6 +720,14 @@ namespace uri {
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Modfies the Path
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function path(&$object, $action, $str) {
 			$str = str_replace(array('//','\\'), '/', $str);
 			$path_arr = explode('/', $str);
@@ -583,10 +737,18 @@ namespace uri {
 			}
 			$str = implode('/', $safe_arr);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'path', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Modfies the Query
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function query(&$object, $action, $str) {
 			if (is_array($str)) {
 				$str = http_build_query($str, '', '&', PHP_QUERY_RFC3986);
@@ -594,28 +756,27 @@ namespace uri {
 				$str = substr($str, 1);
 			}
 			
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'query', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
+		/**
+		 * Modfies the Fragment
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $str     The modfication
+		 * @return string          Returns the resulting URI on success, FALSE otherwise
+		 */
 		public static function fragment(&$object, $action, $str) {
 			if ($str[0] == '#') {
 				unset($str[0]);
 			}
 			$str = urlencode($str);
 			
-			call_user_func_array(array('\\uri\\modify', $action), array(&$object, 'fragment', $str));
+			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	

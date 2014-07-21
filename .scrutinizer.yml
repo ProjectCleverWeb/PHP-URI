@@ -44,5 +44,4 @@ checks:
     remove_php_closing_tag: true
 tools:
   external_code_coverage:
-    runs: 5
     timeout: 600
