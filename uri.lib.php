@@ -741,12 +741,23 @@ namespace uri {
 	
 	
 	/**
+	 * The Generator Class
 	 * 
+	 * This class makes sure everything stays in sync and is produced correctly.
+	 * Unlike the the modify class, this class only changes $object to keep
+	 * things syncronized. It's primary purpose is to use the information in
+	 * $object to create some type of returnable value.
 	 */
 	class generate {
 		
 		/*** Methods ***/
 		
+		/**
+		 * Generates all the aliases for $object
+		 * 
+		 * @param  object $object The object to modify
+		 * @return  void
+		 */
 		public static function aliases(&$object) {
 			$object->protocol = &$object->scheme;
 			$object->username = &$object->user;
@@ -755,10 +766,24 @@ namespace uri {
 			$object->fqdn     = &$object->host;
 		}
 		
+		/**
+		 * Generate the scheme. This method exists to make changing how the scheme
+		 * is generated easier; and will likely help prevent redundant code in the
+		 * future
+		 * 
+		 * @param  object $object The object to modify
+		 * @return void
+		 */
 		public static function scheme(&$object) {
 			$object->scheme = $object->scheme_name.$object->scheme_symbols;
 		}
 		
+		/**
+		 * Regenerates the Authority string
+		 * 
+		 * @param  object $object The object to modify
+		 * @return void
+		 */
 		public static function authority(&$object) {
 			$str_arr = array($object->user);
 			if (empty($object->user) == FALSE && empty($object->pass)) {
@@ -773,6 +798,12 @@ namespace uri {
 			$object->authority = implode('', $str_arr);
 		}
 		
+		/**
+		 * Generate a the full URI as a string, from the current object
+		 * 
+		 * @param  object $object The object to use
+		 * @return string         The current URI string
+		 */
 		public static function string(&$object) {
 			self::scheme($object);
 			self::authority($object);
@@ -786,6 +817,12 @@ namespace uri {
 			return implode('', $str_arr);
 		}
 		
+		/**
+		 * Returns various information about the current $path
+		 * 
+		 * @param  object $object The object to use
+		 * @return array          Associative array of information about the current $path
+		 */
 		public static function path_info(&$object) {
 			$defaults = array(
 				'dirname' => '',
@@ -802,6 +839,12 @@ namespace uri {
 			return $info;
 		}
 		
+		/**
+		 * The current $query string parsed into an array
+		 * 
+		 * @param  object $object The object to use
+		 * @return array          The query string as an array
+		 */
 		public static function query_array(&$object) {
 			parse_str($object->query, $return);
 			return $return;
