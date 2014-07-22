@@ -629,15 +629,11 @@ namespace uri {
 		public static function host(&$object, $action, $str) {
 			$org = $object->host;
 			self::action_callback($object, $action, __FUNCTION__, $str);
-			if (
-				(
-					!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
-					&&
-					!preg_match('/\A([0-9]\.){3}[0-9]\Z/i', $object->host) // ip
-				)
-				||
-				strlen($object->host) > 255
-			) {
+			if ((
+				!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
+				&&
+				!preg_match('/\A([0-9]\.){3}[0-9]\Z/i', $object->host) // ip
+			)) {
 				$object->host = $org;
 				return FALSE;
 			}
@@ -700,14 +696,6 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function path(&$object, $action, $str) {
-			$str = str_replace(array('//','\\'), '/', $str);
-			$path_arr = explode('/', $str);
-			$safe_arr = array();
-			foreach ($path_arr as $path_part) {
-				$safe_arr[] = rawurlencode($path_part);
-			}
-			$str = implode('/', $safe_arr);
-			
 			self::action_callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
