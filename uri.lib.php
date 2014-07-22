@@ -457,43 +457,8 @@ namespace uri {
 		}
 		
 		/**
-		 * The 'replace' action.
-		 * 
-		 * @param  object $object  The object to modify
-		 * @param  string $section The section of the object to modify
-		 * @param  string $str     The modfication
-		 * @return void
-		 */
-		public static function replace(&$object, $section, $str) {
-			$object->$section = $str;
-		}
-		
-		/**
-		 * The 'prepend' action.
-		 * 
-		 * @param  object $object  The object to modify
-		 * @param  string $section The section of the object to modify
-		 * @param  string $str     The modfication
-		 * @return void
-		 */
-		public static function prepend(&$object, $section, $str) {
-			$object->$section = $str.$object->$section;
-		}
-		
-		/**
-		 * The 'append' action.
-		 * 
-		 * @param  object $object  The object to modify
-		 * @param  string $section The section of the object to modify
-		 * @param  string $str     The modfication
-		 * @return void
-		 */
-		public static function append(&$object, $section, $str) {
-			$object->$section = $object->$section.$str;
-		}
-		
-		/**
-		 * Allows the callback method for all actions to be easily replaced
+		 * Handles which action is taken; since there are only 3 very simple
+		 * actions, it makes sense to put them all in 1 method.
 		 * 
 		 * @param  object $object  The object to modify
 		 * @param  string $action  The action to take
@@ -502,10 +467,16 @@ namespace uri {
 		 * @return void
 		 */
 		private static function action_callback(&$object, $action, $section, $str) {
-			call_user_func_array(
-				array('\\uri\\modify', $action),
-				array(&$object, $section, $str)
-			);
+			switch ($action) {
+				case 'replace':
+					$object->$section = $str;
+					break;
+				case 'prepend':
+					$object->$section = $str.$object->$section;
+					break;
+				case 'append':
+					$object->$section = $object->$section.$str;
+			}
 		}
 		
 		/**
@@ -590,7 +561,7 @@ namespace uri {
 		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function protocol(&$object, $action, $str) {
-			self::scheme($object, $action, $str);
+			return self::scheme($object, $action, $str);
 		}
 		
 		/**
@@ -617,7 +588,7 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function username(&$object, $action, $str) {
-			self::user($object, $action, $str);
+			return self::user($object, $action, $str);
 		}
 		
 		/**
@@ -644,7 +615,7 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function password(&$object, $action, $str) {
-			self::pass($object, $action, $str);
+			return self::pass($object, $action, $str);
 		}
 		
 		/**
@@ -683,7 +654,7 @@ namespace uri {
 		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function domain(&$object, $action, $str) {
-			self::host($object, $action, $str);
+			return self::host($object, $action, $str);
 		}
 		
 		/**
@@ -695,7 +666,7 @@ namespace uri {
 		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function fqdn(&$object, $action, $str) {
-			self::host($object, $action, $str);
+			return self::host($object, $action, $str);
 		}
 		
 		/**
