@@ -286,8 +286,8 @@ namespace uri {
 				'user'           => $this->object->user,
 			);
 			
-			$arr['domain']   = &$arr['domain'];
-			$arr['fqdn']     = &$arr['fqdn'];
+			$arr['domain']   = &$arr['host'];
+			$arr['fqdn']     = &$arr['host'];
 			$arr['password'] = &$arr['pass'];
 			$arr['protocol'] = &$arr['scheme'];
 			$arr['username'] = &$arr['user'];
