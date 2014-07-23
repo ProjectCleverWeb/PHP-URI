@@ -38,6 +38,13 @@ namespace uri {
 		
 		public $error;
 		public $input;
+		
+		/*
+		"Ghost" Object Variable
+		=======================
+		This variable can be accesed from within the class, but as far as the rest
+		of PHP is concerned, this variable simply doesn't exist.
+		*/
 		private $object;
 		
 		/*
@@ -142,8 +149,9 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Undefined property via %1$s::__get(): \'%2$s\' in %3$s on line %4$s',
-						__NAMESPACE__.'\\'.__CLASS__,
+						'Undefined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be fetched in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -170,8 +178,9 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Forbidden property via %1$s::__set(): \'%2$s\' in %3$s on line %4$s',
-						__NAMESPACE__.'\\'.__CLASS__,
+						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be set in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -213,8 +222,9 @@ namespace uri {
 				$trace = debug_backtrace();
 				trigger_error(
 					sprintf(
-						'Undifined property via %1$s::__unset(): \'%2$s\' in %3$s on line %4$s',
-						__NAMESPACE__.'\\'.__CLASS__,
+						'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
 						$name,
 						$trace[0]['file'],
 						$trace[0]['line']
@@ -262,7 +272,28 @@ namespace uri {
 		 * @return array The current URI as an array
 		 */
 		public function arr() {
-			return (array) $this->object;
+			$arr = array(
+				'authority'      => $this->object->authority,
+				'fragment'       => $this->object->fragment,
+				'host'           => $this->object->host,
+				'pass'           => $this->object->pass,
+				'path'           => $this->object->path,
+				'port'           => $this->object->port,
+				'query'          => $this->object->query,
+				'scheme'         => $this->object->scheme,
+				'scheme_name'    => $this->object->scheme_name,
+				'scheme_symbols' => $this->object->scheme_symbols,
+				'user'           => $this->object->user,
+			);
+			
+			$arr['domain']   = &$arr['domain'];
+			$arr['fqdn']     = &$arr['fqdn'];
+			$arr['password'] = &$arr['pass'];
+			$arr['protocol'] = &$arr['scheme'];
+			$arr['username'] = &$arr['user'];
+			
+			ksort($arr);
+			return $arr;
 		}
 		
 		/**
@@ -271,7 +302,7 @@ namespace uri {
 		 * @return array The current URI as an array
 		 */
 		public function to_array() {
-			return (array) $this->object;
+			return $this->arr();
 		}
 		
 		/**
@@ -846,6 +877,7 @@ namespace uri {
 		 * @return array          The query string as an array
 		 */
 		public static function query_array(&$object) {
+			$return = array();
 			parse_str($object->query, $return);
 			return $return;
 		}
