@@ -172,7 +172,8 @@ namespace uri {
 		 * @return string|null   The new value of the variable, or NULL if it can't be accessed
 		 */
 		public function __set($name, $value) {
-			if (\uri\modify::modify($this->object, 'replace', $name, $value)) {
+			if (isset($this->object->$name)) {
+				\uri\modify::modify($this->object, 'replace', $name, $value);
 				return $value;
 			} else {
 				$trace = debug_backtrace();
@@ -213,11 +214,22 @@ namespace uri {
 		 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
 		 */
 		public function __unset($name) {
-			if (isset($this->object->$name)) {
-				$this->object->$name = '';
-				\uri\generate::scheme($this->object);
-				\uri\generate::authority($this->object);
+			if (isset($this->object->$name) && $name != 'host') {
+				\uri\modify::modify($this->object, 'replace', $name, '');
 				return TRUE;
+			} elseif (isset($this->object->$name)) {
+				$trace = debug_backtrace();
+				trigger_error(
+					sprintf(
+						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
+						$name,
+						$trace[0]['file'],
+						$trace[0]['line']
+					),
+					E_USER_NOTICE
+				);
 			} else {
 				$trace = debug_backtrace();
 				trigger_error(
@@ -478,6 +490,7 @@ namespace uri {
 		 */
 		public static function modify(&$object, $action, $section, $str) {
 			settype($section, 'string');
+			settype($str, 'string');
 			$section = strtolower($section);
 			
 			if (is_callable(array('\\uri\\modify', $section))) {
@@ -521,7 +534,7 @@ namespace uri {
 		public static function scheme_name(&$object, $action, $str) {
 			$org = $object->scheme_name;
 			self::action_callback($object, $action, __FUNCTION__, $str);
-			if (!preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name)) {
+			if (!(preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name) || empty($str))) {
 				$object->scheme_name = $org;
 				return FALSE;
 			} elseif (empty($object->scheme_symbols)) {
@@ -542,7 +555,7 @@ namespace uri {
 		public static function scheme_symbols(&$object, $action, $str) {
 			$org = $object->scheme_symbols;
 			self::action_callback($object, $action, __FUNCTION__, $str);
-			if (!preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols)) {
+			if (!(preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols) || empty($str))) {
 				$object->scheme_symbols = $org;
 				return FALSE;
 			}
@@ -706,11 +719,11 @@ namespace uri {
 		 */
 		public static function port(&$object, $action, $str) {
 			$org = $object->port;
-			if ($str[0] == ':') {
+			if (isset($str[0]) && $str[0] == ':') {
 				$str = substr($str, 1);
 			}
 			self::action_callback($object, $action, __FUNCTION__, $str);
-			if (!preg_match('/\A[0-9]{0,5}\Z/', $object->port)) {
+			if (!(preg_match('/\A[0-9]{0,5}\Z/', $object->port) || empty($str))) {
 				$object->port = $org;
 				return FALSE;
 			}
@@ -740,9 +753,7 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function query(&$object, $action, $str) {
-			if (is_array($str)) {
-				$str = http_build_query($str, '', '&', PHP_QUERY_RFC3986);
-			} elseif ($str[0] == '?') {
+			if (isset($str[0]) && $str[0] == '?') {
 				$str = substr($str, 1);
 			}
 			
@@ -759,7 +770,7 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function fragment(&$object, $action, $str) {
-			if ($str[0] == '#') {
+			if (isset($str[0]) && $str[0] == '#') {
 				unset($str[0]);
 			}
 			$str = urlencode($str);
@@ -877,9 +888,8 @@ namespace uri {
 		 * @return array          The query string as an array
 		 */
 		public static function query_array(&$object) {
-			$return = array();
 			parse_str($object->query, $return);
-			return $return;
+			return (array) $return;
 		}
 		
 	}
