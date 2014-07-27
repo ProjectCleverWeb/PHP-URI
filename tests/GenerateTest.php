@@ -202,4 +202,108 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('example.com', $uri1());
 	}
+	
+	/**
+	 * @test
+	 * @depends Reset
+	 */
+	public function Sudo_Magic_Constants() {
+		// Test both when there is and isn't pre-existing data
+		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		$uri2 = new \uri('google.com');
+		
+		// Check For Errors
+		$this->assertEmpty($uri1->error);
+		$this->assertEmpty($uri2->error);
+		
+		// __get() (parser checks normal __get())
+		$this->assertSame(NULL, @$uri1->does_not_exist);
+		
+		// __set()
+		$uri2->scheme_name = 'http';
+		$this->assertEquals('http://google.com', $uri2->str());
+		$uri2->scheme_symbols = ':';
+		$this->assertEquals('http:google.com', $uri2->str());
+		$uri2->scheme = 'https://';
+		$this->assertEquals('https://google.com', $uri2->str());
+		$uri2->user = 'username';
+		$this->assertEquals('https://username@google.com', $uri2->str());
+		$uri2->pass = 'password';
+		$this->assertEquals('https://username:password@google.com', $uri2->str());
+		$uri2->host = 'facebook.com';
+		$this->assertEquals('https://username:password@facebook.com', $uri2->str());
+		$uri2->port = '8181';
+		$this->assertEquals('https://username:password@facebook.com:8181', $uri2->str());
+		$uri2->path = '/index.php';
+		$this->assertEquals('https://username:password@facebook.com:8181/index.php', $uri2->str());
+		$uri2->query = 'q=1';
+		$this->assertEquals('https://username:password@facebook.com:8181/index.php?q=1', $uri2->str());
+		$uri2->fragment = 'frag';
+		$this->assertEquals('https://username:password@facebook.com:8181/index.php?q=1#frag', $uri2->str());
+		
+		$uri2->reset();
+		
+		@$uri1->does_not_exist = 'nothing';
+		$this->assertSame(NULL, @$uri1->does_not_exist);
+		
+		// __isset()
+		$this->assertTrue(isset($uri1->scheme_name));
+		$this->assertFalse(isset($uri2->scheme_name));
+		$this->assertTrue(isset($uri1->scheme_symbols));
+		$this->assertFalse(isset($uri2->scheme_symbols));
+		$this->assertTrue(isset($uri1->scheme));
+		$this->assertFalse(isset($uri2->scheme));
+		$this->assertTrue(isset($uri1->user));
+		$this->assertFalse(isset($uri2->user));
+		$this->assertTrue(isset($uri1->pass));
+		$this->assertFalse(isset($uri2->pass));
+		$this->assertTrue(isset($uri1->host));
+		$this->assertTrue(isset($uri2->host));
+		$this->assertTrue(isset($uri1->port));
+		$this->assertFalse(isset($uri2->port));
+		$this->assertTrue(isset($uri1->path));
+		$this->assertFalse(isset($uri2->path));
+		$this->assertTrue(isset($uri1->query));
+		$this->assertFalse(isset($uri2->query));
+		$this->assertTrue(isset($uri1->fragment));
+		$this->assertFalse(isset($uri2->fragment));
+		
+		// __unset()
+		unset($uri1->scheme_name);
+		$this->assertSame('', $uri1->scheme_name);
+		$uri1->reset();
+		unset($uri1->scheme_symbols);
+		$this->assertSame('', $uri1->scheme_symbols);
+		$uri1->reset();
+		unset($uri1->scheme);
+		$this->assertSame('', $uri1->scheme);
+		$uri1->reset();
+		unset($uri1->user);
+		$this->assertSame('', $uri1->user);
+		$uri1->reset();
+		unset($uri1->pass);
+		$this->assertSame('', $uri1->pass);
+		$uri1->reset();
+		error_reporting(0);
+		unset($uri1->host); // Language Construct
+		error_reporting(-1);
+		$this->assertEquals('example.com', $uri1->host);
+		unset($uri1->port);
+		$this->assertSame('', $uri1->port);
+		$uri1->reset();
+		unset($uri1->path);
+		$this->assertSame('', $uri1->path);
+		$uri1->reset();
+		unset($uri1->query);
+		$this->assertSame('', $uri1->query);
+		$uri1->reset();
+		unset($uri1->fragment);
+		$this->assertSame('', $uri1->fragment);
+		$uri1->reset();
+		
+		error_reporting(0);
+		unset($uri1->does_not_exist); // Language Construct
+		error_reporting(-1);
+		$this->assertSame(NULL, @$uri1->does_not_exist);
+	}
 }
