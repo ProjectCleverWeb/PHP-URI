@@ -726,7 +726,7 @@ namespace uri {
 		 */
 		public static function fragment(&$object, $action, $str) {
 			if (isset($str[0]) && $str[0] == '#') {
-				unset($str[0]);
+				$str = substr($str, 1);
 			}
 			$str = urlencode($str);
 			
