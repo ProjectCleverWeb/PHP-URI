@@ -84,10 +84,10 @@ namespace uri {
 		 * @param string $input The URI to parse.
 		 */
 		public function __construct($input) {
-			$this->input  = $input;
+			$this->input = $input;
 			$this->object = \uri\parser::parse($input);
 			
-			if (!empty($this->object->host)) {
+			if (is_object($this->object)) {
 				\uri\generate::authority($this->object);
 				\uri\generate::aliases($this->object);
 				
@@ -146,7 +146,18 @@ namespace uri {
 				\uri\generate::authority($this->object);
 				return $this->object->$name;
 			} else {
-				$this->_undefined_err(debug_backtrace(), $name);
+				$trace = debug_backtrace();
+				trigger_error(
+					sprintf(
+						'Undefined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be fetched in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
+						$name,
+						$trace[0]['file'],
+						$trace[0]['line']
+					),
+					E_USER_NOTICE
+				);
 				return NULL;
 			}
 		}
@@ -165,7 +176,18 @@ namespace uri {
 				\uri\actions::modify($this->object, 'replace', $name, $value);
 				return $value;
 			} else {
-				$this->_forbidden_err(debug_backtrace(), $name);
+				$trace = debug_backtrace();
+				trigger_error(
+					sprintf(
+						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be set in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
+						$name,
+						$trace[0]['file'],
+						$trace[0]['line']
+					),
+					E_USER_NOTICE
+				);
 				return NULL;
 			}
 		}
@@ -196,9 +218,31 @@ namespace uri {
 				\uri\actions::modify($this->object, 'replace', $name, '');
 				return TRUE;
 			} elseif (isset($this->object->$name)) {
-				$this->_forbidden_err(debug_backtrace(), $name);
+				$trace = debug_backtrace();
+				trigger_error(
+					sprintf(
+						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
+						$name,
+						$trace[0]['file'],
+						$trace[0]['line']
+					),
+					E_USER_NOTICE
+				);
 			} else {
-				$this->_undifined_err(debug_backtrace(), $name);
+				$trace = debug_backtrace();
+				trigger_error(
+					sprintf(
+						'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
+						$trace[0]['class'],
+						$trace[0]['function'],
+						$name,
+						$trace[0]['file'],
+						$trace[0]['line']
+					),
+					E_USER_NOTICE
+				);
 			}
 			return FALSE;
 		}
@@ -334,46 +378,6 @@ namespace uri {
 		public function reset() {
 			$this->__construct($this->input);
 		}
-		
-		/**
-		 * A forbidden property has been called. trigger an error
-		 * 
-		 * @param  array $trace Result of debug_backtrace()
-		 * @return void
-		 */
-		private function _forbidden_err($trace, $name) {
-			trigger_error(
-				sprintf(
-					'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-					$trace[0]['class'],
-					$trace[0]['function'],
-					$name,
-					$trace[0]['file'],
-					$trace[0]['line']
-				),
-				E_USER_NOTICE
-			);
-		}
-		
-		/**
-		 * A unknown property has been called. trigger an error
-		 * 
-		 * @param  array $trace Result of debug_backtrace()
-		 * @return void
-		 */
-		private function _undifined_err($trace, $name) {
-			trigger_error(
-				sprintf(
-					'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-					$trace[0]['class'],
-					$trace[0]['function'],
-					$name,
-					$trace[0]['file'],
-					$trace[0]['line']
-				),
-				E_USER_NOTICE
-			);
-		}
 	}
 	
 	
@@ -410,7 +414,7 @@ namespace uri {
 			
 			// Could not be parsed correctly
 			if (empty($parsed)) {
-				$parsed = array_fill(1, 10, '');
+				return FALSE;
 			}
 			
 			return (object) array(
