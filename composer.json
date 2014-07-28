@@ -6,7 +6,8 @@
 		"uri",
 		"url",
 		"address",
-		"web"
+		"web",
+		"parse_url"
 	],
 	"homepage": "https://github.com/ProjectCleverWeb/PHP-URI",
 	"type": "library",
