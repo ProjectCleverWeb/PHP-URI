@@ -1,7 +1,7 @@
 {
 	"name": "projectcleverweb/php-uri",
 	"description": "A PHP library for working with URI's. Requires PHP 5.3.7 or later. Replaces and extends PHP's parse_url().",
-	"version": "1.0.0",
+	"version": "1.0.0-RC2",
 	"keywords": [
 		"uri",
 		"url",
