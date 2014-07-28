@@ -338,7 +338,9 @@ namespace uri {
 		/**
 		 * A unknown/forbidden property has been called. trigger an error
 		 * 
-		 * @param  array $trace Result of debug_backtrace()
+		 * @param  string $type  Type of error
+		 * @param  array  $trace The output from debug_backtrace()
+		 * @param  string $name  Property name
 		 * @return void
 		 */
 		private function _err($type, $trace, $name) {
@@ -384,7 +386,7 @@ namespace uri {
 		 * Wrapper function for parsing a string into a URI object
 		 * 
 		 * @param  string $uri  The input to be parsed as a URI
-		 * @return object|false If the input can be correctly parsed, then it returns an object, FALSE otherwise
+		 * @return object If the input can be correctly parsed, then it returns an object with at least the 'host' populated
 		 */
 		public static function parse($uri) {
 			if (!is_string($uri)) {
@@ -865,7 +867,7 @@ namespace uri {
 				'array' => array()
 			);
 			
-			$info = pathinfo($object->path) + $defaults;
+			$info          = pathinfo($object->path) + $defaults;
 			$info['array'] = array_values(array_filter(explode('/', $object->path)));
 			ksort($info);
 			

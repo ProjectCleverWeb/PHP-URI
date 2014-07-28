@@ -1,7 +1,6 @@
-<phpunit>
+<phpunit bootstrap="uri.lib.php">
 	<testsuites>
 		<testsuite name="PHP URI">
-			<file>uri.lib.php</file>
 			<file>tests/ParseTest.php</file>
 			<file>tests/ErrorsTest.php</file>
 			<file>tests/GenerateTest.php</file>
