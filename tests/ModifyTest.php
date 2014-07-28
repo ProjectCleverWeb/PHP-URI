@@ -107,6 +107,11 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 			'http://user:pass@example.com:777/path/to/script.php?query=str#fragment',
 			$uri2->append('SCHEME', '//')
 		);
+		// Check Alias
+		$this->assertEquals(
+			'git:example.com',
+			$uri1->replace('PROTOCOL', 'git:')
+		);
 	}
 	
 	/**
@@ -147,6 +152,11 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 			'https://johnd:pass@example.com:777/path/to/script.php?query=str#fragment',
 			$uri2->append('USER', 'd')
 		);
+		// Check Alias
+		$this->assertEquals(
+			'dude@example.com',
+			$uri1->replace('USERNAME', 'dude')
+		);
 	}
 	
 	/**
@@ -181,6 +191,11 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 			'https://user:12345@example.com:777/path/to/script.php?query=str#fragment',
 			$uri2->append('PASS', '5')
 		);
+		// Check Alias
+		$this->assertEquals(
+			'jdoe:abc123@example.com',
+			$uri1->replace('PASSWORD', 'abc123')
+		);
 	}
 	
 	/**
@@ -214,6 +229,15 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			'https://user:pass@sample.co.uk:777/path/to/script.php?query=str#fragment',
 			$uri2->append('HOST', '.uk')
+		);
+		// Check Aliases
+		$this->assertEquals(
+			'facebook.com',
+			$uri1->replace('DOMAIN', 'facebook.com')
+		);
+		$this->assertEquals(
+			'example.com',
+			$uri1->replace('FQDN', 'example.com')
 		);
 	}
 	
