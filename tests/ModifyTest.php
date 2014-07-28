@@ -213,6 +213,10 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		
 		// Check Replace
 		$this->assertEquals(
+			'192.168.0.1',
+			$uri1->replace('HOST', '192.168.0.1')
+		);
+		$this->assertEquals(
 			'google.com',
 			$uri1->replace('HOST', 'google.com')
 		);
@@ -255,6 +259,10 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEmpty($uri2->error);
 		
 		// Check Replace
+		$this->assertEquals(
+			'example.com:999',
+			$uri1->replace('PORT', ':999')
+		);
 		$this->assertEquals(
 			'example.com:1234',
 			$uri1->replace('PORT', '1234')
@@ -324,6 +332,10 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		
 		// Check Replace
 		$this->assertEquals(
+			'example.com?my=query',
+			$uri1->replace('QUERY', '?my=query')
+		);
+		$this->assertEquals(
 			'example.com?r=1',
 			$uri1->replace('QUERY', 'r=1')
 		);
@@ -357,6 +369,10 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEmpty($uri2->error);
 		
 		// Check Replace
+		$this->assertEquals(
+			'example.com#top',
+			$uri1->replace('FRAGMENT', '#top')
+		);
 		$this->assertEquals(
 			'example.com#header',
 			$uri1->replace('FRAGMENT', 'header')

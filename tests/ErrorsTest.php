@@ -36,4 +36,39 @@ class ErrorsTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(FALSE, $uri1->prepend('invalid', ''));
 		$this->assertEquals(FALSE, $uri1->replace('invalid', ''));
 	}
+	
+	/**
+	 * @test
+	 * @depends URI\ParseTest::Advanced_Parsing
+	 */
+	public function Invalid_Scheme() {
+		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		
+		// Invalid section to modify;
+		$this->assertEquals(FALSE, $uri1->replace('SCHEME_NAME', 'invalid/'));
+		$this->assertEquals(FALSE, $uri1->replace('SCHEME_SYMBOLS', 'invalid'));
+		$this->assertEquals(FALSE, $uri1->replace('SCHEME', 'invalid_scheme'));
+	}
+	
+	/**
+	 * @test
+	 * @depends URI\ParseTest::Advanced_Parsing
+	 */
+	public function Invalid_Host() {
+		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		
+		// Invalid section to modify;
+		$this->assertEquals(FALSE, $uri1->replace('HOST', 'invalid'));
+	}
+	
+	/**
+	 * @test
+	 * @depends URI\ParseTest::Advanced_Parsing
+	 */
+	public function Invalid_Port() {
+		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		
+		// Invalid section to modify;
+		$this->assertEquals(FALSE, $uri1->replace('PORT', 'invalid'));
+	}
 }
