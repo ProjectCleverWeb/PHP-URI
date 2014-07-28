@@ -173,7 +173,7 @@ namespace uri {
 		 */
 		public function __set($name, $value) {
 			if (isset($this->object->$name)) {
-				\uri\modify::modify($this->object, 'replace', $name, $value);
+				\uri\actions::modify($this->object, 'replace', $name, $value);
 				return $value;
 			} else {
 				$trace = debug_backtrace();
@@ -215,7 +215,7 @@ namespace uri {
 		 */
 		public function __unset($name) {
 			if (isset($this->object->$name) && $name != 'host') {
-				\uri\modify::modify($this->object, 'replace', $name, '');
+				\uri\actions::modify($this->object, 'replace', $name, '');
 				return TRUE;
 			} elseif (isset($this->object->$name)) {
 				$trace = debug_backtrace();
@@ -343,7 +343,7 @@ namespace uri {
 		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 		 */
 		public function replace($section, $str) {
-			return \uri\modify::modify($this->object, 'replace', $section, $str);
+			return \uri\actions::modify($this->object, 'replace', $section, $str);
 		}
 		
 		/**
@@ -355,7 +355,7 @@ namespace uri {
 		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 		 */
 		public function prepend($section, $str) {
-			return \uri\modify::modify($this->object, 'prepend', $section, $str);
+			return \uri\actions::modify($this->object, 'prepend', $section, $str);
 		}
 		
 		/**
@@ -367,7 +367,7 @@ namespace uri {
 		 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 		 */
 		public function append($section, $str) {
-			return \uri\modify::modify($this->object, 'append', $section, $str);
+			return \uri\actions::modify($this->object, 'append', $section, $str);
 		}
 		
 		/**
@@ -479,51 +479,6 @@ namespace uri {
 		/*** Methods ***/
 		
 		/**
-		 * Acts as universal alias to the rest of the class, ensuring the call is
-		 * viable.
-		 * 
-		 * @param  object $object  The object to modify
-		 * @param  string $action  The action to take
-		 * @param  string $section The section of the object to modify
-		 * @param  string $str     The modfication
-		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
-		 */
-		public static function modify(&$object, $action, $section, $str) {
-			settype($section, 'string');
-			settype($str, 'string');
-			$section = strtolower($section);
-			
-			if (is_callable(array('\\uri\\modify', $section))) {
-				return call_user_func_array(array('\\uri\\modify', $section), array(&$object, $action, $str));
-			} else {
-				return FALSE;
-			}
-		}
-		
-		/**
-		 * Handles which action is taken; since there are only 3 very simple
-		 * actions, it makes sense to put them all in 1 method.
-		 * 
-		 * @param  object $object  The object to modify
-		 * @param  string $action  The action to take
-		 * @param  string $section The section of the object to modify
-		 * @param  string $str     The modfication
-		 * @return void
-		 */
-		private static function action_callback(&$object, $action, $section, $str) {
-			switch ($action) {
-				case 'replace':
-					$object->$section = $str;
-					break;
-				case 'prepend':
-					$object->$section = $str.$object->$section;
-					break;
-				case 'append':
-					$object->$section = $object->$section.$str;
-			}
-		}
-		
-		/**
 		 * Modfies the Scheme Name
 		 * 
 		 * @param  object $object  The object to modify
@@ -533,7 +488,7 @@ namespace uri {
 		 */
 		public static function scheme_name(&$object, $action, $str) {
 			$org = $object->scheme_name;
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			if (!(preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name) || empty($str))) {
 				$object->scheme_name = $org;
 				return FALSE;
@@ -554,7 +509,7 @@ namespace uri {
 		 */
 		public static function scheme_symbols(&$object, $action, $str) {
 			$org = $object->scheme_symbols;
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			if (!(preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols) || empty($str))) {
 				$object->scheme_symbols = $org;
 				return FALSE;
@@ -573,7 +528,7 @@ namespace uri {
 		 */
 		public static function scheme(&$object, $action, $str) {
 			$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			if (empty($object->scheme)) {
 				$object->scheme = $object->scheme_name = $object->scheme_symbols = '';
 			} else {
@@ -619,7 +574,7 @@ namespace uri {
 		public static function user(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
@@ -646,7 +601,7 @@ namespace uri {
 		public static function pass(&$object, $action, $str) {
 			$str = rawurlencode($str);
 			
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
@@ -672,7 +627,7 @@ namespace uri {
 		 */
 		public static function host(&$object, $action, $str) {
 			$org = $object->host;
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			if ((
 				!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
 				&&
@@ -722,7 +677,7 @@ namespace uri {
 			if (isset($str[0]) && $str[0] == ':') {
 				$str = substr($str, 1);
 			}
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			if (!(preg_match('/\A[0-9]{0,5}\Z/', $object->port) || empty($str))) {
 				$object->port = $org;
 				return FALSE;
@@ -740,7 +695,7 @@ namespace uri {
 		 * @return string          Returns the resulting URI on success, FALSE otherwise
 		 */
 		public static function path(&$object, $action, $str) {
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
@@ -757,7 +712,7 @@ namespace uri {
 				$str = substr($str, 1);
 			}
 			
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
 		
@@ -775,9 +730,64 @@ namespace uri {
 			}
 			$str = urlencode($str);
 			
-			self::action_callback($object, $action, __FUNCTION__, $str);
+			\uri\actions::callback($object, $action, __FUNCTION__, $str);
 			return \uri\generate::string($object);
 		}
+	}
+	
+	
+	
+	/**
+	 * The Actions Class
+	 * 
+	 * This class handlles the available actions
+	 */
+	class actions {
+		
+		/**
+		 * Acts as universal alias to the modify class, ensuring the call is viable
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return string|false    Returns the resulting URI on success, FALSE otherwise
+		 */
+		public static function modify(&$object, $action, $section, $str) {
+			settype($section, 'string');
+			settype($str, 'string');
+			$section = strtolower($section);
+			
+			if (is_callable(array('\\uri\\modify', $section))) {
+				return call_user_func_array(array('\\uri\\modify', $section), array(&$object, $action, $str));
+			} else {
+				return FALSE;
+			}
+		}
+		
+		/**
+		 * Handles which action is taken; since there are only 3 very simple
+		 * actions, it makes sense to put them all in 1 method.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $action  The action to take
+		 * @param  string $section The section of the object to modify
+		 * @param  string $str     The modfication
+		 * @return void
+		 */
+		public static function callback(&$object, $action, $section, $str) {
+			switch ($action) {
+				case 'replace':
+					$object->$section = $str;
+					break;
+				case 'prepend':
+					$object->$section = $str.$object->$section;
+					break;
+				case 'append':
+					$object->$section = $object->$section.$str;
+			}
+		}
+		
 	}
 	
 	
