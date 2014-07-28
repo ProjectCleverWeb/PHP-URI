@@ -84,10 +84,10 @@ namespace uri {
 		 * @param string $input The URI to parse.
 		 */
 		public function __construct($input) {
-			$this->input = $input;
+			$this->input  = $input;
 			$this->object = \uri\parser::parse($input);
 			
-			if (is_object($this->object)) {
+			if (!empty($this->object->host)) {
 				\uri\generate::authority($this->object);
 				\uri\generate::aliases($this->object);
 				
@@ -146,18 +146,7 @@ namespace uri {
 				\uri\generate::authority($this->object);
 				return $this->object->$name;
 			} else {
-				$trace = debug_backtrace();
-				trigger_error(
-					sprintf(
-						'Undefined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be fetched in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-						$trace[0]['class'],
-						$trace[0]['function'],
-						$name,
-						$trace[0]['file'],
-						$trace[0]['line']
-					),
-					E_USER_NOTICE
-				);
+				$this->_err('UNDEFINED', debug_backtrace(), $name);
 				return NULL;
 			}
 		}
@@ -172,22 +161,11 @@ namespace uri {
 		 * @return string|null   The new value of the variable, or NULL if it can't be accessed
 		 */
 		public function __set($name, $value) {
-			if (isset($this->object->$name)) {
+			if (isset($this->object->$name) && $name != 'authority') {
 				\uri\actions::modify($this->object, 'replace', $name, $value);
 				return $value;
 			} else {
-				$trace = debug_backtrace();
-				trigger_error(
-					sprintf(
-						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be set in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-						$trace[0]['class'],
-						$trace[0]['function'],
-						$name,
-						$trace[0]['file'],
-						$trace[0]['line']
-					),
-					E_USER_NOTICE
-				);
+				$this->_err('FORBIDDEN', debug_backtrace(), $name);
 				return NULL;
 			}
 		}
@@ -214,35 +192,13 @@ namespace uri {
 		 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
 		 */
 		public function __unset($name) {
-			if (isset($this->object->$name) && $name != 'host') {
+			if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
 				\uri\actions::modify($this->object, 'replace', $name, '');
 				return TRUE;
 			} elseif (isset($this->object->$name)) {
-				$trace = debug_backtrace();
-				trigger_error(
-					sprintf(
-						'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-						$trace[0]['class'],
-						$trace[0]['function'],
-						$name,
-						$trace[0]['file'],
-						$trace[0]['line']
-					),
-					E_USER_NOTICE
-				);
+				$this->_err('FORBIDDEN', debug_backtrace(), $name);
 			} else {
-				$trace = debug_backtrace();
-				trigger_error(
-					sprintf(
-						'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered',
-						$trace[0]['class'],
-						$trace[0]['function'],
-						$name,
-						$trace[0]['file'],
-						$trace[0]['line']
-					),
-					E_USER_NOTICE
-				);
+				$this->_err('UNDEFINED', debug_backtrace(), $name);
 			}
 			return FALSE;
 		}
@@ -378,6 +334,31 @@ namespace uri {
 		public function reset() {
 			$this->__construct($this->input);
 		}
+		
+		/**
+		 * A unknown/forbidden property has been called. trigger an error
+		 * 
+		 * @param  array $trace Result of debug_backtrace()
+		 * @return void
+		 */
+		private function _err($type, $trace, $name) {
+			$fmt = 'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
+			if ($type == 'FORBIDDEN') {
+				$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
+			}
+			
+			trigger_error(
+				sprintf(
+					$fmt,
+					$trace[0]['class'],
+					$trace[0]['function'],
+					$name,
+					$trace[0]['file'],
+					$trace[0]['line']
+				),
+				E_USER_NOTICE
+			);
+		}
 	}
 	
 	
@@ -414,7 +395,7 @@ namespace uri {
 			
 			// Could not be parsed correctly
 			if (empty($parsed)) {
-				return FALSE;
+				$parsed = array_fill(1, 10, '');
 			}
 			
 			return (object) array(
