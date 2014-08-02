@@ -326,6 +326,35 @@ namespace uri {
 			return \uri\actions::modify($this->object, 'append', $section, $str);
 		}
 		
+		
+		public function query_add($key, $value) {
+			return \uri\query::add($this->object, $key, $value);
+		}
+		
+		
+		public function query_replace($key, $value) {
+			return \uri\query::replace($this->object, $key, $value);
+		}
+		
+		
+		public function query_remove($key) {
+			return \uri\query::remove($this->object, $key);
+		}
+		
+		
+		public function query_exists($key) {
+			return \uri\query::exists($this->object, $key);
+		}
+		
+		
+		public function query_get($key) {
+			return \uri\query::get($this->object, $key);
+		}
+		
+		public function query_rename($key, $new_key) {
+			return \uri\query::rename($this->object, $key, $new_key);
+		}
+		
 		/**
 		 * Resets the current object to its initial state
 		 * 
@@ -895,7 +924,40 @@ namespace uri {
 		
 		/*** Methods ***/
 		
+		public static function add(&$object, $key, $value) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
 		
+		
+		public static function replace(&$object, $key, $value) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
+		
+		
+		public static function remove(&$object, $key) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
+		
+		
+		public static function exists(&$object, $key) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
+		
+		
+		public static function get(&$object, $key) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
+		
+		
+		public static function rename(&$object, $key, $new_key) {
+			$qarray = \uri\generate::query_array($object);
+			
+		}
 		
 		
 	}
