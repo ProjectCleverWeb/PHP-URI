@@ -45,7 +45,7 @@ namespace uri {
 		These variables can be accesed from within the class, but as far as the rest
 		of PHP is concerned, these variables simply doesn't exist.
 		*/
-		private $object;
+		public $object;
 		private $chain;
 		
 		/*
@@ -134,21 +134,6 @@ namespace uri {
 		 */
 		public function __invoke() {
 			return \uri\generate::string($this->object);
-		}
-		
-		/**
-		 * Because of how references are created within this class, cloning doesn't
-		 * work as expected. This magic method resolves that issue.
-		 * 
-		 * @return string The current URI as a string
-		 */
-		public function __clone() {
-			// recreate this class in its' current state
-			$new = new \uri(\uri\generate::string($this->object));
-			// give it the same origin
-			$new->input = $this->input;
-			// now send the new instance back
-			return $new;
 		}
 		
 		/**
