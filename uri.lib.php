@@ -330,38 +330,80 @@ namespace uri {
 			return \uri\actions::modify($this->object, 'append', $section, $str);
 		}
 		
-		
+		/**
+		 * Adds query var to the query string if it is not already set and returns
+		 * TRUE. Otherwise it returns FALSE
+		 * 
+		 * @param  string $key   The key to add
+		 * @param  string $value The value of $key
+		 * @return boolean       TRUE on success, FALSE otherwise
+		 */
 		public function query_add($key, $value) {
 			return \uri\query::add($this->object, $key, $value);
 		}
 		
-		
+		/**
+		 * Adds query var to the query string regardless if it already set or not
+		 * 
+		 * @param  string $key   The key to replace
+		 * @param  string $value The value of $key
+		 * @return void
+		 */
 		public function query_replace($key, $value) {
-			return \uri\query::replace($this->object, $key, $value);
+			\uri\query::replace($this->object, $key, $value);
 		}
 		
-		
+		/**
+		 * Removes $key from the query if it exists
+		 * 
+		 * @param  string $key The key to remove
+		 * @return void
+		 */
 		public function query_remove($key) {
-			return \uri\query::remove($this->object, $key);
+			\uri\query::remove($this->object, $key);
 		}
 		
-		
+		/**
+		 * Checks if $key exists in the query
+		 * 
+		 * @param  string $key The key to search for
+		 * @return boolean     TRUE if the $key exists, FALSE otherwise
+		 */
 		public function query_exists($key) {
 			return \uri\query::exists($this->object, $key);
 		}
 		
-		
-		
+		/**
+		 * Gets a specific var's value from the query. It is HIGHLY recommended
+		 * that you use query_arr() instead, when fetching multiple values from
+		 * the same query string. Returns NULL if $key does not exist.
+		 * 
+		 * @param  string $key The key to get
+		 * @return mixed|null  The value of $key, or NULL if it does not exist.
+		 */
 		public function query_get($key) {
 			return \uri\query::get($this->object, $key);
 		}
 		
-		
+		/**
+		 * Renames a specific $key within the query. If the key exists within query
+		 * string and is successfully renamed, the TRUE is returned. Otherwise
+		 * FALSE is returned.
+		 * 
+		 * @param  string $key     The key to rename
+		 * @param  string $new_key The new name of $key
+		 * @return boolean         TRUE on success, FALSE otherwise
+		 */
 		public function query_rename($key, $new_key) {
 			return \uri\query::rename($this->object, $key, $new_key);
 		}
 		
-		
+		/**
+		 * Returns the chain class, which allows events to be chained together
+		 * rather than the reference being called several times. see \uri\chain
+		 * 
+		 * @return object The chain class
+		 */
 		public function chain() {
 			return $this->chain;
 		}
@@ -929,48 +971,115 @@ namespace uri {
 	
 	
 	/**
+	 * The Query Class
 	 * 
+	 * This class is resposible for checking and taking actions on the query
+	 * string. It should be noted that this class relies heavily on
+	 * generate::query_arr() and that excessive modification to the query
+	 * string should be done manually through generate::query_arr() and then
+	 * \uri\main::$query should be set (use http_build_query()).
 	 */
 	class query {
 		
 		/*** Methods ***/
 		
+		/**
+		 * Adds query var to the query string if it is not already set and returns
+		 * TRUE. Otherwise it returns FALSE
+		 * 
+		 * @param  object $object The object to modify
+		 * @param  string $key    The key to add
+		 * @param  string $value  The value of $key
+		 * @return boolean        TRUE on success, FALSE otherwise
+		 */
 		public static function add(&$object, $key, $value) {
 			$qarray = \uri\generate::query_array($object);
-			
+			if (!isset($qarray[$key])) {
+				$qarray[$key] = $value;
+				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+				return TRUE;
+			}
+			return FALSE;
 		}
 		
-		
+		/**
+		 * Adds query var to the query string regardless if it already set or not
+		 * 
+		 * @param  object $object The object to modify
+		 * @param  string $key    The key to replace
+		 * @param  string $value  The value of $key
+		 * @return void
+		 */
 		public static function replace(&$object, $key, $value) {
 			$qarray = \uri\generate::query_array($object);
-			
+			$qarray[$key] = $value;
+			\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
 		}
 		
-		
+		/**
+		 * Removes $key from the query if it exists
+		 * 
+		 * @param  object $object The object to modify
+		 * @param  string $key    The key to remove
+		 * @return void
+		 */
 		public static function remove(&$object, $key) {
 			$qarray = \uri\generate::query_array($object);
-			
+			if (isset($qarray[$key])) {
+				unset($qarray[$key]);
+				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+			}
 		}
 		
-		
+		/**
+		 * Checks if $key exists in the query
+		 * 
+		 * @param  object $object The object to use
+		 * @param  string $key    The key to search for
+		 * @return boolean        TRUE if the $key exists, FALSE otherwise
+		 */
 		public static function exists(&$object, $key) {
 			$qarray = \uri\generate::query_array($object);
-			
+			return isset($qarray[$key]);
 		}
 		
-		
+		/**
+		 * Gets a specific var's value from the query. It is HIGHLY recommended
+		 * that you use query_arr() instead, when fetching multiple values from
+		 * the same query string. Returns NULL if $key does not exist.
+		 * 
+		 * @param  object $object The object to use
+		 * @param  string $key    The key to get
+		 * @return mixed|null     The value of $key, or NULL if it does not exist.
+		 */
 		public static function get(&$object, $key) {
 			$qarray = \uri\generate::query_array($object);
-			
+			if (isset($qarray[$key])) {
+				return $qarray[$key];
+			}
+			return NULL;
 		}
 		
-		
+		/**
+		 * Renames a specific $key within the query. If the key exists within query
+		 * string and is successfully renamed, the TRUE is returned. Otherwise
+		 * FALSE is returned.
+		 * 
+		 * @param  object $object  The object to modify
+		 * @param  string $key     The key to rename
+		 * @param  string $new_key The new name of $key
+		 * @return boolean         TRUE on success, FALSE otherwise
+		 */
 		public static function rename(&$object, $key, $new_key) {
 			$qarray = \uri\generate::query_array($object);
-			
+			if (isset($qarray[$key])) {
+				$qarray[$new_key] = $qarray[$key];
+				unset($qarray[$key]);
+				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+				return TRUE;
+			}
+			return FALSE;
 		}
-		
-		
 	}
 	
 	/**
@@ -1046,7 +1155,51 @@ namespace uri {
 			return $this;
 		}
 		
+		/**
+		 * Chainable alias to \uri\main::query_add() within the current instance
+		 * 
+		 * @param  string $key   The key to add
+		 * @param  string $value The value of $key
+		 * @return boolean       TRUE on success, FALSE otherwise
+		 */
+		public function query_add($key, $value) {
+			\uri\query::add($this->object, $key, $value);
+			return $this;
+		}
 		
+		/**
+		 * Chainable alias to \uri\main::query_replace() within the current instance
+		 * 
+		 * @param  string $key   The key to replace
+		 * @param  string $value The value of $key
+		 * @return void
+		 */
+		public function query_replace($key, $value) {
+			\uri\query::replace($this->object, $key, $value);
+			return $this;
+		}
 		
+		/**
+		 * Chainable alias to \uri\main::query_remove() within the current instance
+		 * 
+		 * @param  string $key The key to remove
+		 * @return void
+		 */
+		public function query_remove($key) {
+			\uri\query::remove($this->object, $key);
+			return $this;
+		}
+		
+		/**
+		 * Chainable alias to \uri\main::query_rename() within the current instance
+		 * 
+		 * @param  string $key     The key to rename
+		 * @param  string $new_key The new name of $key
+		 * @return boolean         TRUE on success, FALSE otherwise
+		 */
+		public function query_rename($key, $new_key) {
+			\uri\query::rename($this->object, $key, $new_key);
+			return $this;
+		}
 	}
 }
