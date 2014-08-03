@@ -73,7 +73,7 @@ echo $uri1;
 ```
 
 **Output:**
-```
+```html
 sftp://admin:secure-pass-123@my-server.com:22/public_html
 ```
 
