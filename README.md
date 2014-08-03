@@ -11,7 +11,7 @@ Licensed under the MIT license
 
 Add this to your composer.json file
 
-```
+```json
 "require": {
 	"projectcleverweb/php-uri":"~1.0"
 }
@@ -48,7 +48,7 @@ echo $secure;
 ```
 
 **Output:**
-```
+```html
 http://www.example.com/foo/bar.baz?rand=6
 http://example.com/path/to/file.ext
 https://example.com/path/to/file.ext#Checkout
@@ -107,7 +107,7 @@ $login = array(
 ```
 
 **Output:**
-```
+```html
 Does not use SSL
 /var/www/path/to/file.ext
 <a href="http://example.com/path/to/file.ext?q=1">example.com/path/to/file.ext</a>
@@ -140,7 +140,7 @@ printf(
 ```
 
 **Output:**
-```
+```html
 git@github.com:ProjectCleverWeb/PHP-URI.git
 git@gitlab.com:ProjectCleverWeb/PHP-URI.git
 git@bitbucket.org:ProjectCleverWeb/PHP-URI.git
