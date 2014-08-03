@@ -1,13 +1,13 @@
-#PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](https://packagist.org/packages/projectcleverweb/php-uri)
+# PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](https://packagist.org/packages/projectcleverweb/php-uri)
 
 A PHP library for working with URI's. Requires PHP `5.3.7` or later. Replaces and extends PHP's `parse_url()`.
 
 Copyright &copy; 2014 Nicholas Jordon - All Rights Reserved <br>
 Licensed under the MIT license
 
-###Installing The Library
+### Installing The Library
 
-####Composer:
+#### Composer:
 
 Add this to your composer.json file
 
@@ -17,16 +17,16 @@ Add this to your composer.json file
 }
 ```
 
-####Manual:
+#### Manual:
 
 **Download:**<br>
 [![Latest Stable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/stable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/releases/tag/1.0.0) [![Latest Unstable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/unstable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/archive/master.zip)
 
 Just include the `uri.lib.php` file somewhere in your application.
 
-##Examples
+## Examples
 
-####Example #1: String Operations
+#### Example #1: String Operations
 
 ```php
 $uri = new uri('http://example.com/path/to/file.ext');
@@ -54,7 +54,7 @@ http://example.com/path/to/file.ext
 https://example.com/path/to/file.ext#Checkout
 ```
 
-####Example #2: Daisy Chaining Operations
+#### Example #2: Daisy Chaining Operations
 
 Need to change a lot while keeping anything extra intact? Chain it.
 
@@ -77,7 +77,7 @@ echo $uri1;
 sftp://admin:secure-pass-123@my-server.com:22/public_html
 ```
 
-####Example #3: Information Gathering
+#### Example #3: Information Gathering
 
 ```php
 $uri = new uri('http://example.com/path/to/file.ext?q=1');
@@ -113,7 +113,7 @@ Does not use SSL
 <a href="http://example.com/path/to/file.ext?q=1">example.com/path/to/file.ext</a>
 ```
 
-####Example #4: Works With A Wide Range Of URIs
+#### Example #4: Works With A Wide Range Of URIs
 
 Works perfectly with email, skype, and ssh URIs. The parser is based directly off the URI standard, so it will work well with uncommon and new URI types.
 
@@ -149,7 +149,7 @@ git@bitbucket.org:ProjectCleverWeb/PHP-URI.git
 ```
 
 
-##License
+## License
 
 >The MIT License (MIT)
 >
