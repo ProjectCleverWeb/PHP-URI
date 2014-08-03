@@ -40,12 +40,13 @@ namespace uri {
 		public $input;
 		
 		/*
-		"Ghost" Object Variable
+		"Ghost" Object Variables
 		=======================
-		This variable can be accesed from within the class, but as far as the rest
-		of PHP is concerned, this variable simply doesn't exist.
+		These variables can be accesed from within the class, but as far as the rest
+		of PHP is concerned, these variables simply doesn't exist.
 		*/
 		private $object;
+		private $chain;
 		
 		/*
 		Sudo-Private Variables
@@ -90,6 +91,9 @@ namespace uri {
 			if (!empty($this->object->host)) {
 				\uri\generate::authority($this->object);
 				\uri\generate::aliases($this->object);
+				
+				// Enable Chain Events
+				$this->chain = new \uri\chain($this->object);
 				
 				// References required for Sudo-Private Variables
 				$this->authority      = &$this->object->authority;
@@ -347,12 +351,19 @@ namespace uri {
 		}
 		
 		
+		
 		public function query_get($key) {
 			return \uri\query::get($this->object, $key);
 		}
 		
+		
 		public function query_rename($key, $new_key) {
 			return \uri\query::rename($this->object, $key, $new_key);
+		}
+		
+		
+		public function chain() {
+			return $this->chain;
 		}
 		
 		/**
@@ -962,5 +973,80 @@ namespace uri {
 		
 	}
 	
-	
+	/**
+	 * The Chaining Class
+	 * 
+	 * This class is like \uri\main except that only actionable methods can be
+	 * called. This mean they must either modify $object or print something. It
+	 * also means that the normal return of all methods is replaced with this
+	 * class in its' current instance.
+	 */
+	class chain {
+		
+		/*** Variables ***/
+		private $object;
+		
+		/*** Magic Methods ***/
+		
+		/**
+		 * Simple method to init a chainable object
+		 * 
+		 * @param object $object The object from \uri\main in the current instance
+		 */
+		public function __construct(&$object) {
+			$this->object = &$object;
+			return $this;
+		}
+		
+		/*** Methods ***/
+		
+		/**
+		 * Chainable alias to \uri\main::replace() within the current instance
+		 * 
+		 * @return object This instance
+		 */
+		public function p_str() {
+			echo \uri\generate::string($this->object);
+			return $this;
+		}
+		
+		/**
+		 * Chainable alias to \uri\main::replace() within the current instance
+		 * 
+		 * @param  string $section The section to replace
+		 * @param  string $str     The string to replace the section with
+		 * @return object          This instance
+		 */
+		public function replace($section, $str) {
+			\uri\actions::modify($this->object, 'replace', $section, $str);
+			return $this;
+		}
+		
+		/**
+		 * Chainable alias to \uri\main::prepend() within the current instance
+		 * 
+		 * @param  string $section The section to prepend
+		 * @param  string $str     The string to prepend the section with
+		 * @return object          This instance
+		 */
+		public function prepend($section, $str) {
+			\uri\actions::modify($this->object, 'prepend', $section, $str);
+			return $this;
+		}
+		
+		/**
+		 * Chainable alias to \uri\main::append() within the current instance
+		 * 
+		 * @param  string $section The section to append
+		 * @param  string $str     The string to append the section with
+		 * @return object          This instance
+		 */
+		public function append($section, $str) {
+			\uri\actions::modify($this->object, 'append', $section, $str);
+			return $this;
+		}
+		
+		
+		
+	}
 }
