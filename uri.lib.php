@@ -137,6 +137,21 @@ namespace uri {
 		}
 		
 		/**
+		 * Because of how references are created within this class, cloning doesn't
+		 * work as expected. This magic method resolves that issue.
+		 * 
+		 * @return string The current URI as a string
+		 */
+		public function __clone() {
+			// recreate this class in its' current state
+			$new = new \uri(\uri\generate::string($this->object));
+			// give it the same origin
+			$new->input = $this->input;
+			// now send the new instance back
+			return $new;
+		}
+		
+		/**
 		 * Allows access to the different parts of the URI to be synchronized. This
 		 * means that what is returned should always be accurate. Throws notice if
 		 * the variable cannot be accessed.
