@@ -5,7 +5,7 @@ A PHP library for working with URI's. Requires PHP `5.3.7` or later. Replaces an
 Copyright &copy; 2014 Nicholas Jordon - All Rights Reserved <br>
 Licensed under the MIT license
 
-###Installation
+###Installing The Library
 
 ####Composer:
 
@@ -13,7 +13,7 @@ Add this to your composer.json file
 
 ```
 "require": {
-	"projectcleverweb/php-uri":"1.0.0"
+	"projectcleverweb/php-uri":"~1.0"
 }
 ```
 
@@ -22,14 +22,13 @@ Add this to your composer.json file
 **Download:**<br>
 [![Latest Stable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/stable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/releases/tag/1.0.0) [![Latest Unstable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/unstable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/archive/master.zip)
 
-Include the `uri.lib.php` file in your application.
+Just include the `uri.lib.php` file somewhere in your application.
 
 ##Examples
 
 ####Example #1: String Operations
 
 ```php
-<?php
 $uri = new uri('http://example.com/path/to/file.ext');
 
 $uri->replace('QUERY', array('rand' => (string) rand(1, 10)));
@@ -46,7 +45,6 @@ $secure = $uri->replace('SCHEME_NAME', 'https');
 echo $new.PHP_EOL;
 echo $original.PHP_EOL;
 echo $secure;
-?>
 ```
 
 **Output:**
@@ -56,10 +54,32 @@ http://example.com/path/to/file.ext
 https://example.com/path/to/file.ext#Checkout
 ```
 
-####Example #2: Information Gathering
+####Example #2: Daisy Chaining Operations
+
+Need to change a lot while keeping anything extra intact? Chain it.
 
 ```php
-<?php
+$uri1 = new uri('ftp://jdoe:pass1234@my-server.com/public_html');
+
+// Lets upgrade to an admin account under sftp, but stay in the current directory.
+$uri1->chain()->
+	prepend('SCHEME_NAME', 's')->
+	replace('PORT', '22')->
+	replace('USER', 'admin')->
+	replace('PASS', 'secure-pass-123');
+
+// NOTE: chain() methods always return the chain object, even if a method fails.
+echo $uri1;
+```
+
+**Output:**
+```
+sftp://admin:secure-pass-123@my-server.com:22/public_html
+```
+
+####Example #3: Information Gathering
+
+```php
 $uri = new uri('http://example.com/path/to/file.ext?q=1');
 
 if ($uri->scheme_name == 'https') {
@@ -84,7 +104,6 @@ $login = array(
 	'domain'   => $uri->host,
 	'path'     => $uri->path
 );
-?>
 ```
 
 **Output:**
@@ -94,12 +113,11 @@ Does not use SSL
 <a href="http://example.com/path/to/file.ext?q=1">example.com/path/to/file.ext</a>
 ```
 
-####Example #3: Works With A Wide Range Of URIs
+####Example #4: Works With A Wide Range Of URIs
 
 Works perfectly with email, skype, and ssh URIs. The parser is based directly off the URI standard, so it will work well with uncommon and new URI types.
 
 ```php
-<?php
 $uri1 = new uri('git@github.com:ProjectCleverWeb/PHP-URI.git');
 $uri2 = new uri('example@gmail.com');
 $uri3 = new uri('ftp://jdoe:pass1234@my-server.com/public_html');
@@ -112,21 +130,13 @@ echo $uri1->replace('HOST', 'bitbucket.org').PHP_EOL.PHP_EOL;
 // Quick and easy email template URI
 $uri2->replace('SCHEME', 'mailto:');
 printf(
-	'<a href="%1$s">%2$s</a>'.PHP_EOL.PHP_EOL,
+	'<a href="%1$s">%2$s</a>',
 	$uri2->replace('QUERY', http_build_query(array(
 		'subject' => 'Re: [Suggestion Box]',
 		'body'    => 'More snickers in the break room please!'
 	))),
 	$uri2->authority
 );
-
-// change FTP user/path/port/type
-$uri3->replace('SCHEME_NAME', 'sftp');
-$uri3->replace('PATH', '/admin/configuration');
-$uri3->replace('PORT', '22');
-$uri3->replace('USER', 'admin');
-echo $uri3->replace('PASS', 'secure-pass-123');
-?>
 ```
 
 **Output:**
@@ -136,28 +146,6 @@ git@gitlab.com:ProjectCleverWeb/PHP-URI.git
 git@bitbucket.org:ProjectCleverWeb/PHP-URI.git
 
 <a href="mailto:example@gmail.com?subject=Re%3A%20%5BSuggestion%20Box%5D&body=More%20snickers%20in%20the%20break%20room%20please%21">example@gmail.com</a>
-
-sftp://admin:secure-pass-123@my-server.com:22/admin/configuration
-```
-
-####Example #4: Daisy Chaining Operations
-
-Need to change a lot while keeping anything extra intact? Chain it.
-
-```php
-<?php
-$uri1 = new uri('ftp://jdoe:pass1234@my-server.com/public_html');
-
-// Lets upgrade to an admin account under sftp, but stay in this folder.
-$uri1->chain()->
-	replace('SCHEME_NAME', 'sftp')->
-	replace('PORT', '22')->
-	replace('USER', 'admin')->
-	replace('PASS', 'secure-pass-123');
-
-// NOTE: chain() methods always return the chain object, even if a method fails.
-echo $uri1;
-?>
 ```
 
 
