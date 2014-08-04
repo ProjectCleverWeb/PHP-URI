@@ -137,6 +137,17 @@ namespace uri {
 		}
 		
 		/**
+		 * Because of how references are created within this class, cloning doesn't
+		 * work as expected. This magic method warn's people until the issue can be
+		 * addressed.
+		 * 
+		 * @return string The current URI as a string
+		 */
+		public function __clone() {
+			$this->_err('CLONE', debug_backtrace(), 'clone');
+		}
+		
+		/**
 		 * Allows access to the different parts of the URI to be synchronized. This
 		 * means that what is returned should always be accurate. Throws notice if
 		 * the variable cannot be accessed.
@@ -429,6 +440,8 @@ namespace uri {
 			$fmt = 'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
 			if ($type == 'FORBIDDEN') {
 				$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
+			} elseif($type == 'CLONE') {
+				$fmt = 'Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please make a new instance instead, like so: <code>$clone = new \\uri($original->str()); $clone->input = $original->input;</code>. Error triggered';
 			}
 			
 			trigger_error(
