@@ -243,10 +243,12 @@ namespace uri {
 		/**
 		 * Prints the current URI as a string
 		 * 
+		 * @param  string $prepend The string to prepend to the output
+		 * @param  string $append  The string to append to the output
 		 * @return void
 		 */
-		public function p_str() {
-			echo \uri\generate::string($this->object);
+		public function p_str($prepend = '', $append = '') {
+			echo $prepend.\uri\generate::string($this->object).$append;
 		}
 		
 		/**
@@ -1129,8 +1131,8 @@ namespace uri {
 		 * 
 		 * @return object This instance
 		 */
-		public function p_str() {
-			echo \uri\generate::string($this->object);
+		public function p_str($prepend = '', $append = '') {
+			echo $prepend.\uri\generate::string($this->object).$append;
 			return $this;
 		}
 		
