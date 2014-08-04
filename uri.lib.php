@@ -93,7 +93,7 @@ namespace uri {
 				\uri\generate::aliases($this->object);
 				
 				// Enable Chain Events
-				$this->chain = new \uri\chain($this->object);
+				$this->chain = new \uri\chain($this);
 				
 				// References required for Sudo-Private Variables
 				$this->authority      = &$this->object->authority;
@@ -441,7 +441,7 @@ namespace uri {
 			if ($type == 'FORBIDDEN') {
 				$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
 			} elseif($type == 'CLONE') {
-				$fmt = 'Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please make a new instance instead, like so: <code>$clone = new \\uri($original->str()); $clone->input = $original->input;</code>. Error triggered';
+				$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please make a new instance instead, like so: <code>$clone = new \\uri($original->str()); $clone->input = $original->input;</code>. Error triggered';
 			}
 			
 			trigger_error(
@@ -1106,6 +1106,7 @@ namespace uri {
 	class chain {
 		
 		/*** Variables ***/
+		private $class;
 		private $object;
 		
 		/*** Magic Methods ***/
@@ -1115,8 +1116,9 @@ namespace uri {
 		 * 
 		 * @param object $object The object from \uri\main in the current instance
 		 */
-		public function __construct(&$object) {
-			$this->object = &$object;
+		public function __construct(&$class) {
+			$this->class  = &$class;
+			$this->object = &$class->object;
 			return $this;
 		}
 		
@@ -1173,7 +1175,7 @@ namespace uri {
 		 * 
 		 * @param  string $key   The key to add
 		 * @param  string $value The value of $key
-		 * @return boolean       TRUE on success, FALSE otherwise
+		 * @return object        This instance
 		 */
 		public function query_add($key, $value) {
 			\uri\query::add($this->object, $key, $value);
@@ -1185,7 +1187,7 @@ namespace uri {
 		 * 
 		 * @param  string $key   The key to replace
 		 * @param  string $value The value of $key
-		 * @return void
+		 * @return object        This instance
 		 */
 		public function query_replace($key, $value) {
 			\uri\query::replace($this->object, $key, $value);
@@ -1196,7 +1198,7 @@ namespace uri {
 		 * Chainable alias to \uri\main::query_remove() within the current instance
 		 * 
 		 * @param  string $key The key to remove
-		 * @return void
+		 * @return object      This instance
 		 */
 		public function query_remove($key) {
 			\uri\query::remove($this->object, $key);
@@ -1208,10 +1210,79 @@ namespace uri {
 		 * 
 		 * @param  string $key     The key to rename
 		 * @param  string $new_key The new name of $key
-		 * @return boolean         TRUE on success, FALSE otherwise
+		 * @return object          This instance
 		 */
 		public function query_rename($key, $new_key) {
 			\uri\query::rename($this->object, $key, $new_key);
+			return $this;
+		}
+		
+		/**
+		 * Chainable alias to \uri\main::reset() within the current instance
+		 * 
+		 * @return object This instance
+		 */
+		public function reset() {
+			$this->class->__construct($this->class->input);
+		}
+		
+		/**
+		 * Provides a simple error handle for invalid chainable methods
+		 * 
+		 * @param  array $trace Debug Backtrace
+		 * @return void
+		 */
+		private function _err($trace) {
+			trigger_error(
+				sprintf(
+					'The method %1$s cannot be chained in <b>%2$s</b> on line <b>%3$s</b>. Error triggered',
+					$trace[0]['function'],
+					$trace[0]['file'],
+					$trace[0]['line']
+				),
+				E_USER_NOTICE
+			);
+		}
+		
+		/*** Invalid Chaining Methods ***/
+		
+		public function str() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function to_string() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function arr() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function to_array() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function path_info() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function query_array() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function query_exists() {
+			$this->_err(debug_backtrace());
+			return $this;
+		}
+		
+		public function query_get() {
+			$this->_err(debug_backtrace());
 			return $this;
 		}
 	}
