@@ -2,15 +2,16 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's. Requires PHP 5.3.7 or later. Replaces
- * and extends PHP's parse_url()
+ * A PHP library for working with URI's, that is designed around the URI
+ * standard. Requires PHP 5.3 or later. This library replaces and extends all
+ * of PHP's parse_url() features, and even has some handy aliases.
  * 
  * Originally inspired by P Guardiario's work.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
- * @version   1.0.0 RC2
+ * @version   1.0.0
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
@@ -25,12 +26,13 @@ namespace {
 }
 
 namespace uri {
+	
 	/**
 	 * Main URI Class
 	 * 
 	 * This class parses URI string into a dynamic and easy to use object. In
 	 * many ways, this class simply acts as an extension of a PHP string. Calling
-	 * this class as if it were a string will result in the current URL string
+	 * this class as if it were a string will result in the current URI string
 	 * being used throughout PHP.
 	 */
 	abstract class main {
@@ -40,10 +42,10 @@ namespace uri {
 		public $input;
 		
 		/*
-		"Ghost" Object Variables
-		=======================
+		"Ghost" Variables
+		=================
 		These variables can be accesed from within the class, but as far as the rest
-		of PHP is concerned, these variables simply doesn't exist.
+		of PHP is concerned, these variables simply don't exist.
 		*/
 		public $object;
 		private $chain;
@@ -128,7 +130,7 @@ namespace uri {
 		}
 		
 		/**
-		 * Invoked? just return the current URI, nothing fancy.
+		 * Invoked? just return the current URI as a string, nothing fancy.
 		 * 
 		 * @return string The current URI as a string
 		 */
@@ -139,9 +141,10 @@ namespace uri {
 		/**
 		 * Because of how references are created within this class, cloning doesn't
 		 * work as expected. This magic method warn's people until the issue can be
-		 * addressed.
+		 * correctly addressed. (It may be impossible to resolve this issue, with
+		 * the current configuration)
 		 * 
-		 * @return string The current URI as a string
+		 * @return void
 		 */
 		public function __clone() {
 			$this->_err('CLONE', debug_backtrace(), 'clone');
@@ -149,8 +152,8 @@ namespace uri {
 		
 		/**
 		 * Allows access to the different parts of the URI to be synchronized. This
-		 * means that what is returned should always be accurate. Throws notice if
-		 * the variable cannot be accessed.
+		 * means that what is returned should always be accurate. Triggers a notice
+		 * if the variable cannot be accessed.
 		 * 
 		 * @param  string $name The requested variable
 		 * @return string|null  The value of the variable, or NULL if it can't be accessed
@@ -168,8 +171,8 @@ namespace uri {
 		
 		/**
 		 * Allows access to the different parts of the URI to be synchronized. This
-		 * means that what is returned should always be accurate. Throws notice if
-		 * the variable cannot be accessed.
+		 * means that what is returned should always be accurate. Triggers a notice
+		 * if the variable cannot be accessed.
 		 * 
 		 * @param  string $name  The requested variable
 		 * @param  string $value The new value for the variable
@@ -195,13 +198,16 @@ namespace uri {
 		public function __isset($name) {
 			\uri\generate::scheme($this->object);
 			\uri\generate::authority($this->object);
-			return !empty($this->object->$name);
+			if (isset($this->object->$name)) {
+				return !empty($this->object->$name);
+			}
+			return FALSE;
 		}
 		
 		/**
 		 * Allows access to the different parts of the URI to be synchronized. This
-		 * means that what is returned should always be accurate. Throws notice if
-		 * the variable cannot be accessed.
+		 * means that what is returned should always be accurate. Triggers a notice
+		 * if the variable cannot be accessed.
 		 * 
 		 * @param  string $name The requested variable
 		 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
@@ -257,28 +263,7 @@ namespace uri {
 		 * @return array The current URI as an array
 		 */
 		public function arr() {
-			$arr = array(
-				'authority'      => $this->object->authority,
-				'fragment'       => $this->object->fragment,
-				'host'           => $this->object->host,
-				'pass'           => $this->object->pass,
-				'path'           => $this->object->path,
-				'port'           => $this->object->port,
-				'query'          => $this->object->query,
-				'scheme'         => $this->object->scheme,
-				'scheme_name'    => $this->object->scheme_name,
-				'scheme_symbols' => $this->object->scheme_symbols,
-				'user'           => $this->object->user,
-			);
-			
-			$arr['domain']   = &$arr['host'];
-			$arr['fqdn']     = &$arr['host'];
-			$arr['password'] = &$arr['pass'];
-			$arr['protocol'] = &$arr['scheme'];
-			$arr['username'] = &$arr['user'];
-			
-			ksort($arr);
-			return $arr;
+			return \uri\generate::to_array($this->object);
 		}
 		
 		/**
@@ -287,7 +272,7 @@ namespace uri {
 		 * @return array The current URI as an array
 		 */
 		public function to_array() {
-			return $this->arr();
+			return \uri\generate::to_array($this->object);
 		}
 		
 		/**
@@ -302,7 +287,7 @@ namespace uri {
 		/**
 		 * The query parsed into an array
 		 * 
-		 * @return null|array The query array
+		 * @return array The query array
 		 */
 		public function query_arr() {
 			return \uri\generate::query_array($this->object);
@@ -475,15 +460,13 @@ namespace uri {
 		// This regex is broken down to be readable in regex_parse()
 		const REGEX = '/^(([a-z]+)?(\:\/\/|\:|\/\/))?(?:([a-z0-9$_\.\+!\*\'\(\),;&=\-]+)(?:\:([a-z0-9$_\.\+!\*\'\(\),;&=\-]*))?@)?((?:\d{3}.\d{3}.\d{3}.\d{3})|(?:[a-z0-9\-_]+(?:\.[a-z0-9\-_]+)*))(?:\:([0-9]+))?((?:\:|\/)[a-z0-9\-_\/\.]+)?(?:\?([a-z0-9$_\.\+!\*\'\(\),;:@&=\-%]*))?(?:#([a-z0-9\-_]*))?/i';
 		
-		
-		
 		/*** Methods ***/
 		
 		/**
 		 * Wrapper function for parsing a string into a URI object
 		 * 
 		 * @param  string $uri  The input to be parsed as a URI
-		 * @return object If the input can be correctly parsed, then it returns an object with at least the 'host' populated
+		 * @return object       If the input can be correctly parsed, then it returns an object with at least the 'host' populated
 		 */
 		public static function parse($uri) {
 			if (!is_string($uri)) {
@@ -888,7 +871,7 @@ namespace uri {
 		 * Generates all the aliases for $object
 		 * 
 		 * @param  object $object The object to modify
-		 * @return  void
+		 * @return void
 		 */
 		public static function aliases(&$object) {
 			$object->protocol = &$object->scheme;
@@ -947,6 +930,37 @@ namespace uri {
 				$str_arr[] = '#'.$object->fragment;
 			}
 			return implode('', $str_arr);
+		}
+		
+		/**
+		 * Generate a the full URI as a string, from the current object
+		 * 
+		 * @param  object $object The object to use
+		 * @return array          The current URI as an array
+		 */
+		public static function to_array(&$object) {
+			$arr = array(
+				'authority'      => $object->authority,
+				'fragment'       => $object->fragment,
+				'host'           => $object->host,
+				'pass'           => $object->pass,
+				'path'           => $object->path,
+				'port'           => $object->port,
+				'query'          => $object->query,
+				'scheme'         => $object->scheme,
+				'scheme_name'    => $object->scheme_name,
+				'scheme_symbols' => $object->scheme_symbols,
+				'user'           => $object->user,
+			);
+			
+			$arr['domain']   = &$arr['host'];
+			$arr['fqdn']     = &$arr['host'];
+			$arr['password'] = &$arr['pass'];
+			$arr['protocol'] = &$arr['scheme'];
+			$arr['username'] = &$arr['user'];
+			
+			ksort($arr);
+			return $arr;
 		}
 		
 		/**
@@ -1237,7 +1251,7 @@ namespace uri {
 		private function _err($trace) {
 			trigger_error(
 				sprintf(
-					'The method %1$s cannot be chained in <b>%2$s</b> on line <b>%3$s</b>. Error triggered',
+					'The method <code>%1$s()</code> cannot be chained in <b>%2$s</b> on line <b>%3$s</b>. Error triggered',
 					$trace[0]['function'],
 					$trace[0]['file'],
 					$trace[0]['line']
@@ -1248,41 +1262,65 @@ namespace uri {
 		
 		/*** Invalid Chaining Methods ***/
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function str() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function to_string() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function arr() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function to_array() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function path_info() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function query_array() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function query_exists() {
 			$this->_err(debug_backtrace());
 			return $this;
 		}
 		
+		/**
+		 * Invalid Chaining Method
+		 */
 		public function query_get() {
 			$this->_err(debug_backtrace());
 			return $this;
