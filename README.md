@@ -1,9 +1,8 @@
 # PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](https://packagist.org/packages/projectcleverweb/php-uri)
 
-A PHP library for working with URI's. Requires PHP `5.3.7` or later. Replaces and extends PHP's `parse_url()`.
+A PHP library for working with URI's, that is designed around the URI standard. Requires PHP `5.3` or later. This library replaces and extends all of PHP's `parse_url()` features, and even has some handy aliases.
 
-Copyright &copy; 2014 Nicholas Jordon - All Rights Reserved <br>
-Licensed under the MIT license
+Copyright (c) 2014 Nicholas Jordon - All Rights Reserved.
 
 ### Installing The Library
 
@@ -148,6 +147,9 @@ git@bitbucket.org:ProjectCleverWeb/PHP-URI.git
 <a href="mailto:example@gmail.com?subject=Re%3A%20%5BSuggestion%20Box%5D&body=More%20snickers%20in%20the%20break%20room%20please%21">example@gmail.com</a>
 ```
 
+## Known Issues
+
+- Cloning doesn't work as expected (use `$clone = new \uri($original->str()); $clone->input = $original->input;` instead)
 
 ## License
 
