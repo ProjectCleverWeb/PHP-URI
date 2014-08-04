@@ -1,4 +1,4 @@
-# PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](https://packagist.org/packages/projectcleverweb/php-uri)
+# PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](http://opensource.org/licenses/MIT)
 
 A PHP library for working with URI's, that is designed around the URI standard. Requires PHP `5.3` or later. This library replaces and extends all of PHP's `parse_url()` features, and even has some handy aliases.
 
@@ -150,6 +150,7 @@ git@bitbucket.org:ProjectCleverWeb/PHP-URI.git
 ## Known Issues
 
 - Cloning doesn't work as expected (use `$clone = new \uri($original->str()); $clone->input = $original->input;` instead)
+- You cannot directly change the authority of a URI. This is intentional, as the authority is generated from the current URI.
 
 ## License
 
