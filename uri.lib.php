@@ -1253,6 +1253,7 @@ namespace uri {
 		 */
 		public function reset() {
 			$this->class->__construct($this->class->input);
+			return $this;
 		}
 		
 		/**
