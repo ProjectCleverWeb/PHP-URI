@@ -1,6 +1,6 @@
 # PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=master&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=master&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=master) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](http://opensource.org/licenses/MIT)
 
-A PHP library for working with URI's, that is designed around the URI standard. Requires PHP `5.3` or later. This library replaces and extends all of PHP's `parse_url()` features, and even has some handy aliases.
+A PHP library for working with URI's, that is designed around the URI standard. Requires PHP `5.4` or later. This library replaces and extends all of PHP's `parse_url()` features, and even has some handy aliases.
 
 Copyright (c) 2014 Nicholas Jordon - All Rights Reserved.
 
