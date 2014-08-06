@@ -3,7 +3,7 @@
  * PHP URI Library
  * 
  * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.3 or later. This library replaces and extends all
+ * standard. Requires PHP 5.4 or later. This library replaces and extends all
  * of PHP's parse_url() features, and even has some handy aliases.
  * 
  * Originally inspired by P Guardiario's work.
@@ -333,7 +333,7 @@ namespace uri {
 		 * TRUE. Otherwise it returns FALSE
 		 * 
 		 * @param  string $key   The key to add
-		 * @param  string $value The value of $key
+		 * @param  mixed  $value The value of $key
 		 * @return boolean       TRUE on success, FALSE otherwise
 		 */
 		public function query_add($key, $value) {
@@ -344,7 +344,7 @@ namespace uri {
 		 * Adds query var to the query string regardless if it already set or not
 		 * 
 		 * @param  string $key   The key to replace
-		 * @param  string $value The value of $key
+		 * @param  mixed  $value The value of $key
 		 * @return void
 		 */
 		public function query_replace($key, $value) {
@@ -1013,6 +1013,17 @@ namespace uri {
 		/*** Methods ***/
 		
 		/**
+		 * Builds the query under RFC3986. RFC3986 is used as a replacement for
+		 * RFC1738 because it is more portable.
+		 * 
+		 * @param  array $query_array The array to build the query string from
+		 * @return string             The resulting query string
+		 */
+		private static function build_query($query_array) {
+			return http_build_query($query_array, '', '&', PHP_QUERY_RFC3986);
+		}
+		
+		/**
 		 * Adds query var to the query string if it is not already set and returns
 		 * TRUE. Otherwise it returns FALSE
 		 * 
@@ -1025,7 +1036,7 @@ namespace uri {
 			$qarray = \uri\generate::query_array($object);
 			if (!isset($qarray[$key])) {
 				$qarray[$key] = $value;
-				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+				\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 				return TRUE;
 			}
 			return FALSE;
@@ -1042,7 +1053,7 @@ namespace uri {
 		public static function replace(&$object, $key, $value) {
 			$qarray = \uri\generate::query_array($object);
 			$qarray[$key] = $value;
-			\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+			\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 		}
 		
 		/**
@@ -1056,7 +1067,7 @@ namespace uri {
 			$qarray = \uri\generate::query_array($object);
 			if (isset($qarray[$key])) {
 				unset($qarray[$key]);
-				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+				\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 			}
 		}
 		
@@ -1104,7 +1115,7 @@ namespace uri {
 			if (isset($qarray[$key])) {
 				$qarray[$new_key] = $qarray[$key];
 				unset($qarray[$key]);
-				\uri\actions::modify($object, 'replace', 'QUERY', http_build_query($qarray));
+				\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 				return TRUE;
 			}
 			return FALSE;
@@ -1124,6 +1135,7 @@ namespace uri {
 		/*** Variables ***/
 		private $class;
 		private $object;
+		public  $error_count;
 		
 		/*** Magic Methods ***/
 		
@@ -1133,8 +1145,9 @@ namespace uri {
 		 * @param object $object The object from \uri\main in the current instance
 		 */
 		public function __construct(&$class) {
-			$this->class  = &$class;
-			$this->object = &$class->object;
+			$this->class       = &$class;
+			$this->object      = &$class->object;
+			$this->error_count = 0;
 			return $this;
 		}
 		
@@ -1190,7 +1203,7 @@ namespace uri {
 		 * Chainable alias to \uri\main::query_add() within the current instance
 		 * 
 		 * @param  string $key   The key to add
-		 * @param  string $value The value of $key
+		 * @param  mixed  $value The value of $key
 		 * @return object        This instance
 		 */
 		public function query_add($key, $value) {
@@ -1202,7 +1215,7 @@ namespace uri {
 		 * Chainable alias to \uri\main::query_replace() within the current instance
 		 * 
 		 * @param  string $key   The key to replace
-		 * @param  string $value The value of $key
+		 * @param  mixed  $value The value of $key
 		 * @return object        This instance
 		 */
 		public function query_replace($key, $value) {
@@ -1249,6 +1262,7 @@ namespace uri {
 		 * @return void
 		 */
 		private function _err($trace) {
+			$this->error_count++;
 			trigger_error(
 				sprintf(
 					'The method <code>%1$s()</code> cannot be chained in <b>%2$s</b> on line <b>%3$s</b>. Error triggered',
