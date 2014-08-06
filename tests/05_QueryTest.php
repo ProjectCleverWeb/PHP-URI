@@ -3,7 +3,7 @@
 namespace URI;
 
 /**
- * @requires PHP 5.3.7
+ * @requires PHP 5.4
  */
 class QueryTest extends \PHPUnit_Framework_TestCase {
 	
