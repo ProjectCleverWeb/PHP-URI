@@ -79,7 +79,7 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 		// Check For Errors
 		$this->assertEmpty($uri1->error);
 		
-		// none of these do anything, but they should all still return th chain class
+		// none of these do anything, but they should all still return the chain class
 		@$uri1->chain()
 			->str()
 			->to_string()
@@ -92,5 +92,16 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 		;
 		
 		$this->assertSame(8, $uri1->chain()->error_count);
+		
+		// invalid inputs (no notices)
+		$uri1->chain()
+			->replace('SCHEME', '/invalid/')
+			->prepend('SCHEME', '/invalid/')
+			->append('SCHEME', '/invalid/')
+			->query_rename('does_not_exist', 'nothing')
+		;
+		$this->assertSame(12, $uri1->chain()->error_count);
+		
+		$this->assertEquals($uri1->input, $uri1->str());
 	}
 }

@@ -1171,7 +1171,9 @@ namespace uri {
 		 * @return object          This instance
 		 */
 		public function replace($section, $str) {
-			\uri\actions::modify($this->object, 'replace', $section, $str);
+			if (\uri\actions::modify($this->object, 'replace', $section, $str) === FALSE) {
+				$this->error_count++;
+			}
 			return $this;
 		}
 		
@@ -1183,7 +1185,9 @@ namespace uri {
 		 * @return object          This instance
 		 */
 		public function prepend($section, $str) {
-			\uri\actions::modify($this->object, 'prepend', $section, $str);
+			if (\uri\actions::modify($this->object, 'prepend', $section, $str) === FALSE) {
+				$this->error_count++;
+			}
 			return $this;
 		}
 		
@@ -1195,7 +1199,9 @@ namespace uri {
 		 * @return object          This instance
 		 */
 		public function append($section, $str) {
-			\uri\actions::modify($this->object, 'append', $section, $str);
+			if (\uri\actions::modify($this->object, 'append', $section, $str) === FALSE) {
+				$this->error_count++;
+			}
 			return $this;
 		}
 		
@@ -1242,7 +1248,9 @@ namespace uri {
 		 * @return object          This instance
 		 */
 		public function query_rename($key, $new_key) {
-			\uri\query::rename($this->object, $key, $new_key);
+			if (\uri\query::rename($this->object, $key, $new_key) === FALSE) {
+				$this->error_count++;
+			}
 			return $this;
 		}
 		
