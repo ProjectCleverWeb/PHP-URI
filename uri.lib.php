@@ -1051,7 +1051,7 @@ namespace uri {
 		 * @return void
 		 */
 		public static function replace(&$object, $key, $value) {
-			$qarray = \uri\generate::query_array($object);
+			$qarray       = \uri\generate::query_array($object);
 			$qarray[$key] = $value;
 			\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 		}
@@ -1142,7 +1142,7 @@ namespace uri {
 		/**
 		 * Simple method to init a chainable object
 		 * 
-		 * @param object $object The object from \uri\main in the current instance
+		 * @param object $class The current instance of \uri\main
 		 */
 		public function __construct(&$class) {
 			$this->class       = &$class;
