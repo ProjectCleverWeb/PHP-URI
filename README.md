@@ -30,7 +30,7 @@ Just include the `uri.lib.php` file somewhere in your application.
 ```php
 $uri = new uri('http://example.com/path/to/file.ext');
 
-$uri->replace('QUERY', array('rand' => (string) rand(1, 10)));
+$uri->replace('QUERY', 'number=3');
 $uri->replace('PATH', '/foo/bar');
 $uri->append('PATH', '.baz');
 $new = $uri->prepend('HOST', 'www.');
@@ -48,7 +48,7 @@ echo $secure;
 
 **Output:**
 ```html
-http://www.example.com/foo/bar.baz?rand=6
+http://www.example.com/foo/bar.baz?number=3
 http://example.com/path/to/file.ext
 https://example.com/path/to/file.ext#Checkout
 ```
@@ -69,6 +69,11 @@ $uri1->chain()->
 
 // NOTE: chain() methods always return the chain object, even if a method fails.
 echo $uri1;
+
+// Any failure results in the chain() error count geting incremented.
+if (0 < $uri->chain()->error_count) {
+	print_f('The chain failed %1$s times!', $uri->chain()->error_count);
+}
 ```
 
 **Output:**
@@ -92,8 +97,7 @@ $abs_path = $_SERVER['DOCUMENT_ROOT'].$uri->path;
 echo $abs_path.PHP_EOL;
 
 // easier to read links
-$link = sprintf('<a href="%1$s">%2$s</a>', $uri->str(), $uri->host.$uri->path);
-echo $link;
+printf('<a href="%1$s">%2$s</a>', $uri->str(), $uri->host.$uri->path);
 
 // FTP logins
 $uri = new uri('ftp://jdoe@example.com/my/home/dir');
@@ -127,15 +131,12 @@ echo $uri1->replace('HOST', 'gitlab.com').PHP_EOL;
 echo $uri1->replace('HOST', 'bitbucket.org').PHP_EOL.PHP_EOL;
 
 // Quick and easy email template URI
-$uri2->replace('SCHEME', 'mailto:');
-printf(
-	'<a href="%1$s">%2$s</a>',
-	$uri2->replace('QUERY', http_build_query(array(
-		'subject' => 'Re: [Suggestion Box]',
-		'body'    => 'More snickers in the break room please!'
-	))),
-	$uri2->authority
-);
+$uri2->chain()
+	->replace('SCHEME', 'mailto:')
+	->query_replace('subject', 'Re: [Suggestion Box]')
+	->query_replace('body', 'More snickers in the break room please!')
+;
+printf('<a href="%1$s">%2$s</a>', $uri2, $uri2->authority);
 ```
 
 **Output:**
