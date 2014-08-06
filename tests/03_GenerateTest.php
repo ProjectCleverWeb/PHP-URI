@@ -87,6 +87,22 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 * @test
 	 * @depends Reset
 	 */
+	public function Cloning() {
+		$uri1 = new \uri('example.com/original/path');
+		
+		// Check For Errors
+		$this->assertEmpty($uri1->error);
+		
+		// Ensure that clone is still NOT working as the user expects (reference still intact)
+		$clone = @clone $uri1;
+		$clone->host = 'google.com';
+		$this->assertSame($uri1->host, $clone->host);
+	}
+	
+	/**
+	 * @test
+	 * @depends Reset
+	 */
 	public function To_Array() {
 		// Test both when there is and isn't pre-existing data
 		$uri1 = new \uri('example.com');
@@ -267,6 +283,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse(isset($uri2->query));
 		$this->assertTrue(isset($uri1->fragment));
 		$this->assertFalse(isset($uri2->fragment));
+		
+		$this->assertFalse(isset($uri1->does_not_exist));
 		
 		// __unset()
 		unset($uri1->scheme_name);
