@@ -123,7 +123,6 @@ Works perfectly with email, skype, and ssh URIs. The parser is based directly of
 ```php
 $uri1 = new uri('git@github.com:ProjectCleverWeb/PHP-URI.git');
 $uri2 = new uri('example@gmail.com');
-$uri3 = new uri('ftp://jdoe:pass1234@my-server.com/public_html');
 
 // Publish you source to multiple services?
 echo $uri1.PHP_EOL; // PHP will automatically get the current URI
