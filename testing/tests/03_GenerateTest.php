@@ -93,10 +93,20 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		// Check For Errors
 		$this->assertEmpty($uri1->error);
 		
-		// Ensure that clone is still NOT working as the user expects (reference still intact)
+		// Make sure that clone is still NOT working as the user expects (reference still intact)
 		$clone = @clone $uri1;
 		$clone->host = 'google.com';
 		$this->assertSame($uri1->host, $clone->host);
+		
+		$uri1->reset();
+		
+		// Make sure that standardized cloning method works
+		$uri1->host = 'facebook.com';
+		$new_clone = $uri1->make_clone();
+		$new_clone->host = 'stackoverflow.com';
+		$this->assertSame('stackoverflow.com', $new_clone->host);
+		$this->assertSame('facebook.com', $uri1->host);
+		$this->assertSame($uri1->input, $new_clone->input);
 	}
 	
 	/**

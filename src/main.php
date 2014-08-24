@@ -27,7 +27,7 @@ namespace projectcleverweb\uri;
  * this class as if it were a string will result in the current URI string
  * being used throughout PHP.
  */
-abstract class main {
+abstract class main extends overloading {
 	/*** Variables ***/
 	
 	public $error;
@@ -125,80 +125,6 @@ abstract class main {
 	 */
 	public function __clone() {
 		$this->_err('CLONE', debug_backtrace(), 'clone');
-	}
-	
-	/**
-	 * Allows access to the different parts of the URI to be synchronized. This
-	 * means that what is returned should always be accurate. Triggers a notice
-	 * if the variable cannot be accessed.
-	 * 
-	 * @param  string $name The requested variable
-	 * @return string|null  The value of the variable, or NULL if it can't be accessed
-	 */
-	public function __get($name) {
-		if (isset($this->object->$name)) {
-			generate::scheme($this->object);
-			generate::authority($this->object);
-			return $this->object->$name;
-		} else {
-			$this->_err('UNDEFINED', debug_backtrace(), $name);
-			return NULL;
-		}
-	}
-	
-	/**
-	 * Allows access to the different parts of the URI to be synchronized. This
-	 * means that what is returned should always be accurate. Triggers a notice
-	 * if the variable cannot be accessed.
-	 * 
-	 * @param  string $name  The requested variable
-	 * @param  string $value The new value for the variable
-	 * @return string|null   The new value of the variable, or NULL if it can't be accessed
-	 */
-	public function __set($name, $value) {
-		if (isset($this->object->$name) && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, $value);
-			return $value;
-		} else {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return NULL;
-		}
-	}
-	
-	/**
-	 * Allows access to the different parts of the URI to be synchronized. This
-	 * means that what is returned should always be accurate.
-	 * 
-	 * @param  string  $name The requested variable
-	 * @return boolean       Returns TRUE if the variable is not empty, FALSE otherwise
-	 */
-	public function __isset($name) {
-		generate::scheme($this->object);
-		generate::authority($this->object);
-		if (isset($this->object->$name)) {
-			return !empty($this->object->$name);
-		}
-		return FALSE;
-	}
-	
-	/**
-	 * Allows access to the different parts of the URI to be synchronized. This
-	 * means that what is returned should always be accurate. Triggers a notice
-	 * if the variable cannot be accessed.
-	 * 
-	 * @param  string $name The requested variable
-	 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
-	 */
-	public function __unset($name) {
-		if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, '');
-			return TRUE;
-		} elseif (isset($this->object->$name)) {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return FALSE;
-		}
-		$this->_err('UNDEFINED', debug_backtrace(), $name);
-		return FALSE;
 	}
 	
 	
@@ -430,7 +356,8 @@ abstract class main {
 	}
 	
 	/**
-	 * A unknown/forbidden property has been called. trigger an error
+	 * At the moment only __clone() calls this method, for __get(), __set(),
+	 * __isset(), and __unset() see overloading::_err()
 	 * 
 	 * @param  string $type  Type of error
 	 * @param  array  $trace The output from debug_backtrace()
@@ -438,12 +365,7 @@ abstract class main {
 	 * @return void
 	 */
 	private function _err($type, $trace, $name) {
-		$fmt = 'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
-		if ($type == 'FORBIDDEN') {
-			$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
-		} elseif($type == 'CLONE') {
-			$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>make_clone()</code> instead. Error triggered';
-		}
+		$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>make_clone()</code> instead. Error triggered';
 		
 		trigger_error(sprintf($fmt, $trace[0]['class'], $trace[0]['function'], $name, $trace[0]['file'], $trace[0]['line']), E_USER_NOTICE);
 	}
