@@ -117,10 +117,10 @@ abstract class main {
 	
 	/**
 	 * Because of how references are created within this class, cloning doesn't
-	 * work as expected. This magic method warn's people until the issue can be
-	 * correctly addressed. (It may be impossible to resolve this issue, with
-	 * the current configuration)
+	 * work as expected. This magic method warn's people to use make_clone()
+	 * instead.
 	 * 
+	 * @see http://stackoverflow.com/questions/25420812/issue-with-cloning-and-pass-by-reference
 	 * @return void
 	 */
 	public function __clone() {
@@ -195,9 +195,9 @@ abstract class main {
 			return TRUE;
 		} elseif (isset($this->object->$name)) {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-		} else {
-			$this->_err('UNDEFINED', debug_backtrace(), $name);
+			return FALSE;
 		}
+		$this->_err('UNDEFINED', debug_backtrace(), $name);
 		return FALSE;
 	}
 	
@@ -409,6 +409,18 @@ abstract class main {
 	}
 	
 	/**
+	 * Returns the a new instance at the current state. This is meant to replace
+	 * traditional cloning.
+	 * 
+	 * @return object A new instance at the current state
+	 */
+	public function make_clone() {
+		$clone = new $this(generate::string($this->object));
+		$clone->input = $this->input;
+		return $clone;
+	}
+	
+	/**
 	 * Resets the current object to its initial state
 	 * 
 	 * @return void
@@ -430,19 +442,9 @@ abstract class main {
 		if ($type == 'FORBIDDEN') {
 			$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
 		} elseif($type == 'CLONE') {
-			$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please make a new instance instead, like so: <code>$clone = new \\uri($original->str()); $clone->input = $original->input;</code>. Error triggered';
+			$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>make_clone()</code> instead. Error triggered';
 		}
 		
-		trigger_error(
-			sprintf(
-				$fmt,
-				$trace[0]['class'],
-				$trace[0]['function'],
-				$name,
-				$trace[0]['file'],
-				$trace[0]['line']
-			),
-			E_USER_NOTICE
-		);
+		trigger_error(sprintf($fmt, $trace[0]['class'], $trace[0]['function'], $name, $trace[0]['file'], $trace[0]['line']), E_USER_NOTICE);
 	}
 }
