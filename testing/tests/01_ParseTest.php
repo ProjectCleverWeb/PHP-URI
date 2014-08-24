@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4

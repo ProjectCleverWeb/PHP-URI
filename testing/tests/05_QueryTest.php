@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4
@@ -9,7 +9,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Add() {
 		// Test both when there is and isn't pre-existing data
@@ -32,7 +32,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Replace() {
 		// Test both when there is and isn't pre-existing data
@@ -53,7 +53,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Remove() {
 		// Test both when there is and isn't pre-existing data
@@ -74,7 +74,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Exists() {
 		// Test both when there is and isn't pre-existing data
@@ -94,7 +94,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Get() {
 		// Test both when there is and isn't pre-existing data
@@ -111,7 +111,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Query_Rename() {
 		// Test both when there is and isn't pre-existing data

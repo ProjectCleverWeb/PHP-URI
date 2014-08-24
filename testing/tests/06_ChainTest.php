@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4
@@ -9,7 +9,7 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Chain_String_Operations() {
 		$uri1 = new \uri('example.com');
@@ -33,7 +33,7 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Chain_Print_Operations() {
 		$uri1 = new \uri('example.com');
@@ -50,7 +50,7 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Chain_Query_Operations() {
 		$uri1 = new \uri('example.com');
@@ -71,7 +71,7 @@ class ChainTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Chain_Errors() {
 		$uri1 = new \uri('example.com');

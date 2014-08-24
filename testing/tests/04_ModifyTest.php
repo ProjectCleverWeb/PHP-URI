@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4
@@ -9,7 +9,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Scheme_Name() {
 		// Test both when there is and isn't pre-existing data
@@ -43,7 +43,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Scheme_Symbols() {
 		// Test both when there is and isn't pre-existing data
@@ -77,7 +77,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Scheme() {
 		// Test both when there is and isn't pre-existing data
@@ -116,7 +116,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_User() {
 		// Test both when there is and isn't pre-existing data
@@ -161,7 +161,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Pass() {
 		// Test both when there is and isn't pre-existing data
@@ -200,7 +200,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Host() {
 		// Test both when there is and isn't pre-existing data
@@ -247,7 +247,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Port() {
 		// Test both when there is and isn't pre-existing data
@@ -285,7 +285,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Path() {
 		// Test both when there is and isn't pre-existing data
@@ -319,7 +319,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Query() {
 		// Test both when there is and isn't pre-existing data
@@ -357,7 +357,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\GenerateTest::Reset
+	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
 	 */
 	public function Modify_Fragment() {
 		// Test both when there is and isn't pre-existing data

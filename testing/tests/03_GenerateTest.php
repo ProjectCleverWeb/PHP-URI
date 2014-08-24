@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4
@@ -9,7 +9,7 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Simple_Output() {
 		$input = 'https://user:pass@example.com:777/path/to/script.php?query=str#fragment';
@@ -27,7 +27,7 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Aliases() {
 		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
@@ -50,7 +50,7 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Simple_Replace() {
 		$uri1 = new \uri('example.com/original/path');
@@ -64,12 +64,12 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 * @depends Simple_Replace
 	 * @depends Simple_Output
 	 * @depends Aliases
-	 * @depends URI\ErrorsTest::Parse_Errors
-	 * @depends URI\ErrorsTest::Invalid_Section_Errors
+	 * @depends ProjectCleverWeb\URI\ErrorsTest::Parse_Errors
+	 * @depends ProjectCleverWeb\URI\ErrorsTest::Invalid_Section_Errors
 	 */
 	public function Reset() {
 		$uri1 = new \uri('example.com/original/path');

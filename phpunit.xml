@@ -1,6 +1,6 @@
 <phpunit bootstrap="testing/bootstrap.php">
 	<testsuites>
-		<testsuite name="PHP URI">
+		<testsuite name="projectcleverweb\uri">
 			<directory>testing/tests</directory>
 		</testsuite>
 	</testsuites>

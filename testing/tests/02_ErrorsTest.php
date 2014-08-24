@@ -1,6 +1,6 @@
 <?php
 
-namespace URI;
+namespace ProjectCleverWeb\URI;
 
 /**
  * @requires PHP 5.4
@@ -8,7 +8,7 @@ namespace URI;
 class ErrorsTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Parse_Errors() {
 		// Invalid
@@ -26,7 +26,7 @@ class ErrorsTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Invalid_Section_Errors() {
 		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
@@ -39,7 +39,7 @@ class ErrorsTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Invalid_Scheme() {
 		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
@@ -52,7 +52,7 @@ class ErrorsTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Invalid_Host() {
 		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
@@ -63,7 +63,7 @@ class ErrorsTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends URI\ParseTest::Advanced_Parsing
+	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
 	 */
 	public function Invalid_Port() {
 		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
