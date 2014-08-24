@@ -90,22 +90,7 @@ abstract class main {
 			$this->chain = new chain($this);
 			
 			// References required for Sudo-Private Variables
-			$this->authority      = &$this->object->authority;
-			$this->domain         = &$this->object->domain;
-			$this->fqdn           = &$this->object->fqdn;
-			$this->fragment       = &$this->object->fragment;
-			$this->host           = &$this->object->host;
-			$this->protocol       = &$this->object->protocol;
-			$this->pass           = &$this->object->pass;
-			$this->password       = &$this->object->password;
-			$this->path           = &$this->object->path;
-			$this->port           = &$this->object->port;
-			$this->query          = &$this->object->query;
-			$this->scheme         = &$this->object->scheme;
-			$this->scheme_name    = &$this->object->scheme_name;
-			$this->scheme_symbols = &$this->object->scheme_symbols;
-			$this->user           = &$this->object->user;
-			$this->username       = &$this->object->username;
+			$this->_make_references();
 		} else {
 			$this->error = 'Input could not be parsed as a URI';
 		}
@@ -219,6 +204,30 @@ abstract class main {
 	
 	
 	/*** Methods ***/
+	
+	/**
+	 * Generates all the references to $this->object from $this
+	 * 
+	 * @return void
+	 */
+	public function _make_references() {
+		$this->authority      = &$this->object->authority;
+		$this->domain         = &$this->object->domain;
+		$this->fqdn           = &$this->object->fqdn;
+		$this->fragment       = &$this->object->fragment;
+		$this->host           = &$this->object->host;
+		$this->protocol       = &$this->object->protocol;
+		$this->pass           = &$this->object->pass;
+		$this->password       = &$this->object->password;
+		$this->path           = &$this->object->path;
+		$this->port           = &$this->object->port;
+		$this->query          = &$this->object->query;
+		$this->scheme         = &$this->object->scheme;
+		$this->scheme_name    = &$this->object->scheme_name;
+		$this->scheme_symbols = &$this->object->scheme_symbols;
+		$this->user           = &$this->object->user;
+		$this->username       = &$this->object->username;
+	}
 	
 	/**
 	 * Returns the current URI as a string.
