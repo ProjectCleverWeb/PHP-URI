@@ -10,7 +10,7 @@ build:
     php:
       version: 5.5.12
 filter:
-  paths: [uri.lib.php]
+  paths: [src/*]
 checks:
   php:
     verify_property_names: true

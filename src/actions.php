@@ -12,11 +12,12 @@
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
  * @version   2.0.0
+ * @package   projectcleverweb\uri\actions
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
 
-namespace uri;
+namespace projectcleverweb\uri;
 
 /**
  * The Actions Class
@@ -39,8 +40,8 @@ class actions {
 		settype($str, 'string');
 		$section = strtolower($section);
 		
-		if (is_callable(array('\\uri\\modify', $section))) {
-			return call_user_func_array(array('\\uri\\modify', $section), array(&$object, $action, $str));
+		if (is_callable(array(__NAMESPACE__.'\\modify', $section))) {
+			return call_user_func_array(array(__NAMESPACE__.'\\modify', $section), array(&$object, $action, $str));
 		} else {
 			return FALSE;
 		}

@@ -12,11 +12,12 @@
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
  * @version   2.0.0
+ * @package   projectcleverweb\uri\modify
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
 
-namespace uri;
+namespace projectcleverweb\uri;
 
 /**
  * The Modifier Class
@@ -36,7 +37,7 @@ class modify {
 	 */
 	public static function scheme_name(&$object, $action, $str) {
 		$org = $object->scheme_name;
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
+		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name) || empty($str))) {
 			$object->scheme_name = $org;
 			return FALSE;
@@ -44,7 +45,7 @@ class modify {
 			$object->scheme_symbols = '://';
 		}
 		
-		return \uri\generate::string($object);
+		return generate::string($object);
 	}
 	
 	/**
@@ -57,13 +58,13 @@ class modify {
 	 */
 	public static function scheme_symbols(&$object, $action, $str) {
 		$org = $object->scheme_symbols;
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
+		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols) || empty($str))) {
 			$object->scheme_symbols = $org;
 			return FALSE;
 		}
 		
-		return \uri\generate::string($object);
+		return generate::string($object);
 	}
 	
 	/**
@@ -76,7 +77,7 @@ class modify {
 	 */
 	public static function scheme(&$object, $action, $str) {
 		$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
+		actions::callback($object, $action, __FUNCTION__, $str);
 		if (empty($object->scheme)) {
 			$object->scheme = $object->scheme_name = $object->scheme_symbols = '';
 		} else {
@@ -96,7 +97,7 @@ class modify {
 			}
 		}
 		
-		return \uri\generate::string($object);
+		return generate::string($object);
 	}
 	
 	/**
@@ -122,8 +123,8 @@ class modify {
 	public static function user(&$object, $action, $str) {
 		$str = rawurlencode($str);
 		
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
-		return \uri\generate::string($object);
+		actions::callback($object, $action, __FUNCTION__, $str);
+		return generate::string($object);
 	}
 	
 	/**
@@ -149,8 +150,8 @@ class modify {
 	public static function pass(&$object, $action, $str) {
 		$str = rawurlencode($str);
 		
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
-		return \uri\generate::string($object);
+		actions::callback($object, $action, __FUNCTION__, $str);
+		return generate::string($object);
 	}
 	
 	/**
@@ -175,7 +176,7 @@ class modify {
 	 */
 	public static function host(&$object, $action, $str) {
 		$org = $object->host;
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
+		actions::callback($object, $action, __FUNCTION__, $str);
 		if ((
 			!preg_match('/\A(([a-z0-9_]([a-z0-9\-_]+)?)\.)+[a-z0-9]([a-z0-9\-]+)?\Z/i', $object->host) // fqdn
 			&&
@@ -185,7 +186,7 @@ class modify {
 			return FALSE;
 		}
 		
-		return \uri\generate::string($object);
+		return generate::string($object);
 	}
 	
 	/**
@@ -225,13 +226,13 @@ class modify {
 		if (isset($str[0]) && $str[0] == ':') {
 			$str = substr($str, 1);
 		}
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
+		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A[0-9]{0,5}\Z/', $object->port) || empty($str))) {
 			$object->port = $org;
 			return FALSE;
 		}
 		
-		return \uri\generate::string($object);
+		return generate::string($object);
 	}
 	
 	/**
@@ -243,8 +244,8 @@ class modify {
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
 	public static function path(&$object, $action, $str) {
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
-		return \uri\generate::string($object);
+		actions::callback($object, $action, __FUNCTION__, $str);
+		return generate::string($object);
 	}
 	
 	/**
@@ -260,8 +261,8 @@ class modify {
 			$str = substr($str, 1);
 		}
 		
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
-		return \uri\generate::string($object);
+		actions::callback($object, $action, __FUNCTION__, $str);
+		return generate::string($object);
 	}
 	
 	/**
@@ -278,7 +279,7 @@ class modify {
 		}
 		$str = urlencode($str);
 		
-		\uri\actions::callback($object, $action, __FUNCTION__, $str);
-		return \uri\generate::string($object);
+		actions::callback($object, $action, __FUNCTION__, $str);
+		return generate::string($object);
 	}
 }

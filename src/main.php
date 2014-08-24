@@ -12,11 +12,12 @@
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
  * @version   2.0.0
+ * @package   projectcleverweb\uri\main
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
 
-namespace uri;
+namespace projectcleverweb\uri;
 
 /**
  * Main URI Class
@@ -79,14 +80,14 @@ abstract class main {
 	 */
 	public function __construct($input) {
 		$this->input  = $input;
-		$this->object = \uri\parser::parse($input);
+		$this->object = parser::parse($input);
 		
 		if (!empty($this->object->host)) {
-			\uri\generate::authority($this->object);
-			\uri\generate::aliases($this->object);
+			generate::authority($this->object);
+			generate::aliases($this->object);
 			
 			// Enable Chain Events
-			$this->chain = new \uri\chain($this);
+			$this->chain = new chain($this);
 			
 			// References required for Sudo-Private Variables
 			$this->authority      = &$this->object->authority;
@@ -117,7 +118,7 @@ abstract class main {
 	 * @return string The current URI as a string
 	 */
 	public function __toString() {
-		return \uri\generate::string($this->object);
+		return generate::string($this->object);
 	}
 	
 	/**
@@ -126,7 +127,7 @@ abstract class main {
 	 * @return string The current URI as a string
 	 */
 	public function __invoke() {
-		return \uri\generate::string($this->object);
+		return generate::string($this->object);
 	}
 	
 	/**
@@ -151,8 +152,8 @@ abstract class main {
 	 */
 	public function __get($name) {
 		if (isset($this->object->$name)) {
-			\uri\generate::scheme($this->object);
-			\uri\generate::authority($this->object);
+			generate::scheme($this->object);
+			generate::authority($this->object);
 			return $this->object->$name;
 		} else {
 			$this->_err('UNDEFINED', debug_backtrace(), $name);
@@ -171,7 +172,7 @@ abstract class main {
 	 */
 	public function __set($name, $value) {
 		if (isset($this->object->$name) && $name != 'authority') {
-			\uri\actions::modify($this->object, 'replace', $name, $value);
+			actions::modify($this->object, 'replace', $name, $value);
 			return $value;
 		} else {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);
@@ -187,8 +188,8 @@ abstract class main {
 	 * @return boolean       Returns TRUE if the variable is not empty, FALSE otherwise
 	 */
 	public function __isset($name) {
-		\uri\generate::scheme($this->object);
-		\uri\generate::authority($this->object);
+		generate::scheme($this->object);
+		generate::authority($this->object);
 		if (isset($this->object->$name)) {
 			return !empty($this->object->$name);
 		}
@@ -205,7 +206,7 @@ abstract class main {
 	 */
 	public function __unset($name) {
 		if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
-			\uri\actions::modify($this->object, 'replace', $name, '');
+			actions::modify($this->object, 'replace', $name, '');
 			return TRUE;
 		} elseif (isset($this->object->$name)) {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);
@@ -225,7 +226,7 @@ abstract class main {
 	 * @return string The current URI as a string
 	 */
 	public function str() {
-		return \uri\generate::string($this->object);
+		return generate::string($this->object);
 	}
 	
 	/**
@@ -234,7 +235,7 @@ abstract class main {
 	 * @return string The current URI as a string
 	 */
 	public function to_string() {
-		return \uri\generate::string($this->object);
+		return generate::string($this->object);
 	}
 	
 	/**
@@ -245,7 +246,7 @@ abstract class main {
 	 * @return void
 	 */
 	public function p_str($prepend = '', $append = '') {
-		echo $prepend.\uri\generate::string($this->object).$append;
+		echo $prepend.generate::string($this->object).$append;
 	}
 	
 	/**
@@ -254,7 +255,7 @@ abstract class main {
 	 * @return array The current URI as an array
 	 */
 	public function arr() {
-		return \uri\generate::to_array($this->object);
+		return generate::to_array($this->object);
 	}
 	
 	/**
@@ -263,7 +264,7 @@ abstract class main {
 	 * @return array The current URI as an array
 	 */
 	public function to_array() {
-		return \uri\generate::to_array($this->object);
+		return generate::to_array($this->object);
 	}
 	
 	/**
@@ -272,7 +273,7 @@ abstract class main {
 	 * @return array The information array
 	 */
 	public function path_info() {
-		return \uri\generate::path_info($this->object);
+		return generate::path_info($this->object);
 	}
 	
 	/**
@@ -281,7 +282,7 @@ abstract class main {
 	 * @return array The query array
 	 */
 	public function query_arr() {
-		return \uri\generate::query_array($this->object);
+		return generate::query_array($this->object);
 	}
 	
 	/**
@@ -292,7 +293,7 @@ abstract class main {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function replace($section, $str) {
-		return \uri\actions::modify($this->object, 'replace', $section, $str);
+		return actions::modify($this->object, 'replace', $section, $str);
 	}
 	
 	/**
@@ -304,7 +305,7 @@ abstract class main {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function prepend($section, $str) {
-		return \uri\actions::modify($this->object, 'prepend', $section, $str);
+		return actions::modify($this->object, 'prepend', $section, $str);
 	}
 	
 	/**
@@ -316,7 +317,7 @@ abstract class main {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function append($section, $str) {
-		return \uri\actions::modify($this->object, 'append', $section, $str);
+		return actions::modify($this->object, 'append', $section, $str);
 	}
 	
 	/**
@@ -328,7 +329,7 @@ abstract class main {
 	 * @return boolean       TRUE on success, FALSE otherwise
 	 */
 	public function query_add($key, $value) {
-		return \uri\query::add($this->object, $key, $value);
+		return query::add($this->object, $key, $value);
 	}
 	
 	/**
@@ -339,7 +340,7 @@ abstract class main {
 	 * @return void
 	 */
 	public function query_replace($key, $value) {
-		\uri\query::replace($this->object, $key, $value);
+		query::replace($this->object, $key, $value);
 	}
 	
 	/**
@@ -349,7 +350,7 @@ abstract class main {
 	 * @return void
 	 */
 	public function query_remove($key) {
-		\uri\query::remove($this->object, $key);
+		query::remove($this->object, $key);
 	}
 	
 	/**
@@ -359,7 +360,7 @@ abstract class main {
 	 * @return boolean     TRUE if the $key exists, FALSE otherwise
 	 */
 	public function query_exists($key) {
-		return \uri\query::exists($this->object, $key);
+		return query::exists($this->object, $key);
 	}
 	
 	/**
@@ -371,7 +372,7 @@ abstract class main {
 	 * @return mixed|null  The value of $key, or NULL if it does not exist.
 	 */
 	public function query_get($key) {
-		return \uri\query::get($this->object, $key);
+		return query::get($this->object, $key);
 	}
 	
 	/**
@@ -384,12 +385,13 @@ abstract class main {
 	 * @return boolean         TRUE on success, FALSE otherwise
 	 */
 	public function query_rename($key, $new_key) {
-		return \uri\query::rename($this->object, $key, $new_key);
+		return query::rename($this->object, $key, $new_key);
 	}
 	
 	/**
 	 * Returns the chain class, which allows events to be chained together
-	 * rather than the reference being called several times. see \uri\chain
+	 * rather than the reference being called several times. see
+	 * \projectcleverweb\uri\chain
 	 * 
 	 * @return object The chain class
 	 */

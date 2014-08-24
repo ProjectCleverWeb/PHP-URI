@@ -12,11 +12,12 @@
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
  * @version   2.0.0
+ * @package   projectcleverweb\uri\query
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
 
-namespace uri;
+namespace projectcleverweb\uri;
 
 /**
  * The Query Class
@@ -25,7 +26,7 @@ namespace uri;
  * string. It should be noted that this class relies heavily on
  * generate::query_arr() and that excessive modification to the query
  * string should be done manually through generate::query_arr() and then
- * \uri\main::$query should be set (use http_build_query()).
+ * \projectcleverweb\uri\main::$query should be set (use http_build_query()).
  */
 class query {
 	
@@ -52,10 +53,10 @@ class query {
 	 * @return boolean        TRUE on success, FALSE otherwise
 	 */
 	public static function add(&$object, $key, $value) {
-		$qarray = \uri\generate::query_array($object);
+		$qarray = generate::query_array($object);
 		if (!isset($qarray[$key])) {
 			$qarray[$key] = $value;
-			\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
+			actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 			return TRUE;
 		}
 		return FALSE;
@@ -70,9 +71,9 @@ class query {
 	 * @return void
 	 */
 	public static function replace(&$object, $key, $value) {
-		$qarray       = \uri\generate::query_array($object);
+		$qarray       = generate::query_array($object);
 		$qarray[$key] = $value;
-		\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
+		actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 	}
 	
 	/**
@@ -83,10 +84,10 @@ class query {
 	 * @return void
 	 */
 	public static function remove(&$object, $key) {
-		$qarray = \uri\generate::query_array($object);
+		$qarray = generate::query_array($object);
 		if (isset($qarray[$key])) {
 			unset($qarray[$key]);
-			\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
+			actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 		}
 	}
 	
@@ -98,7 +99,7 @@ class query {
 	 * @return boolean        TRUE if the $key exists, FALSE otherwise
 	 */
 	public static function exists(&$object, $key) {
-		$qarray = \uri\generate::query_array($object);
+		$qarray = generate::query_array($object);
 		return isset($qarray[$key]);
 	}
 	
@@ -112,7 +113,7 @@ class query {
 	 * @return mixed|null     The value of $key, or NULL if it does not exist.
 	 */
 	public static function get(&$object, $key) {
-		$qarray = \uri\generate::query_array($object);
+		$qarray = generate::query_array($object);
 		if (isset($qarray[$key])) {
 			return $qarray[$key];
 		}
@@ -130,11 +131,11 @@ class query {
 	 * @return boolean         TRUE on success, FALSE otherwise
 	 */
 	public static function rename(&$object, $key, $new_key) {
-		$qarray = \uri\generate::query_array($object);
+		$qarray = generate::query_array($object);
 		if (isset($qarray[$key])) {
 			$qarray[$new_key] = $qarray[$key];
 			unset($qarray[$key]);
-			\uri\actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
+			actions::modify($object, 'replace', 'QUERY', self::build_query($qarray));
 			return TRUE;
 		}
 		return FALSE;

@@ -2,7 +2,7 @@
 
 
 spl_autoload_register(function ($class) {
-	$prefix = 'uri';
+	$prefix = 'projectcleverweb\\uri';
 	$base_dir = realpath(__DIR__.'/../src');
 	
 	$prefix_len = strlen($prefix);
@@ -18,4 +18,4 @@ spl_autoload_register(function ($class) {
 });
 
 
-class uri extends \uri\main {}
+class uri extends \projectcleverweb\uri\main {}

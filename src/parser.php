@@ -12,11 +12,12 @@
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
  * @version   2.0.0
+ * @package   projectcleverweb\uri\parser
  * @license   http://opensource.org/licenses/MIT
  * @see       http://en.wikipedia.org/wiki/URI_scheme
  */
 
-namespace uri;
+namespace projectcleverweb\uri;
 
 /**
  * The Parser Class

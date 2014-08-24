@@ -26,6 +26,8 @@
 		"phpunit/phpunit": "~4.0"
 	},
 	"autoload": {
-		"files": ["uri.lib.php"]
+		"psr-4": {
+			"projectcleverweb\\uri\\": "src"
+		}
 	}
 }
