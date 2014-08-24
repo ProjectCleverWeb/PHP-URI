@@ -1,4 +1,4 @@
-<phpunit bootstrap="uri.lib.php">
+<phpunit bootstrap="testing/bootstrap.php">
 	<testsuites>
 		<testsuite name="PHP URI">
 			<directory>testing/tests</directory>
