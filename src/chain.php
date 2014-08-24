@@ -43,7 +43,6 @@ class chain {
 	 */
 	public function __construct(&$class) {
 		$this->class       = &$class;
-		$this->object      = &$class->object;
 		$this->error_count = 0;
 		return $this;
 	}
@@ -57,7 +56,7 @@ class chain {
 	 * @return object This instance
 	 */
 	public function p_str($prepend = '', $append = '') {
-		echo $prepend.generate::string($this->object).$append;
+		$this->class->p_str($prepend, $append);
 		return $this;
 	}
 	
@@ -70,7 +69,7 @@ class chain {
 	 * @return object          This instance
 	 */
 	public function replace($section, $str) {
-		if (actions::modify($this->object, 'replace', $section, $str) === FALSE) {
+		if ($this->class->replace($section, $str) === FALSE) {
 			$this->error_count++;
 		}
 		return $this;
@@ -85,7 +84,7 @@ class chain {
 	 * @return object          This instance
 	 */
 	public function prepend($section, $str) {
-		if (actions::modify($this->object, 'prepend', $section, $str) === FALSE) {
+		if ($this->class->prepend($section, $str) === FALSE) {
 			$this->error_count++;
 		}
 		return $this;
@@ -100,7 +99,7 @@ class chain {
 	 * @return object          This instance
 	 */
 	public function append($section, $str) {
-		if (actions::modify($this->object, 'append', $section, $str) === FALSE) {
+		if ($this->class->append($section, $str) === FALSE) {
 			$this->error_count++;
 		}
 		return $this;
@@ -115,7 +114,7 @@ class chain {
 	 * @return object        This instance
 	 */
 	public function query_add($key, $value) {
-		query::add($this->object, $key, $value);
+		$this->class->query_add($key, $value);
 		return $this;
 	}
 	
@@ -128,7 +127,7 @@ class chain {
 	 * @return object        This instance
 	 */
 	public function query_replace($key, $value) {
-		query::replace($this->object, $key, $value);
+		$this->class->query_replace($key, $value);
 		return $this;
 	}
 	
@@ -140,7 +139,7 @@ class chain {
 	 * @return object      This instance
 	 */
 	public function query_remove($key) {
-		query::remove($this->object, $key);
+		$this->class->query_remove($key);
 		return $this;
 	}
 	
@@ -153,7 +152,7 @@ class chain {
 	 * @return object          This instance
 	 */
 	public function query_rename($key, $new_key) {
-		if (query::rename($this->object, $key, $new_key) === FALSE) {
+		if ($this->class->query_rename($key, $new_key) === FALSE) {
 			$this->error_count++;
 		}
 		return $this;
@@ -166,7 +165,7 @@ class chain {
 	 * @return object This instance
 	 */
 	public function reset() {
-		$this->class->__construct($this->class->input);
+		$this->class->reset();
 		return $this;
 	}
 	

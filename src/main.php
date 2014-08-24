@@ -36,11 +36,13 @@ abstract class main extends overloading {
 	/*
 	"Ghost" Variables
 	=================
-	These variables can be accesed from within the class, but as far as the rest
-	of PHP is concerned, these variables simply don't exist.
+	These variables can be accesed from within the class (or by parent/child
+	classes), but as far as the rest of PHP is concerned, these variables
+	simply don't exist. This basically means, if you don't know what your doing
+	just leave these alone.
 	*/
-	public $object;
-	private $chain;
+	protected $object;
+	protected $chain;
 	
 	/*
 	Sudo-Private Variables
@@ -341,7 +343,7 @@ abstract class main extends overloading {
 	 * @return object A new instance at the current state
 	 */
 	public function make_clone() {
-		$clone = new $this(generate::string($this->object));
+		$clone        = new $this(generate::string($this->object));
 		$clone->input = $this->input;
 		return $clone;
 	}
