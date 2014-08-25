@@ -80,23 +80,17 @@ class modify {
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (empty($object->scheme)) {
 			$object->scheme = $object->scheme_name = $object->scheme_symbols = '';
+		} elseif (preg_match('/\A([a-z]{1,10})?(\:|:\/\/|\/\/|:\/\/\/)\Z/i', $object->scheme, $matches)) {
+			$matches                = $matches + array('', '', '');
+			$object->scheme         = $matches[0];
+			$object->scheme_name    = $matches[1];
+			$object->scheme_symbols = $matches[2];
 		} else {
-			preg_match('/\A([a-z]{1,10})?(\:|:\/\/|\/\/|:\/\/\/)\Z/i', $object->scheme, $matches);
-			if (empty($matches[1]) && empty($matches[2])) {
-				// restore values
-				$object->scheme         = $org[0];
-				$object->scheme_name    = $org[1];
-				$object->scheme_symbols = $org[2];
-				return FALSE;
-			} else {
-				// apply changes
-				$matches                = $matches + array('', '', '');
-				$object->scheme         = $matches[0];
-				$object->scheme_name    = $matches[1];
-				$object->scheme_symbols = $matches[2];
-			}
+			$object->scheme         = $org[0];
+			$object->scheme_name    = $org[1];
+			$object->scheme_symbols = $org[2];
+			return FALSE;
 		}
-		
 		return generate::string($object);
 	}
 	
