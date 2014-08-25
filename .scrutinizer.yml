@@ -8,7 +8,7 @@ build:
           format: php-clover
   environment:
     php:
-      version: hhvm
+      version: 5.5.14
 filter:
   paths: [src/*]
 checks:
