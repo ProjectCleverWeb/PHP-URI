@@ -97,11 +97,8 @@ abstract class overloading {
 		if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
 			actions::modify($this->object, 'replace', $name, '');
 			return TRUE;
-		} elseif (isset($this->object->$name)) {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return FALSE;
 		} else {
-			$this->_err('UNDEFINED', debug_backtrace(), $name);
+			$this->_err('FORBIDDEN', debug_backtrace(), $name);
 			return FALSE;
 		}
 	}
