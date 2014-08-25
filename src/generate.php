@@ -103,20 +103,9 @@ class generate {
 	 * @return array          The current URI as an array
 	 */
 	public static function to_array(&$object) {
-		$arr = array(
-			'authority'      => $object->authority,
-			'fragment'       => $object->fragment,
-			'host'           => $object->host,
-			'pass'           => $object->pass,
-			'path'           => $object->path,
-			'port'           => $object->port,
-			'query'          => $object->query,
-			'scheme'         => $object->scheme,
-			'scheme_name'    => $object->scheme_name,
-			'scheme_symbols' => $object->scheme_symbols,
-			'user'           => $object->user,
-		);
-		
+		$keys            = array('authority', 'fragment', 'host', 'pass', 'path', 'port', 'query', 'scheme', 'scheme_name', 'scheme_symbols', 'user');
+		$values          = array($object->authority, $object->fragment, $object->host, $object->pass, $object->path, $object->port, $object->query, $object->scheme, $object->scheme_name, $object->scheme_symbols, $object->user);
+		$arr             = array_combine($keys, $values);
 		$arr['domain']   = &$arr['host'];
 		$arr['fqdn']     = &$arr['host'];
 		$arr['password'] = &$arr['pass'];

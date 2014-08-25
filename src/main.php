@@ -81,7 +81,10 @@ abstract class main extends overloading {
 	 * @param string $input The URI to parse.
 	 */
 	public function __construct($input) {
-		$this->input  = $input;
+		$this->input = $input;
+		if (!is_string($input)) {
+			$input = '';
+		}
 		$this->object = parser::parse($input);
 		
 		if (!empty($this->object->host)) {

@@ -100,9 +100,10 @@ abstract class overloading {
 		} elseif (isset($this->object->$name)) {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);
 			return FALSE;
+		} else {
+			$this->_err('UNDEFINED', debug_backtrace(), $name);
+			return FALSE;
 		}
-		$this->_err('UNDEFINED', debug_backtrace(), $name);
-		return FALSE;
 	}
 	
 	/**
