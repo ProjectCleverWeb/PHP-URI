@@ -31,7 +31,6 @@ class chain {
 	
 	/*** Variables ***/
 	private $class;
-	private $object;
 	public  $error_count;
 	
 	/*** Magic Methods ***/

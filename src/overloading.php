@@ -27,8 +27,9 @@ namespace projectcleverweb\uri;
  * __call(), and __callStatic().
  * 
  * @see http://php.net/manual/en/language.oop5.overloading.php
+ * @property object $object The data object from the main class
  */
-class overloading {
+abstract class overloading {
 	
 	/**
 	 * Allows access to the different parts of the URI to be synchronized. This
