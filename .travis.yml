@@ -1,5 +1,5 @@
 language: php
-script: phpunit --coverage-text
+script: phpunit
 php:
   - 5.6
   - 5.5

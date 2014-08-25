@@ -2,13 +2,13 @@ build:
   tests:
     override:
       -
-        command: phpunit --testdox --coverage-text --coverage-clover=coverage.clover
+        command: phpunit --testdox --coverage-clover=coverage.clover
         coverage:
           file: coverage.clover
           format: php-clover
   environment:
     php:
-      version: 5.5.12
+      version: hhvm
 filter:
   paths: [src/*]
 checks:
