@@ -42,6 +42,7 @@ abstract class main extends overloading {
 	just leave these alone.
 	*/
 	protected $object;
+	protected $query;
 	protected $chain;
 	
 	/*
@@ -63,7 +64,6 @@ abstract class main extends overloading {
 	private $password;
 	private $path;
 	private $port;
-	private $query;
 	private $scheme;
 	private $scheme_name;
 	private $scheme_symbols;
