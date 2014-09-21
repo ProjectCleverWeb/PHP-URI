@@ -1,86 +1,62 @@
 <?php
 
-namespace ProjectCleverWeb\URI;
+namespace projectcleverweb\uri;
 
-/**
- * @requires PHP 5.4
- */
-class GenerateTest extends \PHPUnit_Framework_TestCase {
+class GenerateTest extends URI_Testing_Config {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
+	 * @depends projectcleverweb\uri\ParseTest::Advanced_Parsing
 	 */
 	public function Simple_Output() {
-		$input = 'https://user:pass@example.com:777/path/to/script.php?query=str#fragment';
-		$uri1 = new \uri($input);
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		
-		// Check Output
-		$this->assertEquals($input, $uri1->input);
-		$this->assertEquals($input, $uri1->str());
-		$this->expectOutputString($input);
-		$uri1->p_str();
+		$uri = $this->uri->advanced1;
+		$this->assertEquals($this->input->advanced1, $uri->input);
+		$this->assertEquals($this->input->advanced1, $uri->str());
+		$this->expectOutputString($this->input->advanced1);
+		$uri->p_str();
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
+	 * @depends projectcleverweb\uri\ParseTest::Advanced_Parsing
 	 */
 	public function Aliases() {
-		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
+		$uri = $this->uri->advanced1;
 		
 		// Check Var Aliases
-		$this->assertSame($uri1->scheme, $uri1->protocol);
-		$this->assertSame($uri1->user, $uri1->username);
-		$this->assertSame($uri1->pass, $uri1->password);
-		$this->assertSame($uri1->host, $uri1->fqdn);
-		$this->assertSame($uri1->host, $uri1->domain);
+		$this->assertSame($uri->scheme, $uri->protocol);
+		$this->assertSame($uri->user, $uri->username);
+		$this->assertSame($uri->pass, $uri->password);
+		$this->assertSame($uri->host, $uri->fqdn);
+		$this->assertSame($uri->host, $uri->domain);
 		
 		// Check Method Aliases
-		$this->assertSame($uri1->arr(), $uri1->to_array());
-		$this->assertSame($uri1->str(), $uri1->to_string());
-		$this->assertSame($uri1->str(), $uri1->__toString());
+		$this->assertSame($uri->arr(), $uri->to_array());
+		$this->assertSame($uri->str(), $uri->to_string());
+		$this->assertSame($uri->str(), $uri->__toString());
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
+	 * @depends projectcleverweb\uri\ParseTest::Advanced_Parsing
 	 */
 	public function Simple_Replace() {
-		$uri1 = new \uri('example.com/original/path');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		
-		// Check Replace
-		$this->assertEquals('example.com/alternative/path', $uri1->replace('PATH', '/alternative/path'));
+		$this->assertEquals('http://example.com/alternative', $this->uri->simple->replace('PATH', '/alternative'));
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\ParseTest::Advanced_Parsing
+	 * @depends projectcleverweb\uri\ParseTest::Advanced_Parsing
 	 * @depends Simple_Replace
 	 * @depends Simple_Output
 	 * @depends Aliases
-	 * @depends ProjectCleverWeb\URI\ErrorsTest::Parse_Errors
-	 * @depends ProjectCleverWeb\URI\ErrorsTest::Invalid_Section_Errors
+	 * @depends projectcleverweb\uri\ErrorsTest::Invalid_Section_Errors
 	 */
 	public function Reset() {
-		$uri1 = new \uri('example.com/original/path');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		
-		// Check Replace
-		$this->assertEquals('example.com/alternative/path', $uri1->replace('PATH', '/alternative/path'));
-		$uri1->reset();
-		$this->assertEquals('example.com/original/path', $uri1->str());
+		$uri = $this->uri->average1;
+		$this->assertEquals('http://example.com/alt/path/to/file.ext', $uri->replace('PATH', '/alt/path/to/file.ext'));
+		$uri->reset();
+		$this->assertEquals('http://example.com/path/to/file.ext', $uri->str());
 	}
 	
 	/**
@@ -88,25 +64,22 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 * @depends Reset
 	 */
 	public function Cloning() {
-		$uri1 = new \uri('example.com/original/path');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
+		$uri = $this->uri->average1;
 		
 		// Make sure that clone is still NOT working as the user expects (reference still intact)
-		$clone = @clone $uri1;
+		$clone = @clone $uri;
 		$clone->host = 'google.com';
-		$this->assertSame($uri1->host, $clone->host);
+		$this->assertSame($uri->host, $clone->host);
 		
-		$uri1->reset();
+		$uri->reset();
 		
 		// Make sure that standardized cloning method works
-		$uri1->host = 'facebook.com';
-		$new_clone = $uri1->make_clone();
+		$uri->host = 'facebook.com';
+		$new_clone = $uri->make_clone();
 		$new_clone->host = 'stackoverflow.com';
 		$this->assertSame('stackoverflow.com', $new_clone->host);
-		$this->assertSame('facebook.com', $uri1->host);
-		$this->assertSame($uri1->input, $new_clone->input);
+		$this->assertSame('facebook.com', $uri->host);
+		$this->assertSame($uri->input, $new_clone->input);
 	}
 	
 	/**
@@ -115,12 +88,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function To_Array() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Setup
 		$arr1 = $uri1->arr();
@@ -150,6 +119,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		$this->assertSame($arr2['host'], $arr2['domain']);
 		$this->assertSame($arr2['host'], $arr2['fqdn']);
 		
+		// https://user:pass@example.com:777/path/to/script.php?query=str#fragment
+		
 		// Check Values
 		$this->assertEquals('user:pass@example.com:777', $arr2['authority']);
 		$this->assertEquals('fragment', $arr2['fragment']);
@@ -170,12 +141,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function Path_Info() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Setup
 		$arr1 = $uri1->path_info();
@@ -204,12 +171,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function Queries() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		$this->assertSame(array(), $uri1->query_arr());
 		$this->assertSame(array('query' => 'str'), $uri2->query_arr());
@@ -220,13 +183,8 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 * @depends Reset
 	 */
 	public function Invoke() {
-		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		
-		$this->assertEquals('example.com', $uri1());
+		$uri = $this->uri->minimal;
+		$this->assertEquals('example.com', $uri());
 	}
 	
 	/**
@@ -235,27 +193,23 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function Sudo_Magic_Constants() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		$uri2 = new \uri('google.com');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->advanced1;
+		$uri2 = $this->uri->minimal;
 		
 		// __get() (parser checks normal __get())
-		$this->assertSame(NULL, @$uri1->does_not_exist);
+		$this->assertNull(@$uri1->does_not_exist);
 		
 		// __set()
 		$uri2->scheme_name = 'http';
-		$this->assertEquals('http://google.com', $uri2->str());
+		$this->assertEquals('http://example.com', $uri2->str());
 		$uri2->scheme_symbols = ':';
-		$this->assertEquals('http:google.com', $uri2->str());
+		$this->assertEquals('http:example.com', $uri2->str());
 		$uri2->scheme = 'https://';
-		$this->assertEquals('https://google.com', $uri2->str());
+		$this->assertEquals('https://example.com', $uri2->str());
 		$uri2->user = 'username';
-		$this->assertEquals('https://username@google.com', $uri2->str());
+		$this->assertEquals('https://username@example.com', $uri2->str());
 		$uri2->pass = 'password';
-		$this->assertEquals('https://username:password@google.com', $uri2->str());
+		$this->assertEquals('https://username:password@example.com', $uri2->str());
 		$uri2->host = 'facebook.com';
 		$this->assertEquals('https://username:password@facebook.com', $uri2->str());
 		$uri2->port = '8181';
@@ -270,7 +224,7 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		$uri2->reset();
 		
 		@$uri1->does_not_exist = 'nothing';
-		$this->assertSame(NULL, @$uri1->does_not_exist);
+		$this->assertNull(@$uri1->does_not_exist);
 		
 		// __isset()
 		$this->assertTrue(isset($uri1->scheme_name));
@@ -332,6 +286,6 @@ class GenerateTest extends \PHPUnit_Framework_TestCase {
 		error_reporting(0);
 		unset($uri1->does_not_exist); // Language Construct
 		error_reporting(-1);
-		$this->assertSame(NULL, @$uri1->does_not_exist);
+		$this->assertNull(@$uri1->does_not_exist);
 	}
 }

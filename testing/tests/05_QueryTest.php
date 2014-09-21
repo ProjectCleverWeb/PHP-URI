@@ -1,24 +1,17 @@
 <?php
 
-namespace ProjectCleverWeb\URI;
+namespace projectcleverweb\uri;
 
-/**
- * @requires PHP 5.4
- */
-class QueryTest extends \PHPUnit_Framework_TestCase {
+class QueryTest extends URI_Testing_Config {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Add() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		$this->assertTrue($uri1->query_add('a', 'b'));
 		$this->assertEquals('example.com?a=b', $uri1->str());
@@ -32,16 +25,12 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Replace() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		$this->assertNull($uri1->query_replace('a', 'b'));
 		$this->assertEquals('example.com?a=b', $uri1->str());
@@ -53,39 +42,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Remove() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str&test=true#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		$this->assertNull($uri1->query_remove('a'));
 		$this->assertEquals($uri1->input, $uri1->str());
 		$this->assertNull($uri2->query_remove('query'));
-		$this->assertEquals('https://user:pass@example.com:777/path/to/script.php?test=true#fragment', $uri2->str());
-		$this->assertNull($uri2->query_remove('test'));
 		$this->assertEquals('https://user:pass@example.com:777/path/to/script.php#fragment', $uri2->str());
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Exists() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		$uri3 = new \uri('google.com?empty');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
-		$this->assertEmpty($uri3->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
+		$uri3 = new uri('google.com?empty'); // make sure empty queries keys work
 		
 		$this->assertFalse($uri1->query_exists('a'));
 		$this->assertTrue($uri2->query_exists('query'));
@@ -94,34 +72,28 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Get() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
+		$uri3 = new uri('google.com?empty'); // make sure empty queries keys work
 		
 		$this->assertNull($uri1->query_get('a'));
 		$this->assertEquals('str', $uri2->query_get('query'));
+		$this->assertSame('', $uri3->query_get('empty'));
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Query_Rename() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		$uri3 = new \uri('google.com?empty');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
+		$uri3 = new uri('google.com?empty'); // make sure empty queries keys work
 		
 		$this->assertFalse($uri1->query_rename('a', 'b'));
 		$this->assertEquals($uri1->input, $uri1->str());

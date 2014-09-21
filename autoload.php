@@ -1,22 +1,25 @@
 <?php
 /**
- * PHP URI Library
+ * Autoloader for PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
- * 
- * Originally inspired by P Guardiario's work.
+ * Licensed under WTFPL, so have at it.
  * 
  * @author    Nicholas Jordon
- * @link      https://github.com/ProjectCleverWeb/PHP-URI
+ * @link      https://github.com/ProjectCleverWeb
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
- * @version   2.0.0
- * @license   http://opensource.org/licenses/MIT
- * @see       http://en.wikipedia.org/wiki/URI_scheme
+ * @version   1.0.0
+ * @license   http://www.wtfpl.net/
  */
 
-// Simple PSR-4 autoloader
+/**
+ * Simple PSR-4 autoloader
+ * 
+ * This is ignored by code coverage because the autoload is not considered a
+ * part of the actual library, and is not required for the library to work in
+ * some cases. (such as when loaded by composer)
+ * 
+ * @codeCoverageIgnore
+ */
 spl_autoload_register(function ($class) {
 	$prefix = 'projectcleverweb\\uri';
 	

@@ -1,24 +1,17 @@
 <?php
 
-namespace ProjectCleverWeb\URI;
+namespace projectcleverweb\uri;
 
-/**
- * @requires PHP 5.4
- */
-class ModifyTest extends \PHPUnit_Framework_TestCase {
+class ModifyTest extends URI_Testing_Config {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Scheme_Name() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -43,16 +36,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Scheme_Symbols() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -77,16 +66,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Scheme() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -116,13 +101,13 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_User() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		$uri3 = new \uri('user@gmail.com'); // user w/out pass
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
+		$uri3 = $this->uri->advanced4; // user w/out pass
 		
 		// Check For Errors
 		$this->assertEmpty($uri1->error);
@@ -139,7 +124,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		);
 		$uri3->user = 'jane';
 		$this->assertEquals(
-			'jane@gmail.com',
+			'jane@google.com',
 			$uri3->str()
 		);
 		// Check Prepend
@@ -161,20 +146,17 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Pass() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('jdoe@example.com'); // MUST have a user to have a password
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
+		$uri1 = $this->uri->advanced4; // MUST have a user to have a password
+		$uri2 = $this->uri->advanced1;
 		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
 		
 		// Check Replace
 		$this->assertEquals(
-			'jdoe:1234@example.com',
+			'jdoe:1234@google.com',
 			$uri1->replace('PASS', '1234')
 		);
 		$this->assertEquals(
@@ -183,7 +165,7 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		);
 		// Check Prepend
 		$this->assertEquals(
-			'jdoe:01234@example.com',
+			'jdoe:01234@google.com',
 			$uri1->prepend('PASS', '0')
 		);
 		// Check Append
@@ -193,23 +175,19 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 		);
 		// Check Alias
 		$this->assertEquals(
-			'jdoe:abc123@example.com',
+			'jdoe:abc123@google.com',
 			$uri1->replace('PASSWORD', 'abc123')
 		);
 	}
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Host() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -247,16 +225,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Port() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -285,16 +259,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Path() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -319,16 +289,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Query() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(
@@ -357,16 +323,12 @@ class ModifyTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @test
-	 * @depends ProjectCleverWeb\URI\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
 	 */
 	public function Modify_Fragment() {
 		// Test both when there is and isn't pre-existing data
-		$uri1 = new \uri('example.com');
-		$uri2 = new \uri('https://user:pass@example.com:777/path/to/script.php?query=str#fragment');
-		
-		// Check For Errors
-		$this->assertEmpty($uri1->error);
-		$this->assertEmpty($uri2->error);
+		$uri1 = $this->uri->minimal;
+		$uri2 = $this->uri->advanced1;
 		
 		// Check Replace
 		$this->assertEquals(

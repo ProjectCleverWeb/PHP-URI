@@ -1,4 +1,4 @@
-<phpunit bootstrap="testing/bootstrap.php" colors="true" coverageText="true">
+<phpunit bootstrap="testing/bootstrap.php" colors="true">
 	<testsuites>
 		<testsuite name="projectcleverweb\uri">
 			<directory>testing/tests</directory>
