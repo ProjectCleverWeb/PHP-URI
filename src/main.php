@@ -274,7 +274,7 @@ abstract class main extends overloading {
 	 * @return boolean       TRUE on success, FALSE otherwise
 	 */
 	public function query_add($key, $value) {
-		return query::add($this->object, $key, $value);
+		return modify_query::add($this->object, $key, $value);
 	}
 	
 	/**
@@ -285,7 +285,7 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function query_replace($key, $value) {
-		query::replace($this->object, $key, $value);
+		modify_query::replace($this->object, $key, $value);
 	}
 	
 	/**
@@ -295,7 +295,7 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function query_remove($key) {
-		query::remove($this->object, $key);
+		modify_query::remove($this->object, $key);
 	}
 	
 	/**
@@ -305,7 +305,7 @@ abstract class main extends overloading {
 	 * @return boolean     TRUE if the $key exists, FALSE otherwise
 	 */
 	public function query_exists($key) {
-		return query::exists($this->object, $key);
+		return modify_query::exists($this->object, $key);
 	}
 	
 	/**
@@ -317,7 +317,7 @@ abstract class main extends overloading {
 	 * @return mixed|null  The value of $key, or NULL if it does not exist.
 	 */
 	public function query_get($key) {
-		return query::get($this->object, $key);
+		return modify_query::get($this->object, $key);
 	}
 	
 	/**
@@ -330,7 +330,7 @@ abstract class main extends overloading {
 	 * @return boolean         TRUE on success, FALSE otherwise
 	 */
 	public function query_rename($key, $new_key) {
-		return query::rename($this->object, $key, $new_key);
+		return modify_query::rename($this->object, $key, $new_key);
 	}
 	
 	/**

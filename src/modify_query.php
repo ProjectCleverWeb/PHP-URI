@@ -28,7 +28,7 @@ namespace projectcleverweb\uri;
  * string should be done manually through generate::query_arr() and then
  * \projectcleverweb\uri\main::$query should be set (use http_build_query()).
  */
-class query {
+class modify_query {
 	
 	/*** Methods ***/
 	
