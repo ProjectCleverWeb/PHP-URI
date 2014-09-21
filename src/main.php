@@ -88,11 +88,12 @@ abstract class main extends overloading {
 		$this->object = parser::parse_uri($input);
 		
 		if (!empty($this->object->host)) {
+			$this->query = new query($this->object->query);
 			generate::authority($this->object);
 			generate::aliases($this->object);
 			
 			// Enable Chain Events
-			$this->chain = new chain($this);
+			$this->chain = new chain($this, $this->query);
 			
 			// References required for Sudo-Private Variables
 			$this->_make_references();
@@ -157,7 +158,6 @@ abstract class main extends overloading {
 		$this->password       = &$this->object->password;
 		$this->path           = &$this->object->path;
 		$this->port           = &$this->object->port;
-		$this->query          = &$this->object->query;
 		$this->scheme         = &$this->object->scheme;
 		$this->scheme_name    = &$this->object->scheme_name;
 		$this->scheme_symbols = &$this->object->scheme_symbols;
@@ -171,7 +171,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function str() {
-		return generate::string($this->object);
+		return generate::string($this, $this->object);
 	}
 	
 	/**
@@ -191,7 +191,7 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function p_str($prepend = '', $append = '') {
-		echo $prepend.generate::string($this->object).$append;
+		echo $prepend.$this->str().$append;
 	}
 	
 	/**
@@ -200,7 +200,7 @@ abstract class main extends overloading {
 	 * @return array The current URI as an array
 	 */
 	public function arr() {
-		return generate::to_array($this->object);
+		return generate::to_array($this, $this->object);
 	}
 	
 	/**
@@ -238,7 +238,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function replace($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -250,7 +250,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function prepend($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -262,7 +262,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function append($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -274,7 +274,7 @@ abstract class main extends overloading {
 	 * @return boolean       TRUE on success, FALSE otherwise
 	 */
 	public function query_add($key, $value) {
-		return modify_query::add($this->object, $key, $value);
+		return $this->query->add($key, $value);
 	}
 	
 	/**
@@ -285,7 +285,7 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function query_replace($key, $value) {
-		modify_query::replace($this->object, $key, $value);
+		$this->query->replace($key, $value);
 	}
 	
 	/**
@@ -295,7 +295,7 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function query_remove($key) {
-		modify_query::remove($this->object, $key);
+		$this->query->remove($key);
 	}
 	
 	/**
@@ -305,7 +305,7 @@ abstract class main extends overloading {
 	 * @return boolean     TRUE if the $key exists, FALSE otherwise
 	 */
 	public function query_exists($key) {
-		return modify_query::exists($this->object, $key);
+		return $this->query->exists($key);
 	}
 	
 	/**
@@ -317,7 +317,7 @@ abstract class main extends overloading {
 	 * @return mixed|null  The value of $key, or NULL if it does not exist.
 	 */
 	public function query_get($key) {
-		return modify_query::get($this->object, $key);
+		return $this->query->get($key);
 	}
 	
 	/**
@@ -330,7 +330,7 @@ abstract class main extends overloading {
 	 * @return boolean         TRUE on success, FALSE otherwise
 	 */
 	public function query_rename($key, $new_key) {
-		return modify_query::rename($this->object, $key, $new_key);
+		return $this->query->rename($key, $new_key);
 	}
 	
 	/**
@@ -351,7 +351,7 @@ abstract class main extends overloading {
 	 * @return object A new instance at the current state
 	 */
 	public function make_clone() {
-		$clone        = new $this(generate::string($this->object));
+		$clone        = new $this($this->str());
 		$clone->input = $this->input;
 		return $clone;
 	}

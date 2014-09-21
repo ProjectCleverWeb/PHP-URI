@@ -39,7 +39,7 @@ class query {
 	
 	/*** Magic Methods ***/
 	
-	public function __construct($query_str) {
+	public function __construct($query_str = '') {
 		$this->input           = $query_str;
 		$this->data            = parser::parse_query($this->input);
 		$this->build_spec      = PHP_QUERY_RFC3986;

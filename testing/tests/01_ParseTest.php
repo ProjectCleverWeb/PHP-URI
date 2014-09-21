@@ -72,7 +72,7 @@ class ParseTest extends URI_Testing_Config {
 		$this->assertEquals('skype', $uri2->scheme_name);
 		$this->assertEquals(':', $uri2->scheme_symbols);
 		$this->assertEquals('user123', $uri2->host);
-		$this->assertEquals('call', $uri2->query);
+		$this->assertEquals('call=', $uri2->query->str());
 		// email
 		$this->assertEquals('jdoe', $uri3->user);
 		$this->assertEquals('google.com', $uri3->host);

@@ -102,6 +102,6 @@ class parser {
 		if (!empty($query_str)) {
 			parse_str($query_str, $return);
 		}
-		return $return;
+		return (array) $return;
 	}
 }

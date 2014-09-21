@@ -41,9 +41,9 @@ class chain {
 	 * 
 	 * @param object $class The current 'main' instance
 	 */
-	public function __construct(main &$class) {
+	public function __construct(main &$class, query &$query) {
 		$this->class       = &$class;
-		$this->query       = new chain_query(new query($class->query), $this);
+		$this->query       = new chain_query($query, $this);
 		$this->error_count = 0;
 		return $this;
 	}

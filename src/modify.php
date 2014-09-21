@@ -35,7 +35,7 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme_name(&$object, $action, $str) {
+	public static function scheme_name(main &$main, &$object, $action, $str) {
 		$org = $object->scheme_name;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name) || empty($str))) {
@@ -45,7 +45,7 @@ class modify {
 			$object->scheme_symbols = '://';
 		}
 		
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme_symbols(&$object, $action, $str) {
+	public static function scheme_symbols(main &$main, &$object, $action, $str) {
 		$org = $object->scheme_symbols;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols) || empty($str))) {
@@ -64,7 +64,7 @@ class modify {
 			return FALSE;
 		}
 		
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme(&$object, $action, $str) {
+	public static function scheme(main &$main, &$object, $action, $str) {
 		$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (empty($object->scheme)) {
@@ -91,7 +91,7 @@ class modify {
 			$object->scheme_symbols = $org[2];
 			return FALSE;
 		}
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -102,8 +102,8 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function protocol(&$object, $action, $str) {
-		return self::scheme($object, $action, $str);
+	public static function protocol(main &$main, &$object, $action, $str) {
+		return self::scheme($main, $object, $action, $str);
 	}
 	
 	/**
@@ -114,11 +114,11 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function user(&$object, $action, $str) {
+	public static function user(main &$main, &$object, $action, $str) {
 		$str = rawurlencode($str);
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -129,8 +129,8 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function username(&$object, $action, $str) {
-		return self::user($object, $action, $str);
+	public static function username(main &$main, &$object, $action, $str) {
+		return self::user($main, $object, $action, $str);
 	}
 	
 	/**
@@ -141,11 +141,11 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function pass(&$object, $action, $str) {
+	public static function pass(main &$main, &$object, $action, $str) {
 		$str = rawurlencode($str);
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -156,8 +156,8 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function password(&$object, $action, $str) {
-		return self::pass($object, $action, $str);
+	public static function password(main &$main, &$object, $action, $str) {
+		return self::pass($main, $object, $action, $str);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function host(&$object, $action, $str) {
+	public static function host(main &$main, &$object, $action, $str) {
 		$org = $object->host;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if ((
@@ -180,7 +180,7 @@ class modify {
 			return FALSE;
 		}
 		
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -191,8 +191,8 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function domain(&$object, $action, $str) {
-		return self::host($object, $action, $str);
+	public static function domain(main &$main, &$object, $action, $str) {
+		return self::host($main, $object, $action, $str);
 	}
 	
 	/**
@@ -203,8 +203,8 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function fqdn(&$object, $action, $str) {
-		return self::host($object, $action, $str);
+	public static function fqdn(main &$main, &$object, $action, $str) {
+		return self::host($main, $object, $action, $str);
 	}
 	
 	/**
@@ -215,7 +215,7 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function port(&$object, $action, $str) {
+	public static function port(main &$main, &$object, $action, $str) {
 		$org = $object->port;
 		if (isset($str[0]) && $str[0] == ':') {
 			$str = substr($str, 1);
@@ -226,7 +226,7 @@ class modify {
 			return FALSE;
 		}
 		
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -237,26 +237,27 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function path(&$object, $action, $str) {
+	public static function path(main &$main, &$object, $action, $str) {
 		actions::callback($object, $action, __FUNCTION__, $str);
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 	
 	/**
 	 * Modfies the Query
 	 * 
-	 * @param  object $object  The object to modify
+	 * @param  main   $main    The main class
 	 * @param  string $action  The action to take
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function query(&$object, $action, $str) {
+	public static function query(main &$main, &$object, $action, $str) {
 		if (isset($str[0]) && $str[0] == '?') {
 			$str = substr($str, 1);
 		}
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
-		return generate::string($object);
+		$main->query = new query($object->query);
+		return generate::string($main, $object);
 	}
 	
 	/**
@@ -267,13 +268,13 @@ class modify {
 	 * @param  string $str     The modfication
 	 * @return string          Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function fragment(&$object, $action, $str) {
+	public static function fragment(main &$main, &$object, $action, $str) {
 		if (isset($str[0]) && $str[0] == '#') {
 			$str = substr($str, 1);
 		}
 		$str = urlencode($str);
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
-		return generate::string($object);
+		return generate::string($main, $object);
 	}
 }

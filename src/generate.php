@@ -83,12 +83,13 @@ class generate {
 	 * @param  object $object The object to use
 	 * @return string         The current URI string
 	 */
-	public static function string(&$object) {
+	public static function string(main &$main, &$object) {
 		self::scheme($object);
 		self::authority($object);
 		$str_arr = array($object->scheme, $object->authority, $object->path);
-		if (!empty($object->query)) {
-			$str_arr[] = '?'.$object->query;
+		$query   = $main->query->str();
+		if (!empty($query)) {
+			$str_arr[] = '?'.$query;
 		}
 		if (!empty($object->fragment)) {
 			$str_arr[] = '#'.$object->fragment;
@@ -102,9 +103,9 @@ class generate {
 	 * @param  object $object The object to use
 	 * @return array          The current URI as an array
 	 */
-	public static function to_array(&$object) {
+	public static function to_array(main &$main, &$object) {
 		$keys            = array('authority', 'fragment', 'host', 'pass', 'path', 'port', 'query', 'scheme', 'scheme_name', 'scheme_symbols', 'user');
-		$values          = array($object->authority, $object->fragment, $object->host, $object->pass, $object->path, $object->port, $object->query, $object->scheme, $object->scheme_name, $object->scheme_symbols, $object->user);
+		$values          = array($object->authority, $object->fragment, $object->host, $object->pass, $object->path, $object->port, $main->query->str(), $object->scheme, $object->scheme_name, $object->scheme_symbols, $object->user);
 		$arr             = array_combine($keys, $values);
 		$arr['domain']   = &$arr['host'];
 		$arr['fqdn']     = &$arr['host'];
@@ -163,6 +164,6 @@ class generate {
 	 * @return string             The resulting query string
 	 */
 	public static function query_str($data_array, $prefix = '', $seperator = '&', $spec = PHP_QUERY_RFC3986) {
-		return http_build_query($data_array, $prefix, $separator, $spec);
+		return http_build_query($data_array, $prefix, $seperator, $spec);
 	}
 }

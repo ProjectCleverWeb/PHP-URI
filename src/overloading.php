@@ -40,7 +40,9 @@ abstract class overloading {
 	 * @return string|null  The value of the variable, or NULL if it can't be accessed
 	 */
 	public function __get($name) {
-		if (isset($this->object->$name)) {
+		if (isset($this->object->$name) && $name == 'query') {
+			return $this->query;
+		} elseif (isset($this->object->$name)) {
 			generate::scheme($this->object);
 			generate::authority($this->object);
 			return $this->object->$name;
@@ -60,8 +62,11 @@ abstract class overloading {
 	 * @return string|null   The new value of the variable, or NULL if it can't be accessed
 	 */
 	public function __set($name, $value) {
-		if (isset($this->object->$name) && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, $value);
+		if (isset($this->object->$name) && $name == 'query') {
+			$this->query = new query($value);
+			return $this->query;
+		} elseif (isset($this->object->$name) && $name != 'authority') {
+			$this->replace($name, $value);
 			return $value;
 		} else {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);
@@ -77,6 +82,9 @@ abstract class overloading {
 	 * @return boolean       Returns TRUE if the variable is not empty, FALSE otherwise
 	 */
 	public function __isset($name) {
+		if ($name == 'query') {
+			return !empty($this->query->data);
+		}
 		generate::scheme($this->object);
 		generate::authority($this->object);
 		if (isset($this->object->$name)) {
@@ -94,8 +102,11 @@ abstract class overloading {
 	 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
 	 */
 	public function __unset($name) {
-		if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, '');
+		if (isset($this->object->$name) && $name == 'query') {
+			$this->query = new query;
+			return TRUE;
+		} elseif (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
+			$this->replace($name, '');
 			return TRUE;
 		} else {
 			$this->_err('FORBIDDEN', debug_backtrace(), $name);

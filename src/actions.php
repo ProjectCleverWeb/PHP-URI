@@ -29,19 +29,19 @@ class actions {
 	/**
 	 * Acts as universal alias to the modify class, ensuring the call is viable
 	 * 
-	 * @param  object $object  The object to modify
+	 * @param  main   $main    The main class
 	 * @param  string $action  The action to take
 	 * @param  string $section The section of the object to modify
 	 * @param  string $str     The modfication
 	 * @return string|false    Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function modify(&$object, $action, $section, $str) {
+	public static function modify(main &$main, &$object, $action, $section, $str) {
 		settype($section, 'string');
 		settype($str, 'string');
 		$section = strtolower($section);
 		
 		if (is_callable(array(__NAMESPACE__.'\\modify', $section))) {
-			return call_user_func_array(array(__NAMESPACE__.'\\modify', $section), array(&$object, $action, $str));
+			return call_user_func_array(array(__NAMESPACE__.'\\modify', $section), array(&$main, &$object, $action, $str));
 		} else {
 			return FALSE;
 		}
