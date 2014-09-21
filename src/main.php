@@ -129,7 +129,12 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function __clone() {
-		$this->_err('CLONE', debug_backtrace(), 'clone');
+		$trace = debug_backtrace();
+		$fmt = 'Invalid clone in <b>%2$s</b> on line <b>%3$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>%1$s->make_clone()</code> instead. Error triggered';
+		trigger_error(
+			sprintf($fmt, $trace[0]['class'], $trace[0]['file'], $trace[0]['line']),
+			E_USER_NOTICE
+		);
 	}
 	
 	
@@ -358,20 +363,5 @@ abstract class main extends overloading {
 	 */
 	public function reset() {
 		$this->__construct($this->input);
-	}
-	
-	/**
-	 * At the moment only __clone() calls this method, for __get(), __set(),
-	 * __isset(), and __unset() see overloading::_err()
-	 * 
-	 * @param  string $type  Type of error
-	 * @param  array  $trace The output from debug_backtrace()
-	 * @param  string $name  Property name
-	 * @return void
-	 */
-	private function _err($type, $trace, $name) {
-		$fmt = 'Invalid clone in <b>%4$s</b> on line <b>%5$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>make_clone()</code> instead. Error triggered';
-		
-		trigger_error(sprintf($fmt, $trace[0]['class'], $trace[0]['function'], $name, $trace[0]['file'], $trace[0]['line']), E_USER_NOTICE);
 	}
 }
