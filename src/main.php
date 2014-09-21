@@ -233,7 +233,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function replace($section, $str) {
-		return actions::modify($this->object, 'replace', $section, $str);
+		return actions::modify($this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -245,7 +245,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function prepend($section, $str) {
-		return actions::modify($this->object, 'prepend', $section, $str);
+		return actions::modify($this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -257,7 +257,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function append($section, $str) {
-		return actions::modify($this->object, 'append', $section, $str);
+		return actions::modify($this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
