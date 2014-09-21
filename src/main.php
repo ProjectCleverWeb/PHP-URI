@@ -108,7 +108,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function __toString() {
-		return generate::string($this->object);
+		return $this->str();
 	}
 	
 	/**
@@ -117,7 +117,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function __invoke() {
-		return generate::string($this->object);
+		return $this->str();
 	}
 	
 	/**
@@ -175,7 +175,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function to_string() {
-		return generate::string($this->object);
+		return $this->str();
 	}
 	
 	/**
@@ -204,7 +204,7 @@ abstract class main extends overloading {
 	 * @return array The current URI as an array
 	 */
 	public function to_array() {
-		return generate::to_array($this->object);
+		return $this->arr();
 	}
 	
 	/**
