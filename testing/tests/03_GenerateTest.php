@@ -184,7 +184,7 @@ class GenerateTest extends URI_Testing_Config {
 	 */
 	public function Invoke() {
 		$uri = $this->uri->minimal;
-		$this->assertEquals('example.com', $uri());
+		$this->assertSame($uri, $uri());
 	}
 	
 	/**

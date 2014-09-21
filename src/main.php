@@ -117,7 +117,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function __invoke() {
-		return $this->str();
+		return $this;
 	}
 	
 	/**
@@ -125,12 +125,12 @@ abstract class main extends overloading {
 	 * work as expected. This magic method warn's people to use make_clone()
 	 * instead.
 	 * 
-	 * @see http://stackoverflow.com/questions/25420812/issue-with-cloning-and-pass-by-reference
+	 * @see    http://stackoverflow.com/questions/25420812/issue-with-cloning-and-pass-by-reference
 	 * @return void
 	 */
 	public function __clone() {
 		$trace = debug_backtrace();
-		$fmt = 'Invalid clone in <b>%2$s</b> on line <b>%3$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>%1$s->make_clone()</code> instead. Error triggered';
+		$fmt   = 'Invalid clone in <b>%2$s</b> on line <b>%3$s</b>. Because of how cloning works, and how references are configured within the class, extensions of %1$s cannot be cloned. Please use <code>%1$s->make_clone()</code> instead. Error triggered';
 		trigger_error(
 			sprintf($fmt, $trace[0]['class'], $trace[0]['file'], $trace[0]['line']),
 			E_USER_NOTICE
