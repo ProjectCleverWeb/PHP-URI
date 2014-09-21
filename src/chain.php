@@ -22,15 +22,16 @@ namespace projectcleverweb\uri;
 /**
  * The Chaining Class
  * 
- * This class is like \projectcleverweb\uri\main except that only actionable
- * methods can be called. This mean they must either modify $object or print
- * something. It also means that the normal return of all methods is replaced
- * with this class in its' current instance.
+ * This class is like the main class except that only actionable methods can
+ * be called. This mean they must either modify $object or print something.
+ * It also means that the normal return of all methods is replaced with this
+ * class in its current instance.
  */
 class chain {
 	
 	/*** Variables ***/
 	private $class;
+	public  $query;
 	public  $error_count;
 	
 	/*** Magic Methods ***/
@@ -38,19 +39,28 @@ class chain {
 	/**
 	 * Simple method to init a chainable object
 	 * 
-	 * @param object $class The current instance of \projectcleverweb\uri\main
+	 * @param object $class The current 'main' instance
 	 */
-	public function __construct(&$class) {
+	public function __construct(main &$class) {
 		$this->class       = &$class;
+		$this->query       = new chain_query(new query($class->query), $this);
 		$this->error_count = 0;
+		return $this;
+	}
+	
+	/**
+	 * Return this chaining instance when invoked
+	 * 
+	 * @return chain The main chaining class
+	 */
+	public function __invoke() {
 		return $this;
 	}
 	
 	/*** Methods ***/
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::replace() within the
-	 * current instance
+	 * Chainable alias to main::replace() within the current instance
 	 * 
 	 * @return object This instance
 	 */
@@ -60,8 +70,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::replace() within the
-	 * current instance
+	 * Chainable alias to main::replace() within the current instance
 	 * 
 	 * @param  string $section The section to replace
 	 * @param  string $str     The string to replace the section with
@@ -75,8 +84,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::prepend() within the
-	 * current instance
+	 * Chainable alias to main::prepend() within the current instance
 	 * 
 	 * @param  string $section The section to prepend
 	 * @param  string $str     The string to prepend the section with
@@ -90,8 +98,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::append() within the
-	 * current instance
+	 * Chainable alias to main::append() within the current instance
 	 * 
 	 * @param  string $section The section to append
 	 * @param  string $str     The string to append the section with
@@ -105,8 +112,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::query_add() within the
-	 * current instance
+	 * Chainable alias to main::query_add() within the current instance
 	 * 
 	 * @param  string $key   The key to add
 	 * @param  mixed  $value The value of $key
@@ -118,8 +124,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::query_replace() within the
-	 * current instance
+	 * Chainable alias to main::query_replace() within the current instance
 	 * 
 	 * @param  string $key   The key to replace
 	 * @param  mixed  $value The value of $key
@@ -131,8 +136,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::query_remove() within the
-	 * current instance
+	 * Chainable alias to main::query_remove() within the current instance
 	 * 
 	 * @param  string $key The key to remove
 	 * @return object      This instance
@@ -143,8 +147,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::query_rename() within the
-	 * current instance
+	 * Chainable alias to main::query_rename() within the current instance
 	 * 
 	 * @param  string $key     The key to rename
 	 * @param  string $new_key The new name of $key
@@ -158,8 +161,7 @@ class chain {
 	}
 	
 	/**
-	 * Chainable alias to \projectcleverweb\uri\main::reset() within the
-	 * current instance
+	 * Chainable alias to main::reset() within the current instance
 	 * 
 	 * @return object This instance
 	 */
@@ -178,7 +180,8 @@ class chain {
 		$this->error_count++;
 		trigger_error(
 			sprintf(
-				'The method <code>%1$s()</code> cannot be chained in <b>%2$s</b> on line <b>%3$s</b>. Error triggered',
+				'The method <code>%1$s::%2$s()</code> cannot be chained in <b>%3$s</b> on line <b>%4$s</b>. Error triggered',
+				$trace[0]['class'],
 				$trace[0]['function'],
 				$trace[0]['file'],
 				$trace[0]['line']
@@ -249,6 +252,14 @@ class chain {
 	 * Invalid Chaining Method
 	 */
 	public function query_get() {
+		$this->_err(debug_backtrace());
+		return $this;
+	}
+	
+	/**
+	 * Invalid Chaining Method
+	 */
+	public function make_clone() {
 		$this->_err(debug_backtrace());
 		return $this;
 	}

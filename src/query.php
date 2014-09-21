@@ -36,7 +36,6 @@ class query {
 	public $build_spec;
 	public $build_prefix;
 	public $build_separator;
-	public $chain;
 	
 	/*** Magic Methods ***/
 	
@@ -46,7 +45,6 @@ class query {
 		$this->build_spec      = PHP_QUERY_RFC3986;
 		$this->build_prefix    = '';
 		$this->build_separator = '&';
-		$this->chain           = new chain_query;
 	}
 	
 	/**
@@ -69,6 +67,20 @@ class query {
 	}
 	
 	/*** Methods ***/
+	
+	/**
+	 * Updates the build settings
+	 * 
+	 * @param  string $prefix    The numeric prefix according to the PHP docs
+	 * @param  string $seperator The seperator you want to use in you query string (default is '&')
+	 * @param  int    $spec      The encoding to use (default is RFC3986)
+	 * @return void
+	 */
+	public function change_build($prefix = '', $separator = '&', $spec = PHP_QUERY_RFC3986) {
+		$this->build_prefix    = $prefix;
+		$this->build_separator = $separator;
+		$this->build_spec      = $spec;
+	}
 	
 	/**
 	 * Builds the query under according to the 'build_*' variable settings.

@@ -92,7 +92,7 @@ class parser {
 	}
 	
 	/**
-	 * Parses $query_str accourding to PHP parse_str()
+	 * Parses $query_str according to PHPs parse_str()
 	 * 
 	 * @param  string $query_str The string to parse
 	 * @return array             The resulting array
