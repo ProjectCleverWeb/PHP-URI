@@ -85,7 +85,7 @@ abstract class main extends overloading {
 		if (!is_string($input)) {
 			$input = '';
 		}
-		$this->object = parser::parse($input);
+		$this->object = parser::parse_uri($input);
 		
 		if (!empty($this->object->host)) {
 			generate::authority($this->object);
@@ -112,7 +112,7 @@ abstract class main extends overloading {
 	}
 	
 	/**
-	 * Invoked? just return the current URI as a string, nothing fancy.
+	 * Just return this class when invoked
 	 * 
 	 * @return string The current URI as a string
 	 */
@@ -195,7 +195,7 @@ abstract class main extends overloading {
 	}
 	
 	/**
-	 * Returns the current URI as an array
+	 * Get the current URI as an array
 	 * 
 	 * @return array The current URI as an array
 	 */

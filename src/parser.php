@@ -29,8 +29,8 @@ namespace projectcleverweb\uri;
 class parser {
 	/*** Constants ***/
 	
-	// This regex is broken down to be readable in regex_parse()
-	const REGEX = '/^(([a-z]+)?(\:\/\/|\:|\/\/))?(?:([a-z0-9$_\.\+!\*\'\(\),;&=\-]+)(?:\:([a-z0-9$_\.\+!\*\'\(\),;&=\-]*))?@)?((?:\d{3}.\d{3}.\d{3}.\d{3})|(?:[a-z0-9\-_]+(?:\.[a-z0-9\-_]+)*))(?:\:([0-9]+))?((?:\:|\/)[a-z0-9\-_\/\.]+)?(?:\?([a-z0-9$_\.\+!\*\'\(\),;:@&=\-%]*))?(?:#([a-z0-9\-_]*))?/i';
+	// This regex is broken down to be readable in regex_parse_uri()
+	const URI_REGEX = '/^(([a-z]+)?(\:\/\/|\:|\/\/))?(?:([a-z0-9$_\.\+!\*\'\(\),;&=\-]+)(?:\:([a-z0-9$_\.\+!\*\'\(\),;&=\-]*))?@)?((?:\d{3}.\d{3}.\d{3}.\d{3})|(?:[a-z0-9\-_]+(?:\.[a-z0-9\-_]+)*))(?:\:([0-9]+))?((?:\:|\/)[a-z0-9\-_\/\.]+)?(?:\?([a-z0-9$_\.\+!\*\'\(\),;:@&=\-%]*))?(?:#([a-z0-9\-_]*))?/i';
 	
 	/*** Methods ***/
 	
@@ -40,8 +40,8 @@ class parser {
 	 * @param  string $uri  The input to be parsed as a URI
 	 * @return object       If the input can be correctly parsed, then it returns an object with at least the 'host' populated
 	 */
-	public static function parse($uri) {
-		$parsed = self::regex_parse($uri);
+	public static function parse_uri($uri) {
+		$parsed = self::regex_parse_uri($uri);
 		
 		// Could not be parsed correctly
 		if (empty($parsed)) {
@@ -78,8 +78,8 @@ class parser {
 	 * @param  string $uri The URI to be parsed
 	 * @return array|false Returns an array if the sting could be correctly parsed, FALSE otherwise
 	 */
-	private static function regex_parse($uri) {
-		preg_match_all(self::REGEX, $uri, $parsed, PREG_SET_ORDER);
+	private static function regex_parse_uri($uri) {
+		preg_match_all(self::URI_REGEX, $uri, $parsed, PREG_SET_ORDER);
 		
 		// Host is required
 		if (!isset($parsed[0][5])) {
@@ -89,5 +89,19 @@ class parser {
 		// Return what was parsed, but make sure that each offset is set regardless
 		array_shift($parsed[0]); // we don't need the whole string
 		return $parsed[0] + array_fill(0, 10, '');
+	}
+	
+	/**
+	 * Parses $query_str accourding to PHP parse_str()
+	 * 
+	 * @param  string $query_str The string to parse
+	 * @return array             The resulting array
+	 */
+	public static function parse_query($query_str = '') {
+		$return = array();
+		if (!empty($query_str)) {
+			parse_str($query_str, $return);
+		}
+		return $return;
 	}
 }
