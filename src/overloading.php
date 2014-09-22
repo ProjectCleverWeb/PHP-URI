@@ -63,7 +63,7 @@ abstract class overloading {
 	 */
 	public function __set($name, $value) {
 		if ($name == 'query') {
-			$this->query = new query($value);
+			$this->query = new query($value, $this->query->build_prefix, $this->query->build_separator, $this->query->build_spec);
 			return $this->query;
 		} elseif (isset($this->object->$name) && $name != 'authority') {
 			$this->replace($name, $value);
