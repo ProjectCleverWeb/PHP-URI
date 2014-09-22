@@ -46,7 +46,7 @@ class chain_query {
 	public function __construct(query $class, chain $chain) {
 		$this->class       = &$class;
 		$this->chain       = &$chain;
-		$this->error_count = 0;
+		$this->error_count = &$chain->error_count;
 	}
 	
 	/**

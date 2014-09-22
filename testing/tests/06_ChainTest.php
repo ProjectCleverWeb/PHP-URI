@@ -52,8 +52,21 @@ class ChainTest extends URI_Testing_Config {
 			->query_add('other', '1')
 			->query_replace('a', 'c')
 			->query_remove('temp')
-			->query_rename('a', 'b')
-		;
+			->query_rename('a', 'b');
+		
+		$this->assertSame('example.com?other=1&b=c', $uri->str());
+		
+		$uri->reset();
+		
+		$invoke = $uri->chain();
+		$invoke()
+			->query->add('a', 'b')
+			->query->add('temp', 'temp')
+			->query->add('other', '1')
+			->query->replace('a', 'c')
+			->query->remove('temp')
+			->query->rename('a', 'b');
+		
 		$this->assertSame('example.com?other=1&b=c', $uri->str());
 	}
 	
@@ -74,9 +87,12 @@ class ChainTest extends URI_Testing_Config {
 			->query_array()
 			->query_exists()
 			->query_get()
-		;
+			->query->to_array()
+			->query->exists()
+			->query->get()
+			->make_clone();
 		
-		$this->assertSame(8, $uri->chain()->error_count);
+		$this->assertSame(12, $uri->chain()->error_count);
 		
 		// invalid inputs (no notices)
 		$uri->chain()
@@ -85,7 +101,7 @@ class ChainTest extends URI_Testing_Config {
 			->append('SCHEME', '/invalid/')
 			->query_rename('does_not_exist', 'nothing')
 		;
-		$this->assertSame(12, $uri->chain()->error_count);
+		$this->assertSame(16, $uri->chain()->error_count);
 		
 		$this->assertEquals($uri->input, $uri->str());
 	}

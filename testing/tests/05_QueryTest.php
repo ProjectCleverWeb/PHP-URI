@@ -67,7 +67,7 @@ class QueryTest extends URI_Testing_Config {
 		
 		$this->assertFalse($uri1->query->exists('a'));
 		$this->assertTrue($uri2->query->exists('query'));
-		$this->assertTrue($uri3->query->exists('empty'));
+		$this->assertTrue($uri3->query_exists('empty')); // test the alias too
 	}
 	
 	/**
@@ -82,7 +82,7 @@ class QueryTest extends URI_Testing_Config {
 		
 		$this->assertNull($uri1->query->get('a'));
 		$this->assertEquals('str', $uri2->query->get('query'));
-		$this->assertSame('', $uri3->query->get('empty'));
+		$this->assertSame('', $uri3->query_get('empty')); // test the alias too
 	}
 	
 	/**
@@ -101,5 +101,26 @@ class QueryTest extends URI_Testing_Config {
 		$this->assertEquals('https://user:pass@example.com:777/path/to/script.php?test=str#fragment', $uri2->str());
 		$this->assertTrue($uri3->query->rename('empty', 'none'));
 		$this->assertEquals('google.com?none=', $uri3->str());
+	}
+	
+	/**
+	 * @test
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
+	 */
+	public function Invoke_Query() {
+		$query = $this->uri->advanced1->query;
+		$this->assertSame($query, $query());
+	}
+	
+	/**
+	 * @test
+	 * @depends projectcleverweb\uri\GenerateTest::Reset
+	 */
+	public function Build_Query() {
+		$query = $this->uri->advanced1->query;
+		$query->add(0, 123);
+		$query->add('testing', array('one', 'two', 'three'));
+		$query->change_build('pf_', '&amp;', PHP_QUERY_RFC1738);
+		$this->assertSame('query=str&amp;pf_0=123&amp;testing%5B0%5D=one&amp;testing%5B1%5D=two&amp;testing%5B2%5D=three', $query->str());
 	}
 }

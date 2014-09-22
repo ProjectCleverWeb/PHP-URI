@@ -65,10 +65,10 @@ class generate {
 	 */
 	public static function authority(&$object) {
 		$str_arr = array($object->user);
-		if (empty($object->user) == FALSE && empty($object->pass)) {
-			$str_arr[] = '@';
-		} elseif (!empty($object->user)) {
+		if (!empty($object->pass)) { // pass can only be parsed if user exists as well
 			$str_arr[] = ':'.$object->pass.'@';
+		} elseif (!empty($object->user)) {
+			$str_arr[] = '@';
 		}
 		$str_arr[] = $object->host;
 		if (!empty($object->port)) {
@@ -137,17 +137,6 @@ class generate {
 		ksort($info);
 		
 		return $info;
-	}
-	
-	/**
-	 * The current $query string parsed into an array
-	 * 
-	 * @param  object $object The object to use
-	 * @return array          The query string as an array
-	 */
-	public static function query_array(&$object) {
-		parse_str($object->query, $return);
-		return (array) $return;
 	}
 	
 	/**

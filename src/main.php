@@ -227,7 +227,7 @@ abstract class main extends overloading {
 	 * @return array The query array
 	 */
 	public function query_arr() {
-		return generate::query_array($this->object);
+		return $this->query->data;
 	}
 	
 	/**

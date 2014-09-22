@@ -62,16 +62,15 @@ abstract class overloading {
 	 * @return string|null   The new value of the variable, or NULL if it can't be accessed
 	 */
 	public function __set($name, $value) {
-		if (isset($this->object->$name) && $name == 'query') {
+		if ($name == 'query') {
 			$this->query = new query($value);
 			return $this->query;
 		} elseif (isset($this->object->$name) && $name != 'authority') {
 			$this->replace($name, $value);
 			return $value;
-		} else {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return NULL;
 		}
+		$this->_err('FORBIDDEN', debug_backtrace(), $name);
+		return NULL;
 	}
 	
 	/**
@@ -102,16 +101,15 @@ abstract class overloading {
 	 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
 	 */
 	public function __unset($name) {
-		if (isset($this->object->$name) && $name == 'query') {
+		if ($name == 'query') {
 			$this->query = new query;
 			return TRUE;
-		} elseif (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
+		} elseif (isset($this->object->$name) && preg_match('/^(host|authority)$/', $name) === 0) {
 			$this->replace($name, '');
 			return TRUE;
-		} else {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return FALSE;
 		}
+		$this->_err('FORBIDDEN', debug_backtrace(), $name);
+		return FALSE;
 	}
 	
 	/**

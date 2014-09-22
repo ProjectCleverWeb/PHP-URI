@@ -221,7 +221,7 @@ class modify {
 			$str = substr($str, 1);
 		}
 		actions::callback($object, $action, __FUNCTION__, $str);
-		if (!(preg_match('/\A[0-9]{0,5}\Z/', $object->port) || empty($str))) {
+		if (!preg_match('/\A[0-9]{0,5}\Z/', $object->port)) {
 			$object->port = $org;
 			return FALSE;
 		}
