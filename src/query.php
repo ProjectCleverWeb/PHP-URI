@@ -33,18 +33,18 @@ class query {
 	
 	public $input;
 	public $data;
-	public $build_spec;
 	public $build_prefix;
 	public $build_separator;
+	public $build_spec;
 	
 	/*** Magic Methods ***/
 	
-	public function __construct($query_str = '') {
+	public function __construct($query_str = '', $build_prefix = '', $build_separator = '&', $build_spec = PHP_QUERY_RFC3986) {
 		$this->input           = $query_str;
-		$this->data            = parser::parse_query($this->input);
-		$this->build_spec      = PHP_QUERY_RFC3986;
-		$this->build_prefix    = '';
-		$this->build_separator = '&';
+		$this->build_prefix    = $build_prefix;
+		$this->build_separator = $build_separator;
+		$this->build_spec      = $build_spec;
+		$this->data            = parser::parse_query($this->input, $this->build_separator);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class query {
 	 * Updates the build settings
 	 * 
 	 * @param  string $prefix    The numeric prefix according to the PHP docs
-	 * @param  string $seperator The seperator you want to use in you query string (default is '&')
+	 * @param  string $separator The separator you want to use in you query string (default is '&')
 	 * @param  int    $spec      The encoding to use (default is RFC3986)
 	 * @return void
 	 */

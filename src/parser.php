@@ -97,9 +97,12 @@ class parser {
 	 * @param  string $query_str The string to parse
 	 * @return array             The resulting array
 	 */
-	public static function parse_query($query_str = '') {
+	public static function parse_query($query_str = '', $separator = '&') {
 		$return = array();
 		if (!empty($query_str)) {
+			if ($separator != '&') {
+				$query_str = str_replace($separator, '&', $query_str);
+			}
 			parse_str($query_str, $return);
 		}
 		return (array) $return;

@@ -148,11 +148,11 @@ class generate {
 	 * @see    http://php.net/manual/en/function.http-build-query.php
 	 * @param  array  $data_array The array to make into a query string
 	 * @param  string $prefix     The numeric prefix according to the PHP docs
-	 * @param  string $seperator  The seperator you want to use in you query string (default is '&')
+	 * @param  string $separator  The separator you want to use in you query string (default is '&')
 	 * @param  int    $spec       The encoding to use (default is RFC3986)
 	 * @return string             The resulting query string
 	 */
-	public static function query_str($data_array, $prefix = '', $seperator = '&', $spec = PHP_QUERY_RFC3986) {
-		return http_build_query($data_array, $prefix, $seperator, $spec);
+	public static function query_str($data_array, $prefix = '', $separator = '&', $spec = PHP_QUERY_RFC3986) {
+		return http_build_query($data_array, $prefix, $separator, $spec);
 	}
 }

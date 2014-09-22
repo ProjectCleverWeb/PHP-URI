@@ -1,6 +1,5 @@
-### Build Process ###
-/node_modules
-/npm-debug.log
+### Unit Testing ###
+/coverage
 
 ### OS ###
 .DS_Store
