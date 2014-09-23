@@ -30,29 +30,52 @@ namespace projectcleverweb\uri;
 abstract class main extends overloading {
 	/*** Variables ***/
 	
-	public $error;
+	/**
+	 * @var string       $input The input of __construct() (this is always set, even if the input is invalid)
+	 * @var false|string $error FALSE if everything is correcty parsed, is a string otherwise (error msg)
+	 */
 	public $input;
+	public $error;
 	
-	/*
-	"Ghost" Variables
-	=================
-	These variables can be accesed from within the class (or by parent/child
-	classes), but as far as the rest of PHP is concerned, these variables
-	simply don't exist. This basically means, if you don't know what your doing
-	just leave these alone.
+	/**
+	 * "Ghost" Variables
+	 * =================
+	 * These variables can be accesed from within the class (or by parent/child
+	 * classes), but as far as the rest of PHP is concerned, these variables
+	 * simply don't exist. This basically means, if you don't know what your doing
+	 * just leave these alone.
+	 * 
+	 * @var stdClass $object The primary data object
+	 * @var chain    $chain  The instance of 'chain' for this class (only accessible via chain())
 	*/
 	protected $object;
-	protected $query;
 	protected $chain;
 	
-	/*
-	Sudo-Private Variables
-	======================
-	These variables can be accessed just like normal public variables, and can
-	even be changed like public variables. This implementation of private
-	variables combined with the __get(), __set(), __isset(), & __unset() magic
-	constants allow each variable to stay in sync with the group, and still be
-	accessable.
+	/**
+	 * Sudo-Private Variables
+	 * ======================
+	 * These variables can be accessed just like normal public variables, and can
+	 * even be changed like public variables. This implementation of private
+	 * variables combined with the __get(), __set(), __isset(), & __unset() magic
+	 * constants allow each variable to stay in sync with the group, and still be
+	 * accessable.
+	 * 
+	 * @var  string $authority      This is automatically generated, and cannot be changed directly.
+	 * @var  string $domain         Alias of $host (by reference)
+	 * @var  string $fqdn           Alias of $host (by reference)
+	 * @var  string $fragment       The fragment for the uri
+	 * @var  string $host           The host for the uri (required for the URI to be correctly parsed)
+	 * @var  string $protocol       Alias of $scheme (by reference)
+	 * @var  string $pass           The password for the uri
+	 * @var  string $password       Alias of $pass (by reference)
+	 * @var  string $path           The path for the uri
+	 * @var  string $port           The port for the uri
+	 * @var  string $scheme         The scheme for the uri
+	 * @var  string $scheme_name    The name of the scheme for the uri
+	 * @var  string $scheme_symbols The scheme symbols for the uri
+	 * @var  string $user           The user for the uri
+	 * @var  string $username       Alias of $user (by reference)
+	 * @var  query  $query          The current instance of 'query' for this URI
 	*/
 	private $authority;
 	private $domain;
@@ -69,6 +92,7 @@ abstract class main extends overloading {
 	private $scheme_symbols;
 	private $user;
 	private $username;
+	protected $query;
 	
 	
 	
@@ -88,6 +112,7 @@ abstract class main extends overloading {
 		$this->object = parser::parse_uri($input);
 		
 		if (!empty($this->object->host)) {
+			$this->error = FALSE;
 			$this->query = new query($this->object->query);
 			generate::authority($this->object);
 			generate::aliases($this->object);
