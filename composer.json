@@ -1,7 +1,7 @@
 {
 	"name": "projectcleverweb/php-uri",
-	"description": "A PHP library for working with URI's, that is designed around the URI standard. Requires PHP 5.4 or later. This library replaces and extends all of PHP's parse_url() features, and even has some handy aliases.",
-	"version": "1.0.0",
+	"description": "A PHP library for working with URIs (aka URLs), that is designed around the URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces and extends all of PHP's parse_url() features, and adds several new features for manipulating URI/URL strings.",
+	"version": "2.0.0-dev",
 	"keywords": [
 		"uri",
 		"url",
@@ -29,5 +29,11 @@
 		"psr-4": {
 			"projectcleverweb\\uri\\": "src"
 		}
-	}
+	},
+	"extra": {
+		"branch-alias": {
+			"2.0.0-dev": "2.0.0-dev",
+			"2.0.0-dev": "2.0.0-query"
+		}
+	},
 }
