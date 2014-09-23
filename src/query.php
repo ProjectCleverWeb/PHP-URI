@@ -138,7 +138,7 @@ class query {
 	 * @param mixed  $value The data to add
 	 * @return boolean      TRUE if $key was set, FALSE if the key already existed
 	 */
-	public function add($key, $value) {
+	public function add($key, $value = '') {
 		if (!isset($this->data[$key])) {
 			$this->data[$key] = $value;
 			return TRUE;
@@ -154,7 +154,7 @@ class query {
 	 * @param mixed  $value The data to add
 	 * @return void
 	 */
-	public function replace($key, $value) {
+	public function replace($key, $value = '') {
 		$this->data[$key] = $value;
 	}
 	
