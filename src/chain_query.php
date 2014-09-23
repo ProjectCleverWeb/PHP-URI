@@ -69,11 +69,11 @@ class chain_query {
 	 * 
 	 * @param  string $prefix    The numeric prefix according to the PHP docs
 	 * @param  string $seperator The seperator you want to use in you query string (default is '&')
-	 * @param  int    $spec      The encoding to use (default is RFC3986)
+	 * @param  int    $enc       The encoding to use (default is RFC3986)
 	 * @return chain             The main chaining class
 	 */
-	public function change_build($prefix = '', $separator = '&', $spec = PHP_QUERY_RFC3986) {
-		$this->class->change_build($prefix, $separator, $spec);
+	public function change_build($prefix = '', $separator = '&', $enc = PHP_QUERY_RFC3986) {
+		$this->class->change_build($prefix, $separator, $enc);
 		return $this->chain;
 	}
 	

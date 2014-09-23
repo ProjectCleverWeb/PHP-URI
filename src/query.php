@@ -2,9 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -29,19 +30,34 @@ class query {
 	
 	/*** Variables ***/
 	
+	/**
+	 * @var string  $input           The original string that was parsed
+	 * @var array   $data            The parsed data as an array
+	 * @var string  $build_prefix    The numeric prefix as defined by http_build_query()
+	 * @var string  $build_separator The separator as defined by http_build_query()
+	 * @var integer $build_enc       The encoding as defined by http_build_query()
+	 */
 	public $input;
 	public $data;
 	public $build_prefix;
 	public $build_separator;
-	public $build_spec;
+	public $build_enc;
 	
 	/*** Magic Methods ***/
 	
-	public function __construct($query_str = '', $build_prefix = '', $build_separator = '&', $build_spec = PHP_QUERY_RFC3986) {
+	/**
+	 * Parses a query string into a data array so it can be manipulated.
+	 * 
+	 * @param string  $query_str       The string to parse
+	 * @param string  $build_prefix    The numeric prefix as defined by http_build_query()
+	 * @param string  $build_separator The separator as defined by http_build_query()
+	 * @param integer $build_enc       The encoding as defined by http_build_query()
+	 */
+	public function __construct($query_str = '', $build_prefix = '', $build_separator = '&', $build_enc = PHP_QUERY_RFC3986) {
 		$this->input           = $query_str;
 		$this->build_prefix    = $build_prefix;
 		$this->build_separator = $build_separator;
-		$this->build_spec      = $build_spec;
+		$this->build_enc       = $build_enc;
 		$this->data            = parser::parse_query($this->input, $this->build_separator);
 	}
 	
@@ -58,7 +74,7 @@ class query {
 	/**
 	 * Just return this class when invoked
 	 * 
-	 * @return string The current query string
+	 * @return query This instance
 	 */
 	public function __invoke() {
 		return $this;
@@ -71,13 +87,13 @@ class query {
 	 * 
 	 * @param  string $prefix    The numeric prefix according to the PHP docs
 	 * @param  string $separator The separator you want to use in you query string (default is '&')
-	 * @param  int    $spec      The encoding to use (default is RFC3986)
+	 * @param  int    $enc       The encoding to use (default is RFC3986)
 	 * @return void
 	 */
-	public function change_build($prefix = '', $separator = '&', $spec = PHP_QUERY_RFC3986) {
+	public function change_build($prefix = '', $separator = '&', $enc = PHP_QUERY_RFC3986) {
 		$this->build_prefix    = $prefix;
 		$this->build_separator = $separator;
-		$this->build_spec      = $spec;
+		$this->build_enc       = $enc;
 	}
 	
 	/**
@@ -87,7 +103,7 @@ class query {
 	 * @return string The current query string
 	 */
 	public function str() {
-		return generate::query_str($this->data, $this->build_prefix, $this->build_separator, $this->build_spec);
+		return generate::query_str($this->data, $this->build_prefix, $this->build_separator, $this->build_enc);
 	}
 	
 	/**
@@ -132,9 +148,9 @@ class query {
 	 * Adds query var to the query string if it is not already set and returns
 	 * TRUE. Otherwise it returns FALSE. (does not recurse into $data)
 	 * 
-	 * @param string $key   The key to add data to
-	 * @param mixed  $value The data to add
-	 * @return boolean      TRUE if $key was set, FALSE if the key already existed
+	 * @param  string $key   The key to add data to
+	 * @param  mixed  $value The data to add
+	 * @return boolean       TRUE if $key was set, FALSE if the key already existed
 	 */
 	public function add($key, $value = '') {
 		if (!isset($this->data[$key])) {
@@ -148,8 +164,8 @@ class query {
 	 * Adds query var to the query string regardless if it already set or not.
 	 * (does not recurse into $data)
 	 * 
-	 * @param string $key   The key to replace (or add)
-	 * @param mixed  $value The data to add
+	 * @param  string $key   The key to replace (or add)
+	 * @param  mixed  $value The data to add
 	 * @return void
 	 */
 	public function replace($key, $value = '') {
@@ -159,7 +175,7 @@ class query {
 	/**
 	 * Removes $key from the query if it exists. (does not recurse into $data)
 	 * 
-	 * @param string $key The key to remove (if it exists)
+	 * @param  string $key The key to remove (if it exists)
 	 * @return void
 	 */
 	public function remove($key) {
@@ -198,9 +214,9 @@ class query {
 	 * string and is successfully renamed, then TRUE is returned. Otherwise
 	 * FALSE is returned. (does not recurse into $data)
 	 * 
-	 * @param string $key The key to rename
-	 * @param string $key The new name of $key
-	 * @return boolean    TRUE if the key existed and was replaced, FALSE otherwise
+	 * @param  string $key     The key to rename
+	 * @param  string $new_key The new name of $key
+	 * @return boolean         TRUE if the key existed and was replaced, FALSE otherwise
 	 */
 	public function rename($key, $new_key) {
 		if (isset($this->data[$key])) {
@@ -217,7 +233,7 @@ class query {
 	 * not a big waste, just pass them back a regular clone. I am sure this will
 	 * help prevent some confusion/errors.
 	 * 
-	 * @return object A clone of this instance
+	 * @return query A clone of this instance
 	 */
 	public function make_clone() {
 		return clone $this;
@@ -229,6 +245,6 @@ class query {
 	 * @return void
 	 */
 	public function reset() {
-		$this->__construct($this->input, $this->build_prefix, $this->build_separator, $this->build_spec);
+		$this->__construct($this->input, $this->build_prefix, $this->build_separator, $this->build_enc);
 	}
 }

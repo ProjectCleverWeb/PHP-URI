@@ -2,9 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -36,7 +37,7 @@ class parser {
 	 * Wrapper function for parsing a string into a URI object
 	 * 
 	 * @param  string $uri  The input to be parsed as a URI
-	 * @return object       If the input can be correctly parsed, then it returns an object with at least the 'host' populated
+	 * @return \stdClass    If the input can be correctly parsed, then it returns an object with at least the 'host' populated
 	 */
 	public static function parse_uri($uri) {
 		$parsed = self::regex_parse_uri($uri);
@@ -93,6 +94,7 @@ class parser {
 	 * Parses $query_str according to PHPs parse_str()
 	 * 
 	 * @param  string $query_str The string to parse
+	 * @param  string $separator The separator as defined by http_build_query()
 	 * @return array             The resulting array
 	 */
 	public static function parse_query($query_str = '', $separator = '&') {
