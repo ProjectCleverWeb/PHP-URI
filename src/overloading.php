@@ -27,6 +27,7 @@ namespace projectcleverweb\uri;
  * 
  * @see http://php.net/manual/en/language.oop5.overloading.php
  * @property \stdClass $object The primary data object
+ * @property query     $query  The query class
  */
 abstract class overloading {
 	
