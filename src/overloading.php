@@ -2,11 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
- * 
- * Originally inspired by P Guardiario's work.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -27,7 +26,8 @@ namespace projectcleverweb\uri;
  * __call(), and __callStatic().
  * 
  * @see http://php.net/manual/en/language.oop5.overloading.php
- * @property object $object The data object from the main class
+ * @property \stdClass $object The primary data object
+ * @property query     $query  The query class
  */
 abstract class overloading {
 	
@@ -36,11 +36,13 @@ abstract class overloading {
 	 * means that what is returned should always be accurate. Triggers a notice
 	 * if the variable cannot be accessed.
 	 * 
-	 * @param  string $name The requested variable
-	 * @return string|null  The value of the variable, or NULL if it can't be accessed
+	 * @param  string $name      The requested variable
+	 * @return string|query|null The value of the variable, or NULL if it can't be accessed
 	 */
 	public function __get($name) {
-		if (isset($this->object->$name)) {
+		if ($name == 'query') {
+			return $this->query;
+		} elseif (isset($this->object->$name)) {
 			generate::scheme($this->object);
 			generate::authority($this->object);
 			return $this->object->$name;
@@ -55,18 +57,20 @@ abstract class overloading {
 	 * means that what is returned should always be accurate. Triggers a notice
 	 * if the variable cannot be accessed.
 	 * 
-	 * @param  string $name  The requested variable
-	 * @param  string $value The new value for the variable
-	 * @return string|null   The new value of the variable, or NULL if it can't be accessed
+	 * @param  string $name      The requested variable
+	 * @param  string $value     The new value for the variable
+	 * @return string|query|null The new value of the variable, or NULL if it can't be accessed
 	 */
 	public function __set($name, $value) {
-		if (isset($this->object->$name) && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, $value);
+		if ($name == 'query') {
+			$this->query = new query((string) $value, $this->query->build_prefix, $this->query->build_separator, $this->query->build_enc);
+			return $this->query;
+		} elseif (isset($this->object->$name) && $name != 'authority') {
+			$this->replace($name, $value);
 			return $value;
-		} else {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return NULL;
 		}
+		$this->_err('FORBIDDEN', debug_backtrace(), $name);
+		return NULL;
 	}
 	
 	/**
@@ -77,6 +81,9 @@ abstract class overloading {
 	 * @return boolean       Returns TRUE if the variable is not empty, FALSE otherwise
 	 */
 	public function __isset($name) {
+		if ($name == 'query') {
+			return !empty($this->query->data);
+		}
 		generate::scheme($this->object);
 		generate::authority($this->object);
 		if (isset($this->object->$name)) {
@@ -94,13 +101,15 @@ abstract class overloading {
 	 * @return boolean      Returns TRUE if the varaible was successfully emptied, FALSE otherwise.
 	 */
 	public function __unset($name) {
-		if (isset($this->object->$name) && $name != 'host' && $name != 'authority') {
-			actions::modify($this->object, 'replace', $name, '');
+		if ($name == 'query') {
+			$this->query = new query;
 			return TRUE;
-		} else {
-			$this->_err('FORBIDDEN', debug_backtrace(), $name);
-			return FALSE;
+		} elseif (isset($this->object->$name) && preg_match('/^(host|authority)$/', $name) === 0) {
+			$this->replace($name, '');
+			return TRUE;
 		}
+		$this->_err('FORBIDDEN', debug_backtrace(), $name);
+		return FALSE;
 	}
 	
 	/**

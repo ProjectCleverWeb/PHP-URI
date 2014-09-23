@@ -2,11 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
- * 
- * Originally inspired by P Guardiario's work.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -26,32 +25,58 @@ namespace projectcleverweb\uri;
  * many ways, this class simply acts as an extension of a PHP string. Calling
  * this class as if it were a string will result in the current URI string
  * being used throughout PHP.
+ * 
+ * @property query $query This is an instance of the query class (treat as if 'public')
  */
 abstract class main extends overloading {
 	/*** Variables ***/
 	
-	public $error;
+	/**
+	 * @var string       $input The input of __construct() (this is always set, even if the input is invalid)
+	 * @var false|string $error FALSE if everything is correcty parsed, is a string otherwise (error msg)
+	 */
 	public $input;
+	public $error;
 	
-	/*
-	"Ghost" Variables
-	=================
-	These variables can be accesed from within the class (or by parent/child
-	classes), but as far as the rest of PHP is concerned, these variables
-	simply don't exist. This basically means, if you don't know what your doing
-	just leave these alone.
+	/**
+	 * "Ghost" Variables
+	 * =================
+	 * These variables can be accesed from within the class (or by parent/child
+	 * classes), but as far as the rest of PHP is concerned, these variables
+	 * simply don't exist. This basically means, if you don't know what your doing
+	 * just leave these alone.
+	 * 
+	 * @var \stdClass $object The primary data object
+	 * @var chain     $chain  The instance of 'chain' for this class (only accessible via chain())
 	*/
 	protected $object;
 	protected $chain;
 	
-	/*
-	Sudo-Private Variables
-	======================
-	These variables can be accessed just like normal public variables, and can
-	even be changed like public variables. This implementation of private
-	variables combined with the __get(), __set(), __isset(), & __unset() magic
-	constants allow each variable to stay in sync with the group, and still be
-	accessable.
+	/**
+	 * Sudo-Private Variables
+	 * ======================
+	 * These variables can be accessed just like normal public variables, and can
+	 * even be changed like public variables. This implementation of private
+	 * variables combined with the __get(), __set(), __isset(), & __unset() magic
+	 * constants allow each variable to stay in sync with the group, and still be
+	 * accessable.
+	 * 
+	 * @var string $authority      This is automatically generated, and cannot be changed directly.
+	 * @var string $domain         Alias of $host (by reference)
+	 * @var string $fqdn           Alias of $host (by reference)
+	 * @var string $fragment       The fragment for the uri
+	 * @var string $host           The host for the uri (required for the URI to be correctly parsed)
+	 * @var string $protocol       Alias of $scheme (by reference)
+	 * @var string $pass           The password for the uri
+	 * @var string $password       Alias of $pass (by reference)
+	 * @var string $path           The path for the uri
+	 * @var string $port           The port for the uri
+	 * @var string $scheme         The scheme for the uri
+	 * @var string $scheme_name    The name of the scheme for the uri
+	 * @var string $scheme_symbols The scheme symbols for the uri
+	 * @var string $user           The user for the uri
+	 * @var string $username       Alias of $user (by reference)
+	 * @var query  $query          The current instance of 'query' for this URI
 	*/
 	private $authority;
 	private $domain;
@@ -63,12 +88,12 @@ abstract class main extends overloading {
 	private $password;
 	private $path;
 	private $port;
-	private $query;
 	private $scheme;
 	private $scheme_name;
 	private $scheme_symbols;
 	private $user;
 	private $username;
+	protected $query;
 	
 	
 	
@@ -85,14 +110,16 @@ abstract class main extends overloading {
 		if (!is_string($input)) {
 			$input = '';
 		}
-		$this->object = parser::parse($input);
+		$this->object = parser::parse_uri($input);
 		
 		if (!empty($this->object->host)) {
+			$this->error = FALSE;
+			$this->query = new query($this->object->query);
 			generate::authority($this->object);
 			generate::aliases($this->object);
 			
 			// Enable Chain Events
-			$this->chain = new chain($this);
+			$this->chain = new chain($this, $this->query);
 			
 			// References required for Sudo-Private Variables
 			$this->_make_references();
@@ -103,7 +130,7 @@ abstract class main extends overloading {
 	
 	/**
 	 * In the event this class is called as or converted to a string, it will
-	 * return the current URI string, and NOT cause any errors.
+	 * return the current URI string, and NOT cause any errors. Alias of str()
 	 * 
 	 * @return string The current URI as a string
 	 */
@@ -112,9 +139,9 @@ abstract class main extends overloading {
 	}
 	
 	/**
-	 * Invoked? just return the current URI as a string, nothing fancy.
+	 * Just return this class when invoked
 	 * 
-	 * @return string The current URI as a string
+	 * @return main The current instance of 'main'
 	 */
 	public function __invoke() {
 		return $this;
@@ -146,7 +173,7 @@ abstract class main extends overloading {
 	 * 
 	 * @return void
 	 */
-	public function _make_references() {
+	private function _make_references() {
 		$this->authority      = &$this->object->authority;
 		$this->domain         = &$this->object->domain;
 		$this->fqdn           = &$this->object->fqdn;
@@ -157,7 +184,6 @@ abstract class main extends overloading {
 		$this->password       = &$this->object->password;
 		$this->path           = &$this->object->path;
 		$this->port           = &$this->object->port;
-		$this->query          = &$this->object->query;
 		$this->scheme         = &$this->object->scheme;
 		$this->scheme_name    = &$this->object->scheme_name;
 		$this->scheme_symbols = &$this->object->scheme_symbols;
@@ -171,7 +197,7 @@ abstract class main extends overloading {
 	 * @return string The current URI as a string
 	 */
 	public function str() {
-		return generate::string($this->object);
+		return generate::string($this, $this->object);
 	}
 	
 	/**
@@ -191,16 +217,16 @@ abstract class main extends overloading {
 	 * @return void
 	 */
 	public function p_str($prepend = '', $append = '') {
-		echo $prepend.generate::string($this->object).$append;
+		echo $prepend.$this->str().$append;
 	}
 	
 	/**
-	 * Returns the current URI as an array
+	 * Get the current URI as an array
 	 * 
 	 * @return array The current URI as an array
 	 */
 	public function arr() {
-		return generate::to_array($this->object);
+		return generate::to_array($this, $this->object);
 	}
 	
 	/**
@@ -227,7 +253,7 @@ abstract class main extends overloading {
 	 * @return array The query array
 	 */
 	public function query_arr() {
-		return generate::query_array($this->object);
+		return $this->query->data;
 	}
 	
 	/**
@@ -238,7 +264,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function replace($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -250,7 +276,7 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function prepend($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
@@ -262,83 +288,86 @@ abstract class main extends overloading {
 	 * @return string|false    The resulting URI if the modification is valid, FALSE otherwise
 	 */
 	public function append($section, $str) {
-		return actions::modify($this->object, __FUNCTION__, $section, $str);
+		return actions::modify($this, $this->object, __FUNCTION__, $section, $str);
 	}
 	
 	/**
-	 * Adds query var to the query string if it is not already set and returns
-	 * TRUE. Otherwise it returns FALSE
+	 * Alias of $query->add()
 	 * 
 	 * @param  string $key   The key to add
 	 * @param  mixed  $value The value of $key
 	 * @return boolean       TRUE on success, FALSE otherwise
 	 */
 	public function query_add($key, $value) {
-		return query::add($this->object, $key, $value);
+		return $this->query->add($key, $value);
 	}
 	
 	/**
-	 * Adds query var to the query string regardless if it already set or not
+	 * Alias of $query->str()
+	 * 
+	 * @return string The current query string
+	 */
+	public function query_string() {
+		return $this->query->str();
+	}
+	
+	/**
+	 * Alias of $query->replace()
 	 * 
 	 * @param  string $key   The key to replace
 	 * @param  mixed  $value The value of $key
 	 * @return void
 	 */
 	public function query_replace($key, $value) {
-		query::replace($this->object, $key, $value);
+		$this->query->replace($key, $value);
 	}
 	
 	/**
-	 * Removes $key from the query if it exists
+	 * Alias of $query->remove()
 	 * 
 	 * @param  string $key The key to remove
 	 * @return void
 	 */
 	public function query_remove($key) {
-		query::remove($this->object, $key);
+		$this->query->remove($key);
 	}
 	
 	/**
-	 * Checks if $key exists in the query
+	 * Alias of $query->exists()
 	 * 
 	 * @param  string $key The key to search for
 	 * @return boolean     TRUE if the $key exists, FALSE otherwise
 	 */
 	public function query_exists($key) {
-		return query::exists($this->object, $key);
+		return $this->query->exists($key);
 	}
 	
 	/**
-	 * Gets a specific var's value from the query. It is HIGHLY recommended
-	 * that you use query_arr() instead, when fetching multiple values from
-	 * the same query string. Returns NULL if $key does not exist.
+	 * Alias of $query->get()
 	 * 
 	 * @param  string $key The key to get
 	 * @return mixed|null  The value of $key, or NULL if it does not exist.
 	 */
 	public function query_get($key) {
-		return query::get($this->object, $key);
+		return $this->query->get($key);
 	}
 	
 	/**
-	 * Renames a specific $key within the query. If the key exists within query
-	 * string and is successfully renamed, the TRUE is returned. Otherwise
-	 * FALSE is returned.
+	 * Alias of $query->rename()
 	 * 
 	 * @param  string $key     The key to rename
 	 * @param  string $new_key The new name of $key
 	 * @return boolean         TRUE on success, FALSE otherwise
 	 */
 	public function query_rename($key, $new_key) {
-		return query::rename($this->object, $key, $new_key);
+		return $this->query->rename($key, $new_key);
 	}
 	
 	/**
-	 * Returns the chain class, which allows events to be chained together
-	 * rather than the reference being called several times. see
-	 * \projectcleverweb\uri\chain
+	 * Returns the current instance of the 'chain' class, which allows events to
+	 * be chained together rather than the reference being called several times.
 	 * 
-	 * @return object The chain class
+	 * @return chain The current instance of the 'chain' class
 	 */
 	public function chain() {
 		return $this->chain;
@@ -348,10 +377,10 @@ abstract class main extends overloading {
 	 * Returns the a new instance at the current state. This is meant to replace
 	 * traditional cloning.
 	 * 
-	 * @return object A new instance at the current state
+	 * @return main A new instance of 'main' at the current state
 	 */
 	public function make_clone() {
-		$clone        = new $this(generate::string($this->object));
+		$clone        = new $this($this->str());
 		$clone->input = $this->input;
 		return $clone;
 	}

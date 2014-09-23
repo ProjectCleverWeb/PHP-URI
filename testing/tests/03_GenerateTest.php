@@ -277,7 +277,7 @@ class GenerateTest extends URI_Testing_Config {
 		$this->assertSame('', $uri1->path);
 		$uri1->reset();
 		unset($uri1->query);
-		$this->assertSame('', $uri1->query);
+		$this->assertSame('', $uri1->query->str());
 		$uri1->reset();
 		unset($uri1->fragment);
 		$this->assertSame('', $uri1->fragment);
