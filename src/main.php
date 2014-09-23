@@ -25,6 +25,8 @@ namespace projectcleverweb\uri;
  * many ways, this class simply acts as an extension of a PHP string. Calling
  * this class as if it were a string will result in the current URI string
  * being used throughout PHP.
+ * 
+ * @property query $query This is an instance of the query class (treat as if 'public')
  */
 abstract class main extends overloading {
 	/*** Variables ***/

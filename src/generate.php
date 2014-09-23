@@ -2,9 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -21,7 +22,7 @@ namespace projectcleverweb\uri;
  * The Generator Class
  * 
  * This class makes sure everything stays in sync and is produced correctly.
- * Unlike the the modify class, this class only changes $object to keep
+ * Unlike the the modify class, this class only changes information to keep
  * things syncronized. It's primary purpose is to use the information in
  * $object to create some type of returnable value.
  */
@@ -32,10 +33,10 @@ class generate {
 	/**
 	 * Generates all the aliases for $object
 	 * 
-	 * @param  object $object The object to modify
+	 * @param  \stdClass $object The primary data object
 	 * @return void
 	 */
-	public static function aliases(&$object) {
+	public static function aliases(\stdClass &$object) {
 		$object->protocol = &$object->scheme;
 		$object->username = &$object->user;
 		$object->password = &$object->pass;
@@ -48,20 +49,20 @@ class generate {
 	 * is generated easier; and will likely help prevent redundant code in the
 	 * future
 	 * 
-	 * @param  object $object The object to modify
+	 * @param  \stdClass $object The primary data object
 	 * @return void
 	 */
-	public static function scheme(&$object) {
+	public static function scheme(\stdClass &$object) {
 		$object->scheme = $object->scheme_name.$object->scheme_symbols;
 	}
 	
 	/**
 	 * Regenerates the Authority string
 	 * 
-	 * @param  object $object The object to modify
+	 * @param  \stdClass $object The primary data object
 	 * @return void
 	 */
-	public static function authority(&$object) {
+	public static function authority(\stdClass &$object) {
 		$str_arr = array($object->user);
 		if (!empty($object->pass)) { // pass can only be parsed if user exists as well
 			$str_arr[] = ':'.$object->pass.'@';
@@ -78,10 +79,11 @@ class generate {
 	/**
 	 * Generate a the full URI as a string, from the current object
 	 * 
-	 * @param  object $object The object to use
-	 * @return string         The current URI string
+	 * @param  main      $main   The main class
+	 * @param  \stdClass $object The primary data object
+	 * @return string            The current URI string
 	 */
-	public static function string(main &$main, &$object) {
+	public static function string(main &$main, \stdClass &$object) {
 		self::scheme($object);
 		self::authority($object);
 		$str_arr = array($object->scheme, $object->authority, $object->path);
@@ -96,12 +98,13 @@ class generate {
 	}
 	
 	/**
-	 * Generate a the full URI as a string, from the current object
+	 * Generate a the full URI as an array, from the current object
 	 * 
-	 * @param  object $object The object to use
-	 * @return array          The current URI as an array
+	 * @param  main      $main   The main class
+	 * @param  \stdClass $object The primary data object
+	 * @return array             The current URI as an array
 	 */
-	public static function to_array(main &$main, &$object) {
+	public static function to_array(main &$main, \stdClass &$object) {
 		$keys            = array('authority', 'fragment', 'host', 'pass', 'path', 'port', 'query', 'scheme', 'scheme_name', 'scheme_symbols', 'user');
 		$values          = array($object->authority, $object->fragment, $object->host, $object->pass, $object->path, $object->port, $main->query->str(), $object->scheme, $object->scheme_name, $object->scheme_symbols, $object->user);
 		$arr             = array_combine($keys, $values);
@@ -116,12 +119,12 @@ class generate {
 	}
 	
 	/**
-	 * Returns various information about the current $path
+	 * Returns various information about the current $path as an array
 	 * 
-	 * @param  object $object The object to use
-	 * @return array          Associative array of information about the current $path
+	 * @param  \stdClass $object The primary data object
+	 * @return array             Associative array of information about the current $path
 	 */
-	public static function path_info(&$object) {
+	public static function path_info(\stdClass &$object) {
 		$defaults = array(
 			'dirname' => '',
 			'basename' => '',

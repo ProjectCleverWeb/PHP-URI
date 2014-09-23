@@ -2,9 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -28,6 +29,12 @@ namespace projectcleverweb\uri;
 class chain {
 	
 	/*** Variables ***/
+	
+	/**
+	 * @var main    $class       The main class
+	 * @var query   $query       The query class
+	 * @var integer $error_count Number of errors that occured during chaining
+	 */
 	private $class;
 	public  $query;
 	public  $error_count;
@@ -37,7 +44,8 @@ class chain {
 	/**
 	 * Simple method to init a chainable object
 	 * 
-	 * @param object $class The current 'main' instance
+	 * @param main  $class The main class
+	 * @param query $query The query class
 	 */
 	public function __construct(main &$class, query &$query) {
 		$this->class       = &$class;
@@ -58,9 +66,11 @@ class chain {
 	/*** Methods ***/
 	
 	/**
-	 * Chainable alias to main::replace() within the current instance
+	 * Chainable alias to main::p_str() within the current instance
 	 * 
-	 * @return object This instance
+	 * @param  string $prepend The string to prepend to the output
+	 * @param  string $append  The string to append to the output
+	 * @return chain           This instance
 	 */
 	public function p_str($prepend = '', $append = '') {
 		$this->class->p_str($prepend, $append);
@@ -72,7 +82,7 @@ class chain {
 	 * 
 	 * @param  string $section The section to replace
 	 * @param  string $str     The string to replace the section with
-	 * @return object          This instance
+	 * @return chain           This instance
 	 */
 	public function replace($section, $str) {
 		if ($this->class->replace($section, $str) === FALSE) {
@@ -86,7 +96,7 @@ class chain {
 	 * 
 	 * @param  string $section The section to prepend
 	 * @param  string $str     The string to prepend the section with
-	 * @return object          This instance
+	 * @return chain           This instance
 	 */
 	public function prepend($section, $str) {
 		if ($this->class->prepend($section, $str) === FALSE) {
@@ -100,7 +110,7 @@ class chain {
 	 * 
 	 * @param  string $section The section to append
 	 * @param  string $str     The string to append the section with
-	 * @return object          This instance
+	 * @return chain           This instance
 	 */
 	public function append($section, $str) {
 		if ($this->class->append($section, $str) === FALSE) {
@@ -114,7 +124,7 @@ class chain {
 	 * 
 	 * @param  string $key   The key to add
 	 * @param  mixed  $value The value of $key
-	 * @return object        This instance
+	 * @return chain         This instance
 	 */
 	public function query_add($key, $value) {
 		$this->class->query_add($key, $value);
@@ -126,7 +136,7 @@ class chain {
 	 * 
 	 * @param  string $key   The key to replace
 	 * @param  mixed  $value The value of $key
-	 * @return object        This instance
+	 * @return chain         This instance
 	 */
 	public function query_replace($key, $value) {
 		$this->class->query_replace($key, $value);
@@ -137,7 +147,7 @@ class chain {
 	 * Chainable alias to main::query_remove() within the current instance
 	 * 
 	 * @param  string $key The key to remove
-	 * @return object      This instance
+	 * @return chain       This instance
 	 */
 	public function query_remove($key) {
 		$this->class->query_remove($key);
@@ -149,7 +159,7 @@ class chain {
 	 * 
 	 * @param  string $key     The key to rename
 	 * @param  string $new_key The new name of $key
-	 * @return object          This instance
+	 * @return chain           This instance
 	 */
 	public function query_rename($key, $new_key) {
 		if ($this->class->query_rename($key, $new_key) === FALSE) {
@@ -161,7 +171,7 @@ class chain {
 	/**
 	 * Chainable alias to main::reset() within the current instance
 	 * 
-	 * @return object This instance
+	 * @return chain This instance
 	 */
 	public function reset() {
 		$this->class->reset();

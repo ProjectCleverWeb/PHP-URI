@@ -2,9 +2,10 @@
 /**
  * PHP URI Library
  * 
- * A PHP library for working with URI's, that is designed around the URI
- * standard. Requires PHP 5.4 or later. This library replaces and extends all
- * of PHP's parse_url() features, and even has some handy aliases.
+ * A PHP library for working with URIs (aka URLs), that is designed around the
+ * URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces
+ * and extends all of PHP's parse_url() features, and adds several new features
+ * for manipulating URI/URL strings.
  * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
@@ -29,6 +30,11 @@ class chain_query {
 	
 	/*** Variables ***/
 	
+	/**
+	 * @var query   $class       The query class
+	 * @var chain   $chain       The main class
+	 * @var integer $error_count Number of errors that occured during chaining
+	 */
 	private $class;
 	private $chain;
 	public  $error_count;
@@ -38,8 +44,8 @@ class chain_query {
 	/**
 	 * Simple method to init a chainable object for queries
 	 * 
-	 * @param query $class The current 'query' instance
-	 * @param chain $chain The current 'chain' instance
+	 * @param query $class The query class
+	 * @param chain $chain The chain class
 	 */
 	public function __construct(query $class, chain $chain) {
 		$this->class       = &$class;
@@ -122,9 +128,9 @@ class chain_query {
 	/**
 	 * Chainable alias to query::rename() within the current instance
 	 * 
-	 * @param string $key The key to rename
-	 * @param string $key The new name of $key
-	 * @return chain      The main chaining class
+	 * @param string $key     The key to rename
+	 * @param string $new_key The new name of $key
+	 * @return chain          The main chaining class
 	 */
 	public function rename($key, $new_key) {
 		$this->class->rename($key, $new_key);
@@ -196,7 +202,7 @@ class chain_query {
 	/**
 	 * Invalid Chaining Method
 	 */
-	public function exists($key) {
+	public function exists() {
 		$this->_err(debug_backtrace());
 		return $this->chain;
 	}
@@ -204,7 +210,7 @@ class chain_query {
 	/**
 	 * Invalid Chaining Method
 	 */
-	public function get($key) {
+	public function get() {
 		$this->_err(debug_backtrace());
 		return $this->chain;
 	}
