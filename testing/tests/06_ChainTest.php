@@ -34,14 +34,22 @@ class ChainTest extends URI_Testing_Config {
 		
 		$uri->chain()
 			->replace('SCHEME', 'http://')
-			->p_str()
-		;
-		$this->expectOutputString('http://example.com');
+			->p_str();
+		
+		echo '?';
+		
+		// print query from chain
+		$uri->chain()
+			->query->add('1', 'one')
+			->query->p_str();
+		
+		
+		$this->expectOutputString('http://example.com?1=one');
 	}
 	
 	/**
 	 * @test
-	 * @depends projectcleverweb\uri\GenerateTest::Reset
+	 * @depends projectcleverweb\uri\QueryTest::Query_Reset
 	 */
 	public function Chain_Query_Operations() {
 		$uri = $this->uri->minimal;
@@ -58,16 +66,34 @@ class ChainTest extends URI_Testing_Config {
 		
 		$uri->reset();
 		
+		// normal chain invoke
 		$invoke = $uri->chain();
 		$invoke()
 			->query->add('a', 'b')
 			->query->add('temp', 'temp')
-			->query->add('other', '1')
+			->query->add('other', '1');
+		
+		// invoking the query chain
+		$invoke_query = $uri->chain()->query;
+		$invoke_query()
 			->query->replace('a', 'c')
 			->query->remove('temp')
-			->query->rename('a', 'b');
+			->query->rename('a', 'b')
+			->query->add('new var', 'new val');
 		
-		$this->assertSame('example.com?other=1&b=c', $uri->str());
+		$this->assertEquals('example.com?other=1&b=c&new%20var=new%20val', $uri->str());
+		
+		// check changing build via chain.
+		$uri->chain()
+			->query->change_build('', '&', PHP_QUERY_RFC1738);
+		
+		$this->assertEquals('other=1&b=c&new+var=new+val', $uri->query->to_string());
+		
+		// check that reset works (does not effect build settings)
+		$uri->chain()
+			->query->reset()
+			->query->add('name', 'test value');
+		$this->assertEquals('name=test+value', $uri->query->str());
 	}
 	
 	/**
@@ -84,24 +110,29 @@ class ChainTest extends URI_Testing_Config {
 			->arr()
 			->to_array()
 			->path_info()
+			->query_string()
 			->query_array()
 			->query_exists()
 			->query_get()
+			->make_clone()
+			->query->str()
+			->query->to_string()
+			->query->arr()
 			->query->to_array()
 			->query->exists()
 			->query->get()
-			->make_clone();
+			->query->make_clone();
 		
-		$this->assertSame(12, $uri->chain()->error_count);
+		$this->assertSame(17, $uri->chain()->error_count);
 		
-		// invalid inputs (no notices)
+		// invalid inputs (no error notices are produced)
 		$uri->chain()
 			->replace('SCHEME', '/invalid/')
 			->prepend('SCHEME', '/invalid/')
 			->append('SCHEME', '/invalid/')
 			->query_rename('does_not_exist', 'nothing')
 		;
-		$this->assertSame(16, $uri->chain()->error_count);
+		$this->assertSame(21, $uri->chain()->error_count);
 		
 		$this->assertEquals($uri->input, $uri->str());
 	}

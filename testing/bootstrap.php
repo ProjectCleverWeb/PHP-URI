@@ -21,7 +21,7 @@ $inputs = (object) array(
 	'simple'    => 'http://example.com/sample',
 	'average1'  => 'http://example.com/path/to/file.ext',
 	'average2'  => 'https://google.com/path/to/file.ext?a=1&b=2&c=3',
-	'average3'  => 'https://facebook.co.uk/file.ext?a=1&b=2&c=3',
+	'average3'  => 'https://facebook.co.uk/?a=1&b=2&c=3',
 	'advanced1' => 'https://user:pass@example.com:777/path/to/script.php?query=str#fragment',
 	'advanced2' => 'ftp://jdoe:Pass123@example.com:21/home',
 	'advanced3' => 'skype:user123?call',
