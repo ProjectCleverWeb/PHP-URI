@@ -231,6 +231,6 @@ class query {
 	 * @return void
 	 */
 	public function reset() {
-		$this->__construct($this->input);
+		$this->__construct($this->input, $this->build_prefix, $this->build_separator, $this->build_spec);
 	}
 }

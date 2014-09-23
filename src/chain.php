@@ -235,6 +235,14 @@ class chain {
 	/**
 	 * Invalid Chaining Method
 	 */
+	public function query_string() {
+		$this->_err(debug_backtrace());
+		return $this;
+	}
+	
+	/**
+	 * Invalid Chaining Method
+	 */
 	public function query_array() {
 		$this->_err(debug_backtrace());
 		return $this;

@@ -278,6 +278,17 @@ abstract class main extends overloading {
 	}
 	
 	/**
+	 * Alias of $query->str()
+	 * 
+	 * @param  string $key   The key to add
+	 * @param  mixed  $value The value of $key
+	 * @return boolean       TRUE on success, FALSE otherwise
+	 */
+	public function query_string() {
+		return $this->query->str();
+	}
+	
+	/**
 	 * Adds query var to the query string regardless if it already set or not
 	 * 
 	 * @param  string $key   The key to replace
