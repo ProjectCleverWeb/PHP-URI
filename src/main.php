@@ -46,8 +46,8 @@ abstract class main extends overloading {
 	 * simply don't exist. This basically means, if you don't know what your doing
 	 * just leave these alone.
 	 * 
-	 * @var stdClass $object The primary data object
-	 * @var chain    $chain  The instance of 'chain' for this class (only accessible via chain())
+	 * @var \stdClass $object The primary data object
+	 * @var chain     $chain  The instance of 'chain' for this class (only accessible via chain())
 	*/
 	protected $object;
 	protected $chain;
