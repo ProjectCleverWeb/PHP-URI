@@ -6,8 +6,6 @@
  * standard. Requires PHP 5.4 or later. This library replaces and extends all
  * of PHP's parse_url() features, and even has some handy aliases.
  * 
- * Originally inspired by P Guardiario's work.
- * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved

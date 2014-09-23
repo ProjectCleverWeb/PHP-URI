@@ -6,8 +6,6 @@
  * standard. Requires PHP 5.4 or later. This library replaces and extends all
  * of PHP's parse_url() features, and even has some handy aliases.
  * 
- * Originally inspired by P Guardiario's work.
- * 
  * @author    Nicholas Jordon
  * @link      https://github.com/ProjectCleverWeb/PHP-URI
  * @copyright 2014 Nicholas Jordon - All Rights Reserved
@@ -60,22 +58,22 @@ abstract class main extends overloading {
 	 * constants allow each variable to stay in sync with the group, and still be
 	 * accessable.
 	 * 
-	 * @var  string $authority      This is automatically generated, and cannot be changed directly.
-	 * @var  string $domain         Alias of $host (by reference)
-	 * @var  string $fqdn           Alias of $host (by reference)
-	 * @var  string $fragment       The fragment for the uri
-	 * @var  string $host           The host for the uri (required for the URI to be correctly parsed)
-	 * @var  string $protocol       Alias of $scheme (by reference)
-	 * @var  string $pass           The password for the uri
-	 * @var  string $password       Alias of $pass (by reference)
-	 * @var  string $path           The path for the uri
-	 * @var  string $port           The port for the uri
-	 * @var  string $scheme         The scheme for the uri
-	 * @var  string $scheme_name    The name of the scheme for the uri
-	 * @var  string $scheme_symbols The scheme symbols for the uri
-	 * @var  string $user           The user for the uri
-	 * @var  string $username       Alias of $user (by reference)
-	 * @var  query  $query          The current instance of 'query' for this URI
+	 * @var string $authority      This is automatically generated, and cannot be changed directly.
+	 * @var string $domain         Alias of $host (by reference)
+	 * @var string $fqdn           Alias of $host (by reference)
+	 * @var string $fragment       The fragment for the uri
+	 * @var string $host           The host for the uri (required for the URI to be correctly parsed)
+	 * @var string $protocol       Alias of $scheme (by reference)
+	 * @var string $pass           The password for the uri
+	 * @var string $password       Alias of $pass (by reference)
+	 * @var string $path           The path for the uri
+	 * @var string $port           The port for the uri
+	 * @var string $scheme         The scheme for the uri
+	 * @var string $scheme_name    The name of the scheme for the uri
+	 * @var string $scheme_symbols The scheme symbols for the uri
+	 * @var string $user           The user for the uri
+	 * @var string $username       Alias of $user (by reference)
+	 * @var query  $query          The current instance of 'query' for this URI
 	*/
 	private $authority;
 	private $domain;
