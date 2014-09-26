@@ -1,6 +1,6 @@
 # PHP URI [![Build Status](https://travis-ci.org/ProjectCleverWeb/PHP-URI.svg?branch=2.0.0-dev&style=flat)](https://travis-ci.org/ProjectCleverWeb/PHP-URI) [![Code Coverage](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/coverage.png?b=2.0.0-dev&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=2.0.0-dev) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/badges/quality-score.png?b=2.0.0-dev&style=flat)](https://scrutinizer-ci.com/g/ProjectCleverWeb/PHP-URI/?branch=2.0.0-dev) [![License](https://poser.pugx.org/projectcleverweb/php-uri/license.svg?style=flat)](http://opensource.org/licenses/MIT)
 
-A PHP library for working with URI's, that is designed around the URI standard. Requires PHP `5.4` or later. This library replaces and extends all of PHP's `parse_url()` features, and even has some handy aliases.
+A PHP library for working with URIs (aka URLs), that is designed around the URI standard (RFC 3986). Requires PHP 5.4 or later. This library replaces and extends all of PHP's parse_url() features, and adds several new features for manipulating URI/URL strings.
 
 Copyright (c) 2014 Nicholas Jordon - All Rights Reserved.
 
@@ -12,7 +12,7 @@ Add this to your composer.json file
 
 ```json
 "require": {
-	"projectcleverweb/php-uri":"~1.0"
+	"projectcleverweb/php-uri":"^2.0"
 }
 ```
 
@@ -21,7 +21,7 @@ Add this to your composer.json file
 **Download:**<br>
 [![Latest Stable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/stable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/releases/tag/1.0.0) [![Latest Unstable Version](https://poser.pugx.org/projectcleverweb/php-uri/v/unstable.svg?style=flat)](https://github.com/ProjectCleverWeb/PHP-URI/archive/master.zip)
 
-Just include the `uri.lib.php` file somewhere in your application.
+Just include the `autoload.php` file somewhere in your application.
 
 ## Examples
 
