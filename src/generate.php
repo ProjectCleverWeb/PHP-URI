@@ -31,38 +31,24 @@ class generate {
 	/*** Methods ***/
 	
 	/**
-	 * Generates all the aliases for $object
-	 * 
-	 * @param  \stdClass $object The primary data object
-	 * @return void
-	 */
-	public static function aliases(\stdClass &$object) {
-		$object->protocol = &$object->scheme;
-		$object->username = &$object->user;
-		$object->password = &$object->pass;
-		$object->domain   = &$object->host;
-		$object->fqdn     = &$object->host;
-	}
-	
-	/**
 	 * Generate the scheme. This method exists to make changing how the scheme
 	 * is generated easier; and will likely help prevent redundant code in the
 	 * future
 	 * 
-	 * @param  \stdClass $object The primary data object
+	 * @param  data_object $object The primary data object
 	 * @return void
 	 */
-	public static function scheme(\stdClass &$object) {
+	public static function scheme(data_object &$object) {
 		$object->scheme = $object->scheme_name.$object->scheme_symbols;
 	}
 	
 	/**
 	 * Regenerates the Authority string
 	 * 
-	 * @param  \stdClass $object The primary data object
+	 * @param  data_object $object The primary data object
 	 * @return void
 	 */
-	public static function authority(\stdClass &$object) {
+	public static function authority(data_object &$object) {
 		$str_arr = array($object->user);
 		if (!empty($object->pass)) { // pass can only be parsed if user exists as well
 			$str_arr[] = ':'.$object->pass.'@';
@@ -79,11 +65,11 @@ class generate {
 	/**
 	 * Generate a the full URI as a string, from the current object
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @return string            The current URI string
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @return string              The current URI string
 	 */
-	public static function string(main &$main, \stdClass &$object) {
+	public static function string(main &$main, data_object &$object) {
 		self::scheme($object);
 		self::authority($object);
 		$str_arr = array($object->scheme, $object->authority, $object->path);
@@ -100,11 +86,11 @@ class generate {
 	/**
 	 * Generate a the full URI as an array, from the current object
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @return array             The current URI as an array
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @return array               The current URI as an array
 	 */
-	public static function to_array(main &$main, \stdClass &$object) {
+	public static function to_array(main &$main, data_object &$object) {
 		$keys            = array('authority', 'fragment', 'host', 'pass', 'path', 'port', 'query', 'scheme', 'scheme_name', 'scheme_symbols', 'user');
 		$values          = array($object->authority, $object->fragment, $object->host, $object->pass, $object->path, $object->port, $main->query->str(), $object->scheme, $object->scheme_name, $object->scheme_symbols, $object->user);
 		$arr             = array_combine($keys, $values);
@@ -121,10 +107,10 @@ class generate {
 	/**
 	 * Returns various information about the current $path as an array
 	 * 
-	 * @param  \stdClass $object The primary data object
-	 * @return array             Associative array of information about the current $path
+	 * @param  data_object $object The primary data object
+	 * @return array               Associative array of information about the current $path
 	 */
-	public static function path_info(\stdClass &$object) {
+	public static function path_info(data_object &$object) {
 		$defaults = array(
 			'dirname' => '',
 			'basename' => '',

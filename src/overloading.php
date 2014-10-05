@@ -121,9 +121,9 @@ abstract class overloading {
 	 * @return void
 	 */
 	private function _err($type, $trace, $name) {
-		$fmt = 'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
+		$fmt = 'Undifined property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be used in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
 		if ($type == 'FORBIDDEN') {
-			$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be unset in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
+			$fmt = 'Forbidden property via <code>%1$s::%2$s()</code>: Property <code>%3$s</code> cannot be used in <b>%4$s</b> on line <b>%5$s</b>. Error triggered';
 		}
 		
 		trigger_error(sprintf($fmt, $trace[0]['class'], $trace[0]['function'], $name, $trace[0]['file'], $trace[0]['line']), E_USER_NOTICE);

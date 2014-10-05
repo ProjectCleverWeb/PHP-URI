@@ -29,13 +29,13 @@ class modify {
 	/**
 	 * Modfies the Scheme Name
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme_name(main &$main, \stdClass &$object, $action, $str) {
+	public static function scheme_name(main &$main, data_object &$object, $action, $str) {
 		$org = $object->scheme_name;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A[a-z]{1,10}\Z/', $object->scheme_name) || empty($str))) {
@@ -51,13 +51,13 @@ class modify {
 	/**
 	 * Modfies the Scheme Symbols
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme_symbols(main &$main, \stdClass &$object, $action, $str) {
+	public static function scheme_symbols(main &$main, data_object &$object, $action, $str) {
 		$org = $object->scheme_symbols;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (!(preg_match('/\A(:)?([\/]{2,3})?\Z/', $object->scheme_symbols) || empty($str))) {
@@ -71,13 +71,13 @@ class modify {
 	/**
 	 * Modfies the Scheme
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function scheme(main &$main, \stdClass &$object, $action, $str) {
+	public static function scheme(main &$main, data_object &$object, $action, $str) {
 		$org = array($object->scheme, $object->scheme_name, $object->scheme_symbols);
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if (empty($object->scheme)) {
@@ -99,27 +99,27 @@ class modify {
 	/**
 	 * Alias of scheme()
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function protocol(main &$main, \stdClass &$object, $action, $str) {
+	public static function protocol(main &$main, data_object &$object, $action, $str) {
 		return self::scheme($main, $object, $action, $str);
 	}
 	
 	/**
 	 * Modfies the Username
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function user(main &$main, \stdClass &$object, $action, $str) {
-		$str = rawurlencode($str);
+	public static function user(main &$main, data_object &$object, $action, $str) {
+		// $str = rawurlencode($str);
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
 		return generate::string($main, $object);
@@ -128,27 +128,27 @@ class modify {
 	/**
 	 * Alias of user()
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function username(main &$main, \stdClass &$object, $action, $str) {
+	public static function username(main &$main, data_object &$object, $action, $str) {
 		return self::user($main, $object, $action, $str);
 	}
 	
 	/**
 	 * Modfies the Password
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function pass(main &$main, \stdClass &$object, $action, $str) {
-		$str = rawurlencode($str);
+	public static function pass(main &$main, data_object &$object, $action, $str) {
+		// $str = rawurlencode($str);
 		
 		actions::callback($object, $action, __FUNCTION__, $str);
 		return generate::string($main, $object);
@@ -157,26 +157,26 @@ class modify {
 	/**
 	 * Alias of pass()
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function password(main &$main, \stdClass &$object, $action, $str) {
+	public static function password(main &$main, data_object &$object, $action, $str) {
 		return self::pass($main, $object, $action, $str);
 	}
 	
 	/**
 	 * Modfies the Host
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function host(main &$main, \stdClass &$object, $action, $str) {
+	public static function host(main &$main, data_object &$object, $action, $str) {
 		$org = $object->host;
 		actions::callback($object, $action, __FUNCTION__, $str);
 		if ((
@@ -194,39 +194,39 @@ class modify {
 	/**
 	 * Alias of host()
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function domain(main &$main, \stdClass &$object, $action, $str) {
+	public static function domain(main &$main, data_object &$object, $action, $str) {
 		return self::host($main, $object, $action, $str);
 	}
 	
 	/**
 	 * Alias of host()
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function fqdn(main &$main, \stdClass &$object, $action, $str) {
+	public static function fqdn(main &$main, data_object &$object, $action, $str) {
 		return self::host($main, $object, $action, $str);
 	}
 	
 	/**
 	 * Modfies the Port
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string|false      Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string|false        Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function port(main &$main, \stdClass &$object, $action, $str) {
+	public static function port(main &$main, data_object &$object, $action, $str) {
 		$org = $object->port;
 		if (isset($str[0]) && $str[0] == ':') {
 			$str = substr($str, 1);
@@ -243,13 +243,13 @@ class modify {
 	/**
 	 * Modfies the Path
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function path(main &$main, \stdClass &$object, $action, $str) {
+	public static function path(main &$main, data_object &$object, $action, $str) {
 		actions::callback($object, $action, __FUNCTION__, $str);
 		return generate::string($main, $object);
 	}
@@ -257,13 +257,13 @@ class modify {
 	/**
 	 * Modfies the Query
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function query(main &$main, \stdClass &$object, $action, $str) {
+	public static function query(main &$main, data_object &$object, $action, $str) {
 		if (isset($str[0]) && $str[0] == '?') {
 			$str = substr($str, 1);
 		}
@@ -276,13 +276,13 @@ class modify {
 	/**
 	 * Modfies the Fragment
 	 * 
-	 * @param  main      $main   The main class
-	 * @param  \stdClass $object The primary data object
-	 * @param  string    $action The action to take
-	 * @param  string    $str    The modfication
-	 * @return string            Returns the resulting URI
+	 * @param  main        $main   The main class
+	 * @param  data_object $object The primary data object
+	 * @param  string      $action The action to take
+	 * @param  string      $str    The modfication
+	 * @return string              Returns the resulting URI
 	 */
-	public static function fragment(main &$main, \stdClass &$object, $action, $str) {
+	public static function fragment(main &$main, data_object &$object, $action, $str) {
 		if (isset($str[0]) && $str[0] == '#') {
 			$str = substr($str, 1);
 		}

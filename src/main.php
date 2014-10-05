@@ -32,7 +32,7 @@ abstract class main extends overloading {
 	/*** Variables ***/
 	
 	/**
-	 * @var string       $input The input of __construct() (this is always set, even if the input is invalid)
+	 * @var data_object  $input The initial parsed data_object
 	 * @var false|string $error FALSE if everything is correcty parsed, is a string otherwise (error msg)
 	 */
 	public $input;
@@ -78,22 +78,22 @@ abstract class main extends overloading {
 	 * @var string $username       Alias of $user (by reference)
 	 * @var query  $query          The current instance of 'query' for this URI
 	*/
-	private $authority;
-	private $domain;
-	private $fqdn;
-	private $fragment;
-	private $host;
-	private $protocol;
-	private $pass;
-	private $password;
-	private $path;
-	private $port;
-	private $scheme;
-	private $scheme_name;
-	private $scheme_symbols;
-	private $user;
-	private $username;
-	protected $query;
+	private   $authority;
+	private   $domain;
+	private   $fqdn;
+	private   $fragment;
+	private   $host;
+	private   $protocol;
+	private   $pass;
+	private   $password;
+	private   $path;
+	private   $port;
+	private   $scheme;
+	private   $scheme_name;
+	private   $scheme_symbols;
+	private   $user;
+	private   $username;
+	protected $query; // is special
 	
 	
 	
@@ -103,26 +103,28 @@ abstract class main extends overloading {
 	 * Parses the input as a URI and populates the variables. Fails if input is
 	 * not a string or if the string cannot be parsed as a URI.
 	 * 
-	 * @param string $input The URI to parse.
+	 * @param string|data_object $input The URI to parse.
 	 */
 	public function __construct($input) {
-		$this->input = $input;
-		if (!is_string($input)) {
-			$input = '';
+		if ($input instanceof data_object) {
+			$this->object = new data_object(clone $input);
+		} elseif (is_string($input)) {
+			$this->object = new data_object(parser::parse_uri($input));
+		} else {
+			$this->object = new data_object(parser::parse_uri(''));
 		}
-		$this->object = parser::parse_uri($input);
+		generate::authority($this->object);
+		$this->input = clone $this->object;
 		
 		if (!empty($this->object->host)) {
 			$this->error = FALSE;
 			$this->query = new query($this->object->query);
-			generate::authority($this->object);
-			generate::aliases($this->object);
 			
 			// Enable Chain Events
 			$this->chain = new chain($this, $this->query);
-			
 			// References required for Sudo-Private Variables
 			$this->_make_references();
+			
 		} else {
 			$this->error = 'Input could not be parsed as a URI';
 		}
@@ -380,7 +382,7 @@ abstract class main extends overloading {
 	 * @return main A new instance of 'main' at the current state
 	 */
 	public function make_clone() {
-		$clone        = new $this($this->str());
+		$clone        = new $this($this->input);
 		$clone->input = $this->input;
 		return $clone;
 	}

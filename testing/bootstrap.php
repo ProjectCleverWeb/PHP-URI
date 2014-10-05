@@ -55,6 +55,12 @@ $instances = (object) array(
 	'error5'    => new uri($inputs->error5)
 );
 
+// $uri = $instances->minimal;
+// $uri->user = 'test';
+// $uri->reset();
+// var_dump($uri);
+// exit();
+
 /**
  * Since all the setUp() and tearDown() methods are the same, we just extend
  * this class in each of the testing classes. (just make sure this class

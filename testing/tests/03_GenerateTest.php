@@ -10,7 +10,6 @@ class GenerateTest extends URI_Testing_Config {
 	 */
 	public function Simple_Output() {
 		$uri = $this->uri->advanced1;
-		$this->assertEquals($this->input->advanced1, $uri->input);
 		$this->assertEquals($this->input->advanced1, $uri->str());
 		$this->expectOutputString($this->input->advanced1);
 		$uri->p_str();
@@ -185,6 +184,18 @@ class GenerateTest extends URI_Testing_Config {
 	public function Invoke() {
 		$uri = $this->uri->minimal;
 		$this->assertSame($uri, $uri());
+	}
+	
+	/**
+	 * @test
+	 */
+	public function Issue() {
+		// $uri = $this->uri->minimal;
+		// $uri->replace('user', 'john');
+		// $uri->replace('user', 'jdoe');
+		// print_r($uri);
+		// $this->expectOutputString('dada');
+		// $this->assertEquals()
 	}
 	
 	/**

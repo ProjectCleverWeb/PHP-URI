@@ -28,14 +28,14 @@ class actions {
 	/**
 	 * Acts as universal alias to the modify class, ensuring the call is viable
 	 * 
-	 * @param  main      $main    The main class
-	 * @param  \stdClass $object  The primary data object
-	 * @param  string    $action  The action to take
-	 * @param  string    $section The section of the object to modify
-	 * @param  string    $str     The modfication
-	 * @return string|false       Returns the resulting URI on success, FALSE otherwise
+	 * @param  main        $main    The main class
+	 * @param  data_object $object  The primary data object
+	 * @param  string      $action  The action to take
+	 * @param  string      $section The section of the object to modify
+	 * @param  string      $str     The modfication
+	 * @return string|false         Returns the resulting URI on success, FALSE otherwise
 	 */
-	public static function modify(main &$main, \stdClass &$object, $action, $section, $str) {
+	public static function modify(main &$main, data_object &$object, $action, $section, $str) {
 		settype($section, 'string');
 		settype($str, 'string');
 		$section = strtolower($section);
@@ -51,13 +51,13 @@ class actions {
 	 * Handles which action is taken; since there are only 3 very simple actions
 	 * that are used several times, it makes sense to put them all in 1 method.
 	 * 
-	 * @param  \stdClass $object  The primary data object
-	 * @param  string    $action  The action to take
-	 * @param  string    $section The section of the object to modify
-	 * @param  string    $str     The modfication
+	 * @param  data_object $object  The primary data object
+	 * @param  string      $action  The action to take
+	 * @param  string      $section The section of the object to modify
+	 * @param  string      $str     The modfication
 	 * @return void
 	 */
-	public static function callback(\stdClass &$object, $action, $section, $str) {
+	public static function callback(data_object &$object, $action, $section, $str) {
 		switch ($action) {
 			case 'replace':
 				$object->$section = $str;

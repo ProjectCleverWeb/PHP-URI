@@ -48,7 +48,7 @@ class parser {
 		}
 		
 		$keys = array('scheme', 'scheme_name', 'scheme_symbols', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment');
-		return (object) array_combine($keys, $parsed);
+		return array_combine($keys, $parsed);
 	}
 	
 	/**
